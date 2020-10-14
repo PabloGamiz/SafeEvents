@@ -6,12 +6,20 @@ services:
         image: mongo:4.2.10
         restart: on-failure
         environment:
+            MONGO_INITDB_DATABASE: safe-events-db
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: rootpassword
         ports:
             - 27017:27017
+        #env_file:
+        #    - .env
         volumes:
             - mongodb_data_container:/data/db
+            #- ./.docker/mongodb/mongod.conf:/etc/mongod.conf
+            #- ./.docker/mongodb/initdb.d/:/docker-entrypoint-initdb.d/
+            #- ./.docker/mongodb/data/db/:/data/db/
+            #- ./.docker/mongodb/data/log/:/var/log/mongodb/
+
         networks: 
             - database
     
