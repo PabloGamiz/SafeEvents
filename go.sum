@@ -1,0 +1,6 @@
+github.com/alvidir/mastermind v0.0.0-20200707215215-d027836ca45e h1:tsaOiBYY47ecfR3sqZxWs4DrWs9f4w2/x3p7dAKV7wY=
+github.com/alvidir/tp-auth v0.0.0-20201013231921-efb4c73a10c7 h1:USsfpBCympQ1wjJgIy7V8CWPxvgC3wLSBG1TNg4gEb8=
+github.com/alvidir/util v0.0.0-20200928183113-0a80c7d7b41d h1:X5U1YinVsqX2RhH4zt5HzEdxHTuQ2t2I52mW3zS/6mo=
+github.com/alvidir/util v0.0.0-20200928183113-0a80c7d7b41d/go.mod h1:utm+V6pEDV/IS/cqbG6oAjwe1JsaIwGHq+RjNbc6QCE=
+gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+gopkg.in/yaml.v2 v2.3.0/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=

@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+    database:
+        container_name: mongo
+        image: mongo:4.2.10
+        restart: on-failure
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: rootpassword
+        ports:
+            - 27017:27017
+        volumes:
+            - mongodb_data_container:/data/db
+        networks: 
+            - database
+    
+    backend:
+        container_name: safe-events
+        image: safe-events/backend:0.1.0
+        restart: always
+        networks: 
+            - database
+        environment: 
+            SERVICE_PORT: 9090
+            SERVICE_NETW: tcp
+            MONGODB_URL: https://mongo:27017
+            
+networks:
+    # Database network is the bridge between domain environment and the sql databases
+    database:
+        name: database
+        driver: bridge
+
+volumes:
+    mongodb_data_container:
