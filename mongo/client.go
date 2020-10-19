@@ -10,7 +10,7 @@ import (
 // Single clientInstance of Client
 var (
 	clientInstance = singleton.NewSingleton(initMongoClient)
-	mongoAPI       = os.Getenv(EnvMongoAPI)
+	mongoURL       = os.Getenv(EnvMongoURL)
 )
 
 // GetClientInstance returns the single instance of Client. Multiple calls returns the same instance

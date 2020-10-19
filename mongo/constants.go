@@ -3,11 +3,11 @@ package mongo
 import "time"
 
 const (
-	// EnvMongoAPI represents the environment variable where the api key is located
-	EnvMongoAPI = "MONGO_API"
+	// EnvMongoURL represents the environment variable where the mongo's url key is located
+	EnvMongoURL = "MONGO_URL"
 
 	// Database consultable by the app
-	Database = "safe-events"
+	Database = "safe-events-db"
 	// Timeout for any database request
 	Timeout = 10 * time.Second
 )
