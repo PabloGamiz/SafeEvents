@@ -13,6 +13,10 @@ type api struct {
 	router http.Handler
 }
 
+func (api *api) Router() http.Handler {
+	return api.router
+}
+
 func (api *api) handleSignupRequest(w http.ResponseWriter, r *http.Request) {
 	// Expected data for a Signup request
 	var signupRequest clientDTO.SignupRequestDTO
@@ -23,7 +27,12 @@ func (api *api) handleSignupRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Setting up TxSignup with the required values
-	txSignup := tx.NewTxSignup()
+	txSignup := tx.NewTxSignup(
+		signupRequest.Username,
+		signupRequest.Email,
+		signupRequest.Token,
+	)
+
 	ctx, cancel := context.WithTimeout(context.TODO(), Timeout)
 	defer cancel() // ensures the context is canceled, at least once, at the end of this function
 
@@ -39,8 +48,4 @@ func (api *api) handleSignupRequest(w http.ResponseWriter, r *http.Request) {
 	// Sending response
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(result)
-}
-
-func (api *api) Router() http.Handler {
-	return api.router
 }
