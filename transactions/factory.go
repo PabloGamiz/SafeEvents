@@ -5,7 +5,7 @@ import (
 )
 
 // NewTxSignup builds a brand new transaction for Signup
-func NewTxSignup() transaction.Tx {
-	body := &txSignup{}
+func NewTxSignup(username string, email string, token string) transaction.Tx {
+	body := &txSignup{username, email, token}
 	return transaction.NewTransaction(body)
 }

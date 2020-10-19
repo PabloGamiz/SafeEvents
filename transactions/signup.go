@@ -9,6 +9,9 @@ import (
 
 // txSignup represents an
 type txSignup struct {
+	username string
+	email    string
+	token    string
 }
 
 // Precondition validates the transaction is ready to run
