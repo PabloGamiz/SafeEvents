@@ -9,9 +9,7 @@ import (
 
 // txSignup represents an
 type txSignup struct {
-	username string
-	email    string
-	token    string
+	request clientDTO.SignupRequestDTO
 }
 
 // Precondition validates the transaction is ready to run
