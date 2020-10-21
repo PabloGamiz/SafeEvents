@@ -7,20 +7,21 @@ import (
 	"time"
 
 	clientDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
-	tx "github.com/PabloGamiz/SafeEvents-Backend/transactions"
+	"github.com/PabloGamiz/SafeEvents-Backend/transactions/users"
 )
 
+// HandleSignupRequest attends a signup request
 func HandleSignupRequest(w http.ResponseWriter, r *http.Request) {
 	// Expected data for a Signup request
-	var signupRequest clientDTO.SignupRequestDTO
-	if err := json.NewDecoder(r.Body).Decode(&signupRequest); err != nil {
+	var signupDTO clientDTO.SignupRequestDTO
+	if err := json.NewDecoder(r.Body).Decode(&signupDTO); err != nil {
 		// If some error just happened it means the provided Json does not match with the expected DTO
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	// Setting up TxSignup with the required values
-	txSignup := tx.NewTxSignup(signupRequest)
+	txSignup := users.NewTxSignup(signupDTO)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel() // ensures the context is canceled, at least once, at the end of this function
 

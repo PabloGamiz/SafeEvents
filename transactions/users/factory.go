@@ -1,4 +1,4 @@
-package transactions
+package users
 
 import (
 	clientDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
