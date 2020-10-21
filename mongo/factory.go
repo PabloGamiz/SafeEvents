@@ -16,7 +16,7 @@ func NewMongoClient() (client *mongo.Client, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), Timeout)
 	defer cancel()
 
-	options := options.Client().ApplyURI(mongoAPI)
+	options := options.Client().ApplyURI(mongoURL)
 	client, err = mongo.Connect(ctx, options)
 
 	if err != nil {
