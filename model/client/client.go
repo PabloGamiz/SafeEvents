@@ -9,6 +9,11 @@ type Client struct {
 	Verified bool   `json:"verified" bson:"_id,omitempty"`
 }
 
+// SetID sets a new id to the model
+func (client *Client) SetID(id string) {
+	client.ID = id
+}
+
 // GetID return the id of the client
 func (client *Client) GetID() string {
 	return client.ID

@@ -11,22 +11,24 @@ import (
 
 // NewClientGateway builds a gateway for the provided client
 func NewClientGateway(ctx context.Context, client client.Controller) Gateway {
-	return &clientGateway{client, ctx}
+	return &clientGateway{Controller: client, ctx: ctx}
 }
 
 // FindClientByEmail returns the gateway for the client that match the provided mail
 func FindClientByEmail(ctx context.Context, email string) (gw Gateway, err error) {
-	var database *mongodb.Database
-	if database, err = mongo.NewDatabaseConnection(ctx); err != nil {
+	var mongoClient *mongodb.Client
+	if mongoClient, err = mongo.NewMongoClient(ctx); err != nil {
 		return
 	}
 
-	col := database.Collection(collection)
-	var model client.Client
-	if err = col.FindOne(ctx, bson.M{"email": email}).Decode(&model); err != nil {
+	defer mongoClient.Disconnect(ctx)
+	col := mongoClient.Database(mongo.Database).Collection(collection)
+	model := &client.Client{}
+
+	if err = col.FindOne(ctx, bson.M{"email": email}).Decode(model); err != nil {
 		return
 	}
 
-	gw = &clientGateway{&model, ctx}
+	gw = &clientGateway{Controller: model, ctx: ctx}
 	return
 }
