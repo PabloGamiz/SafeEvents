@@ -8,7 +8,6 @@ import (
 	"os"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/api"
-	"github.com/joho/godotenv"
 )
 
 const (
@@ -49,14 +48,12 @@ func address() (address string) {
 }
 
 func main() {
+	// to change the flags on the default logger
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
 	address := address()
 	network := network()
 	log.Printf(infoSetup, network, address)
-
-	env := godotenv.Load(".env." + currentEnv)
-	if env != nil {
-		log.Fatalf("Error loading .env.%s file", currentEnv)
-	}
 
 	lis, err := net.Listen(network, address)
 	if err != nil {

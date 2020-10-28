@@ -3,11 +3,20 @@ package mongo
 import "time"
 
 const (
-	// EnvMongoURL represents the environment variable where the mongo's url key is located
-	EnvMongoURL = "MONGO_URL"
+	// EnvMongoUsr represents the environment variable where the mongo's user key is located
+	EnvMongoUsr = "MONGO_USR"
+	// EnvMongoPwd represents the environment variable where the mongo's password key is located
+	EnvMongoPwd = "MONGO_PWD"
 
 	// Database consultable by the app
 	Database = "safe-events-db"
 	// Timeout for any database request
-	Timeout = 10 * time.Second
+	Timeout = 3 * time.Second
+
+	errNoMongoURI  = "No mongo uri has been provided"
+	errNoMongoUsr  = "No mongo user has been provided"
+	errNoMongoPwd  = "No mongo password has been provided"
+	errNoMongoAuth = "No mongo auth has been provided"
+
+	mongoURI = "mongodb+srv://%s:%s@cluster0.itrrv.mongodb.net/%s?retryWrites=true&w=majority"
 )

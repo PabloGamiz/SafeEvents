@@ -1,4 +1,4 @@
-package users
+package client
 
 const (
 	regexNoneSpecialChars = `^[a-zA-Z]+$`

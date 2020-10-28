@@ -1,14 +1,15 @@
-package users
+package client
 
 import (
 	"context"
 	"log"
+	"time"
 
 	clientDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
-	"github.com/PabloGamiz/SafeEvents-Backend/gateway/client"
+	clientGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/google"
 	clientMOD "github.com/PabloGamiz/SafeEvents-Backend/model/client"
-	"github.com/PabloGamiz/SafeEvents-Backend/model/session"
+	sessionMOD "github.com/PabloGamiz/SafeEvents-Backend/model/session"
 	"google.golang.org/api/oauth2/v2"
 )
 
@@ -18,7 +19,7 @@ type txSignin struct {
 	info    *oauth2.Tokeninfo
 }
 
-func (tx *txSignin) buildSessionResponseDTO(ctrl session.Controller) *clientDTO.SigninResponseDTO {
+func (tx *txSignin) buildSessionResponseDTO(ctrl sessionMOD.Controller) *clientDTO.SigninResponseDTO {
 	cookie := ctrl.Cookie()
 	deadline, _ := ctrl.Deadline() // by sure the session context has a deadline
 
@@ -29,8 +30,11 @@ func (tx *txSignin) buildSessionResponseDTO(ctrl session.Controller) *clientDTO.
 }
 
 func (tx *txSignin) registerNewClient(ctx context.Context) (err error) {
-	clnt := &clientMOD.Client{}
-	gw := client.NewClientGateway(ctx, clnt)
+	clnt := &clientMOD.Client{
+		Email: tx.info.Email,
+	}
+
+	gw := clientGW.NewClientGateway(ctx, clnt)
 	return gw.Insert()
 }
 
@@ -42,21 +46,19 @@ func (tx *txSignin) Precondition() (err error) {
 
 // Postcondition creates new user and a opens its first session
 func (tx *txSignin) Postcondition(ctx context.Context) (v interface{}, err error) {
-	// SESSION //
-	if len(tx.request.TokenID) > 0 {
-		log.Printf("Got a Signin request for client %s", tx.info.Email)
+	log.Printf("Got a Signin request for client %s", tx.info.Email)
 
-		var sess session.Controller
-		if sess, err = session.GetSessionByEmail(tx.info.Email); err == nil {
-			log.Printf("The session for %s does exists", tx.info.Email)
-			response := tx.buildSessionResponseDTO(sess)
-			return response, nil
-		}
+	// SESSION //
+	var sess sessionMOD.Controller
+	if sess, err = sessionMOD.GetSessionByEmail(tx.info.Email); err == nil {
+		log.Printf("The session for %s already exists", tx.info.Email)
+		response := tx.buildSessionResponseDTO(sess)
+		return response, nil
 	}
 
 	// SIGNUP //
-	var gw client.Gateway
-	if gw, err = client.FindClientByEmail(ctx, tx.info.Email); err != nil {
+	var gw clientGW.Gateway
+	if gw, err = clientGW.FindClientByEmail(ctx, tx.info.Email); err != nil {
 		log.Printf("Signing up a new user %s", tx.info.Email)
 		if err = tx.registerNewClient(ctx); err != nil {
 			return
@@ -65,16 +67,16 @@ func (tx *txSignin) Postcondition(ctx context.Context) (v interface{}, err error
 
 	// LOGIN //
 	log.Printf("Loging in the user %s", tx.info.Email)
-	if gw, err = client.FindClientByEmail(ctx, tx.info.Email); err != nil {
+	if gw, err = clientGW.FindClientByEmail(ctx, tx.info.Email); err != nil {
 		// At this point the client must be stored in the database
 		return
 	}
 
 	log.Printf("Got a duration for the current session of %v unix", tx.info.ExpiresIn)
-	sessCtx := context.TODO()
 
-	var sess session.Controller
-	if sess, err = session.NewSession(sessCtx, gw); err != nil {
+	deadline := time.Unix(tx.info.ExpiresIn, 0)
+	sessCtx, _ := context.WithDeadline(context.TODO(), deadline)
+	if sess, err = sessionMOD.NewSession(sessCtx, gw); err != nil {
 		return
 	}
 

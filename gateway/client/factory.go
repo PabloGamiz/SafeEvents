@@ -25,7 +25,7 @@ func FindClientByEmail(ctx context.Context, email string) (gw Gateway, err error
 	col := mongoClient.Database(mongo.Database).Collection(collection)
 	model := &client.Client{}
 
-	if err = col.FindOne(ctx, bson.M{"email": email}).Decode(model); err != nil {
+	if err = col.FindOne(ctx, bson.M{ /*"email": email*/ }).Decode(model); err != nil {
 		return
 	}
 

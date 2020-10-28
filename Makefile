@@ -10,10 +10,11 @@ run:
 	go run ./cmd/safe-events/main.go
 
 test:
-	go test ./...
+	go clean -testcache
+	go test -v ./...
 
-compose-up:
+deploy:
 	docker-compose -f docker-compose.yaml up
 
-compose-down:
+undeploy:
 	docker-compose -f docker-compose.yaml down

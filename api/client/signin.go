@@ -1,4 +1,4 @@
-package users
+package client
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"time"
 
 	clientDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
-	"github.com/PabloGamiz/SafeEvents-Backend/transactions/users"
+	"github.com/PabloGamiz/SafeEvents-Backend/transactions/client"
 )
 
 // HandleSigninRequest attends a signin request
@@ -21,7 +21,7 @@ func HandleSigninRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Setting up TxSignin with the required values
-	txSignin := users.NewTxSignin(signinDTO)
+	txSignin := client.NewTxSignin(signinDTO)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel() // ensures the context is canceled, at least once, at the end of this function
 

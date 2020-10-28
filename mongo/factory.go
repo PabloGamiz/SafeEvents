@@ -2,22 +2,27 @@ package mongo
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var (
-	mongoURL = os.Getenv(EnvMongoURL)
-)
+func getMongoURI() string {
+	username := os.Getenv(EnvMongoUsr)
+	password := os.Getenv(EnvMongoPwd)
+
+	return fmt.Sprintf(mongoURI, username, password, Database)
+}
 
 // NewMongoClient returns a brand new client
 func NewMongoClient(ctx context.Context) (client *mongo.Client, err error) {
 	mongoCtx, cancel := context.WithTimeout(ctx, Timeout)
 	defer cancel()
 
-	options := options.Client().ApplyURI(mongoURL)
+	uri := getMongoURI()
+	options := options.Client().ApplyURI(uri)
 	client, err = mongo.Connect(mongoCtx, options)
 
 	if err != nil {

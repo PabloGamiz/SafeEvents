@@ -6,6 +6,7 @@ import (
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/mongo"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	mongodb "go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -14,13 +15,9 @@ type clientGateway struct {
 	ctx context.Context
 }
 
-func (client *clientGateway) initMongoClient() (*mongodb.Client, error) {
-	return mongo.NewMongoClient(client.ctx)
-}
-
 func (client *clientGateway) Insert() (err error) {
 	var c *mongodb.Client
-	if c, err = client.initMongoClient(); err != nil {
+	if c, err = mongo.NewMongoClient(client.ctx); err != nil {
 		return
 	}
 
@@ -31,19 +28,19 @@ func (client *clientGateway) Insert() (err error) {
 		return
 	}
 
-	parsed, ok := result.InsertedID.(string)
+	parsed, ok := result.InsertedID.(primitive.ObjectID)
 	if !ok {
 		err = fmt.Errorf(errInsertOneResultParse, result)
 		return
 	}
 
-	client.SetID(parsed)
+	client.SetID(&parsed)
 	return
 }
 
 func (client *clientGateway) Update() (err error) {
 	var c *mongodb.Client
-	if c, err = client.initMongoClient(); err != nil {
+	if c, err = mongo.NewMongoClient(client.ctx); err != nil {
 		return
 	}
 
@@ -53,7 +50,7 @@ func (client *clientGateway) Update() (err error) {
 
 func (client *clientGateway) Remove() (err error) {
 	var c *mongodb.Client
-	if c, err = client.initMongoClient(); err != nil {
+	if c, err = mongo.NewMongoClient(client.ctx); err != nil {
 		return
 	}
 
