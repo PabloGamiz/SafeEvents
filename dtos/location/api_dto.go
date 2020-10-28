@@ -1,7 +1,7 @@
-package dtos
+package location
 
-// LocationDTO represents the expected data from a Location.
-type LocationDTO struct {
+// DTO represents the expected data from a Location.
+type DTO struct {
 	ID          int    `json:"id"`
 	Name        string `json:"name"`
 	Address     string `json:"address"`

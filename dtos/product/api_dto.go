@@ -1,7 +1,7 @@
-package dtos
+package product
 
-// ProductDTO represents the expected data from a Product.
-type ProductDTO struct {
+// DTO represents the expected data from a Product.
+type DTO struct {
 	ID          int    `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
