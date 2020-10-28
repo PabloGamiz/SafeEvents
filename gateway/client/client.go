@@ -3,7 +3,6 @@ package client
 import (
 	"context"
 	"fmt"
-	"sync"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/mongo"
@@ -12,40 +11,20 @@ import (
 
 type clientGateway struct {
 	client.Controller
-	ctx   context.Context
-	mongo *mongodb.Client
-	mu    sync.Mutex
+	ctx context.Context
 }
 
-func (client *clientGateway) iniMongoClient() (err error) {
-	client.mu.Lock()
-	defer client.mu.Unlock()
-
-	if client.mongo == nil {
-		var mongoClient *mongodb.Client
-		if mongoClient, err = mongo.NewMongoClient(client.ctx); err == nil {
-			client.mongo = mongoClient
-		}
-	}
-
-	return
-}
-
-func (client *clientGateway) getMongoClient() (mongo *mongodb.Client, err error) {
-	if client.mongo == nil {
-		err = client.iniMongoClient()
-	}
-
-	mongo = client.mongo
-	return
+func (client *clientGateway) initMongoClient() (*mongodb.Client, error) {
+	return mongo.NewMongoClient(client.ctx)
 }
 
 func (client *clientGateway) Insert() (err error) {
 	var c *mongodb.Client
-	if c, err = client.getMongoClient(); err != nil {
+	if c, err = client.initMongoClient(); err != nil {
 		return
 	}
 
+	defer c.Disconnect(client.ctx)
 	col := c.Database(mongo.Database).Collection(collection)
 	var result *mongodb.InsertOneResult
 	if result, err = col.InsertOne(client.ctx, client); err != nil {
@@ -54,17 +33,30 @@ func (client *clientGateway) Insert() (err error) {
 
 	parsed, ok := result.InsertedID.(string)
 	if !ok {
-		err = fmt.Errorf("Got an error while parsing InsertOneResult: %+v", result)
+		err = fmt.Errorf(errInsertOneResultParse, result)
 		return
 	}
+
 	client.SetID(parsed)
 	return
 }
 
-func (client *clientGateway) Update() error {
+func (client *clientGateway) Update() (err error) {
+	var c *mongodb.Client
+	if c, err = client.initMongoClient(); err != nil {
+		return
+	}
+
+	defer c.Disconnect(client.ctx)
 	return nil
 }
 
-func (client *clientGateway) Remove() error {
+func (client *clientGateway) Remove() (err error) {
+	var c *mongodb.Client
+	if c, err = client.initMongoClient(); err != nil {
+		return
+	}
+
+	defer c.Disconnect(client.ctx)
 	return nil
 }

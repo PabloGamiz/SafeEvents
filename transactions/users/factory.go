@@ -5,8 +5,8 @@ import (
 	"github.com/alvidir/util/pattern/transaction"
 )
 
-// NewTxSignup builds a brand new transaction for Signup
-func NewTxSignup(request clientDTO.SignupRequestDTO) transaction.Tx {
-	body := &txSignup{request}
+// NewTxSignin builds a brand new transaction for Signin
+func NewTxSignin(request clientDTO.SigninRequestDTO) transaction.Tx {
+	body := &txSignin{request: request}
 	return transaction.NewTransaction(body)
 }

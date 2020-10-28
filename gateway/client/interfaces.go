@@ -8,4 +8,6 @@ import (
 type Gateway interface {
 	client.Controller
 	Insert() error
+	Update() error
+	Remove() error
 }
