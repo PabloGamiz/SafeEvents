@@ -1,40 +1,41 @@
 version: '3.8'
 
 services:
-    database:
-        container_name: mongo
-        image: mongo:4.2.10
-        restart: on-failure
+    #database:
+    #    container_name: mongo
+    #    image: mongo:4.2.10
+    #    restart: on-failure
+    #    ports:
+    #        - 8080:27017
+    #    environment:
+    #        MONGO_INITDB_DATABASE: safe-events-db
+    #        MONGO_INITDB_ROOT_USERNAME: root
+    #        MONGO_INITDB_ROOT_PASSWORD: rootpwd
+    #    #env_file:
+    #    #    - .env
+    #    volumes:
+    #        - mongodb_data_volume:/data/db
+    #        #- ./.docker/mongodb/mongod.conf:/etc/mongod.conf
+    #        #- ./.docker/mongodb/initdb.d/:/docker-entrypoint-initdb.d/
+    #        #- ./.docker/mongodb/data/db/:/data/db/
+    #        #- ./.docker/mongodb/data/log/:/var/log/mongodb/
+    #
+    #    networks: 
+    #        - database
+    
+    backend:
+        container_name: safe-events
+        image: safe-events/backend:0.1.0
+        restart: always
         ports:
-            - 8080:27017
-        environment:
-            MONGO_INITDB_DATABASE: safe-events-db
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: rootpwd
-        #env_file:
-        #    - .env
-        volumes:
-            - mongodb_data_volume:/data/db
-            #- ./.docker/mongodb/mongod.conf:/etc/mongod.conf
-            #- ./.docker/mongodb/initdb.d/:/docker-entrypoint-initdb.d/
-            #- ./.docker/mongodb/data/db/:/data/db/
-            #- ./.docker/mongodb/data/log/:/var/log/mongodb/
-
+            - 9090:9090
         networks: 
             - database
-    
-    # backend:
-    #     container_name: safe-events
-    #     image: safe-events/backend:0.1.0
-    #     restart: always
-    #     ports:
-    #         - 9090:9090
-    #     networks: 
-    #         - database
-    #     environment: 
-    #         SERVICE_PORT: 9090
-    #         SERVICE_NETW: tcp
-    #         MONGO_URL: mongodb://mongo:27017
+        environment: 
+            SERVICE_PORT: 9090
+            SERVICE_NETW: tcp
+            MONGO_USR: backend
+            MONGO_PWD: safe-events-backend
             
 networks:
     # Database network is the bridge between domain environment and the sql databases
