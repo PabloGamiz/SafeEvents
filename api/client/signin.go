@@ -13,7 +13,7 @@ import (
 
 // HandleSigninRequest attends a signin request
 func HandleSigninRequest(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Handlering a Signin request: %+v", r.Body)
+	log.Printf("Handlering a Signin request")
 
 	// Expected data for a Signup request
 	var signinDTO clientDTO.SigninRequestDTO
