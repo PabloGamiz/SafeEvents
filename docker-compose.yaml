@@ -34,6 +34,8 @@ services:
         environment: 
             SERVICE_PORT: 9090
             SERVICE_NETW: tcp
+            MONGO_USR: backend
+            MONGO_PWD: safe-events-backend
             
 networks:
     # Database network is the bridge between domain environment and the sql databases

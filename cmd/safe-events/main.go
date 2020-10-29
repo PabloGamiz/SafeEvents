@@ -8,7 +8,6 @@ import (
 	"os"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/api"
-	"github.com/joho/godotenv"
 )
 
 const (
@@ -52,9 +51,9 @@ func address() (address string) {
 func main() {
 	// to change the flags on the default logger
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	if err := godotenv.Load("../../testing.env"); err != nil {
-		log.Panicf(errDotenvLoad, err.Error())
-	}
+	//if err := godotenv.Load("../../testing.env"); err != nil {
+	//	log.Panicf(errDotenvLoad, err.Error())
+	//}
 
 	address := address()
 	network := network()
