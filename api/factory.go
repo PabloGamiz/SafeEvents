@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/api/client"
+	"github.com/PabloGamiz/SafeEvents-Backend/api/events"
 	"github.com/gorilla/mux"
 )
 

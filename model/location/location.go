@@ -1,21 +1,25 @@
 package location
 
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
 // Location represents the Location class from UML.
 type Location struct {
-	ID          string `json:"id" bson:"_id,omitempty"`
-	Name        string `json:"name" bson:"name,omitempty"`
-	Address     string `json:"address" bson:"address,omitempty"`
-	Coordinates string `json:"coordinates" bson:"coordinates,omitempty"`
-	Extension   int    `json:"extension" bson:"extension,omitempty"`
+	ID          primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Name        string             `json:"name" bson:"name,omitempty"`
+	Address     string             `json:"address" bson:"address,omitempty"`
+	Coordinates string             `json:"coordinates" bson:"coordinates,omitempty"`
+	Extension   int                `json:"extension" bson:"extension,omitempty"`
 }
 
 // GetID return the ID of the Location.
-func (location *Location) GetID() string {
+func (location *Location) GetID() primitive.ObjectID {
 	return location.ID
 }
 
 // SetID sets the Name of the Location.
-func (location *Location) SetID(id string) {
+func (location *Location) SetID(id primitive.ObjectID) {
 	location.ID = id
 }
 

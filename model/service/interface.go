@@ -18,6 +18,6 @@ type Controller interface {
 	SetKind(kind Kind)
 	GetLocation() location.Location
 	SetLocation(location location.Location)
-	GetProducts() product.Product
+	GetProducts() []product.Product
 	SetProducts(products []product.Product)
 }

@@ -1,21 +1,23 @@
 package product
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 // Product represents the product class from UML
 type Product struct {
-	ID          string `json:"id" bson:"_id,omitempty"`
-	Name        string `json:"name" bson:"name,omitempty"`
-	Description string `json:"description" bson:"description,omitempty"`
-	Price       int    `json:"price" bson:"price,omitempty"`
-	Status      Status `json:"status" bson:"status,omitempty"`
+	ID          primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Name        string             `json:"name" bson:"name,omitempty"`
+	Description string             `json:"description" bson:"description,omitempty"`
+	Price       int                `json:"price" bson:"price,omitempty"`
+	Status      Status             `json:"status" bson:"status,omitempty"`
 }
 
 // GetID return the ID of the Product.
-func (product *Product) GetID() string {
+func (product *Product) GetID() primitive.ObjectID {
 	return product.ID
 }
 
 // SetID sets a new id to the model
-func (product *Product) SetID(id string) { //TODO: El tipus del ID ha de ser primitive.ObjectID o int o string (...) ?
+func (product *Product) SetID(id primitive.ObjectID) { //TODO: El tipus del ID ha de ser primitive.ObjectID o int o string (...) ?
 	product.ID = id
 }
 

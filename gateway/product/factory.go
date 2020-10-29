@@ -24,8 +24,8 @@ func FindProductByID(ctx context.Context, id string) (gw Gateway, err error) {
 
 	defer mongoClient.Disconnect(ctx)
 	col := mongoClient.Database(mongo.Database).Collection(collection)
-	model := &product.Product{}
 
+	var model product.Product
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return
@@ -35,6 +35,6 @@ func FindProductByID(ctx context.Context, id string) (gw Gateway, err error) {
 		return
 	}
 
-	gw = &productGateway{Controller: model, ctx: ctx}
+	gw = &productGateway{Controller: &model, ctx: ctx}
 	return
 }

@@ -1,23 +1,22 @@
-package location
+package event
 
 import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/mongo"
 	"go.mongodb.org/mongo-driver/bson"
 	mongodb "go.mongodb.org/mongo-driver/mongo"
 )
 
-// NewLocationGateway builds a gateway for the provided location
-func NewLocationGateway(ctx context.Context, location location.Controller) Gateway {
-	return &locationGateway{Controller: location, ctx: ctx}
+// NewEventGateway builds a gateway for the provided event
+func NewEventGateway(ctx context.Context, event event.Controller) Gateway {
+	return &eventGateway{Controller: event, ctx: ctx}
 }
 
-// FindLocationByID returns the gateway for the location that match the provided Id
-func FindLocationByID(ctx context.Context, id string) (gw Gateway, err error) {
+// FindEventByID returns the gateway for the event that match the provided Id
+func FindEventByID(ctx context.Context, id string) (gw Gateway, err error) {
 	var mongoClient *mongodb.Client
 	if mongoClient, err = mongo.NewMongoClient(ctx); err != nil {
 		return
@@ -26,7 +25,7 @@ func FindLocationByID(ctx context.Context, id string) (gw Gateway, err error) {
 	defer mongoClient.Disconnect(ctx)
 	col := mongoClient.Database(mongo.Database).Collection(collection)
 
-	var model location.Location
+	var model event.Event
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return

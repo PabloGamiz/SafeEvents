@@ -3,68 +3,57 @@ package location
 import (
 	"context"
 	"fmt"
-	"sync"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/mongo"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	mongodb "go.mongodb.org/mongo-driver/mongo"
 )
 
 type locationGateway struct {
 	location.Controller
-	ctx   context.Context
-	mongo *mongodb.Client
-	mu    sync.Mutex
+	ctx context.Context
 }
 
-func (location *locationGateway) iniMongoClient() (err error) {
-	location.mu.Lock()
-	defer location.mu.Unlock()
-
-	if location.mongo == nil {
-		var mongoClient *mongodb.Client
-		if mongoClient, err = mongo.NewMongoClient(location.ctx); err == nil {
-			location.mongo = mongoClient
-		}
-	}
-
-	return
-}
-
-func (location *locationGateway) getMongoClient() (mongo *mongodb.Client, err error) {
-	if location.mongo == nil {
-		err = location.iniMongoClient()
-	}
-
-	mongo = location.mongo
-	return
-}
-
-func (location *locationGateway) Insert() (err error) {
+func (gw *locationGateway) Insert() (err error) {
 	var c *mongodb.Client
-	if c, err = location.getMongoClient(); err != nil {
+	if c, err = mongo.NewMongoClient(gw.ctx); err != nil {
 		return
 	}
 
+	defer c.Disconnect(gw.ctx)
 	col := c.Database(mongo.Database).Collection(collection)
 	var result *mongodb.InsertOneResult
-	if result, err = col.InsertOne(location.ctx, location); err != nil {
+	if result, err = col.InsertOne(gw.ctx, gw.Controller); err != nil {
 		return
 	}
 
-	parsed, ok := result.InsertedID.(string)
+	parsed, ok := result.InsertedID.(primitive.ObjectID)
 	if !ok {
-		err = fmt.Errorf("Got an error while parsing InsertOneResult: %+v", result)
+		err = fmt.Errorf(errInsertOneResultParse, result)
 		return
 	}
-	location.SetID(parsed)
+
+	gw.SetID(parsed)
 	return
 }
 
-func (location *locationGateway) Update() error {
+func (gw *locationGateway) Update() (err error) {
+	var c *mongodb.Client
+	if c, err = mongo.NewMongoClient(gw.ctx); err != nil {
+		return
+	}
+
+	defer c.Disconnect(gw.ctx)
 	return nil
 }
 
-func (location *locationGateway) Remove() error {
+func (gw *locationGateway) Remove() (err error) {
+	var c *mongodb.Client
+	if c, err = mongo.NewMongoClient(gw.ctx); err != nil {
+		return
+	}
+
+	defer c.Disconnect(gw.ctx)
 	return nil
 }

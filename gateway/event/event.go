@@ -1,21 +1,21 @@
-package product
+package event
 
 import (
 	"context"
 	"fmt"
 
-	"github.com/PabloGamiz/SafeEvents-Backend/model/product"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/mongo"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	mongodb "go.mongodb.org/mongo-driver/mongo"
 )
 
-type productGateway struct {
-	product.Controller
+type eventGateway struct {
+	location.Controller
 	ctx context.Context
 }
 
-func (gw *productGateway) Insert() (err error) {
+func (gw *eventGateway) Insert() (err error) {
 	var c *mongodb.Client
 	if c, err = mongo.NewMongoClient(gw.ctx); err != nil {
 		return
@@ -38,7 +38,7 @@ func (gw *productGateway) Insert() (err error) {
 	return
 }
 
-func (gw *productGateway) Update() (err error) {
+func (gw *eventGateway) Update() (err error) {
 	var c *mongodb.Client
 	if c, err = mongo.NewMongoClient(gw.ctx); err != nil {
 		return
@@ -48,7 +48,7 @@ func (gw *productGateway) Update() (err error) {
 	return nil
 }
 
-func (gw *productGateway) Remove() (err error) {
+func (gw *eventGateway) Remove() (err error) {
 	var c *mongodb.Client
 	if c, err = mongo.NewMongoClient(gw.ctx); err != nil {
 		return

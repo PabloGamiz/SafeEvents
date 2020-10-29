@@ -16,9 +16,9 @@ type Event struct {
 	Capacity    int                  `json:"capacity" bson:"capacity,omitempty"`
 	CheckInDate time.Time            `json:"checkInDate" bson:"checkInDate,omitempty"`
 	ClosureDate time.Time            `json:"closureDate" bson:"closureDate,omitempty"`
-	Location    location.Controller  `json:"location"`
-	Organizers  []client.Controller  `json:"organizers"`
-	Services    []service.Controller `json:"services"`
+	Location    location.Controller  `json:"location" bson:"location"`
+	Organizers  []client.Controller  `json:"organizers" bson:"organizers"`
+	Services    []service.Controller `json:"services" bson:"services"`
 }
 
 // GetID return the ID of the Event.

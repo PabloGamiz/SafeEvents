@@ -3,68 +3,57 @@ package service
 import (
 	"context"
 	"fmt"
-	"sync"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
 	"github.com/PabloGamiz/SafeEvents-Backend/mongo"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	mongodb "go.mongodb.org/mongo-driver/mongo"
 )
 
 type serviceGateway struct {
 	service.Controller
-	ctx   context.Context
-	mongo *mongodb.Client
-	mu    sync.Mutex
+	ctx context.Context
 }
 
-func (service *serviceGateway) iniMongoClient() (err error) {
-	service.mu.Lock()
-	defer service.mu.Unlock()
-
-	if service.mongo == nil {
-		var mongoClient *mongodb.Client
-		if mongoClient, err = mongo.NewMongoClient(service.ctx); err == nil {
-			service.mongo = mongoClient
-		}
-	}
-
-	return
-}
-
-func (service *serviceGateway) getMongoClient() (mongo *mongodb.Client, err error) {
-	if service.mongo == nil {
-		err = service.iniMongoClient()
-	}
-
-	mongo = service.mongo
-	return
-}
-
-func (service *serviceGateway) Insert() (err error) {
+func (gw *serviceGateway) Insert() (err error) {
 	var c *mongodb.Client
-	if c, err = service.getMongoClient(); err != nil {
+	if c, err = mongo.NewMongoClient(gw.ctx); err != nil {
 		return
 	}
 
+	defer c.Disconnect(gw.ctx)
 	col := c.Database(mongo.Database).Collection(collection)
 	var result *mongodb.InsertOneResult
-	if result, err = col.InsertOne(service.ctx, service); err != nil {
+	if result, err = col.InsertOne(gw.ctx, gw.Controller); err != nil {
 		return
 	}
 
-	parsed, ok := result.InsertedID.(string)
+	parsed, ok := result.InsertedID.(primitive.ObjectID)
 	if !ok {
-		err = fmt.Errorf("Got an error while parsing InsertOneResult: %+v", result)
+		err = fmt.Errorf(errInsertOneResultParse, result)
 		return
 	}
-	service.setID(parsed)
+
+	gw.SetID(parsed)
 	return
 }
 
-func (client *clientGateway) Update() error {
+func (gw *serviceGateway) Update() (err error) {
+	var c *mongodb.Client
+	if c, err = mongo.NewMongoClient(gw.ctx); err != nil {
+		return
+	}
+
+	defer c.Disconnect(gw.ctx)
 	return nil
 }
 
-func (client *clientGateway) Remove() error {
+func (gw *serviceGateway) Remove() (err error) {
+	var c *mongodb.Client
+	if c, err = mongo.NewMongoClient(gw.ctx); err != nil {
+		return
+	}
+
+	defer c.Disconnect(gw.ctx)
 	return nil
 }
