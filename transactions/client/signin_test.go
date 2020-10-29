@@ -31,10 +31,12 @@ func TestPostcondition(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 
-	if _, err := subject.Postcondition(ctx); err != nil {
+	response, err := subject.Postcondition(ctx)
+	if err != nil {
 		t.Fatalf("Got error %s; while executing Postcondition", err.Error())
 	}
 
+	log.Printf("Session response set as %+v", response)
 	session.AllInstancesByEmail.Range(func(key interface{}, value interface{}) bool {
 		log.Printf("Got session for email %s", key)
 		return true

@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 
@@ -12,6 +13,8 @@ import (
 
 // HandleSigninRequest attends a signin request
 func HandleSigninRequest(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Handlering a Signin request: %+v", r.Body)
+
 	// Expected data for a Signup request
 	var signinDTO clientDTO.SigninRequestDTO
 	if err := json.NewDecoder(r.Body).Decode(&signinDTO); err != nil {
