@@ -3,8 +3,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/PabloGamiz/SafeEvents-Backend/api/events"
-	"github.com/PabloGamiz/SafeEvents-Backend/api/users"
+	"github.com/PabloGamiz/SafeEvents-Backend/api/client"
 	"github.com/gorilla/mux"
 )
 
@@ -13,9 +12,8 @@ func NewServer() Server {
 	api := &api{}
 
 	router := mux.NewRouter()
-
-	// Users router Handlers
-	router.HandleFunc("/signup", users.HandleSignupRequest).Methods(http.MethodPost)
+	router.HandleFunc(client.APIPath, client.HandleSigninRequest).Methods(http.MethodPost)
+	//router.HandleFunc("/client/{ID:[a-zA-Z0-9_]+}", api.getClient).Methods(http.MethodGet)
 
 	// Events router Handlers
 	router.HandleFunc("/events/list", events.HandleListEventsRequest).Methods(http.MethodGet)

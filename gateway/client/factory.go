@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/mongo"
@@ -23,12 +24,13 @@ func FindClientByEmail(ctx context.Context, email string) (gw Gateway, err error
 
 	defer mongoClient.Disconnect(ctx)
 	col := mongoClient.Database(mongo.Database).Collection(collection)
-	model := &client.Client{}
 
-	if err = col.FindOne(ctx, bson.M{"email": email}).Decode(model); err != nil {
+	var model client.Client
+	if err = col.FindOne(ctx, bson.M{"email": email}).Decode(&model); err != nil {
+		err = fmt.Errorf("Got error %s, while searching for email %s", err.Error(), email)
 		return
 	}
 
-	gw = &clientGateway{Controller: model, ctx: ctx}
+	gw = &clientGateway{Controller: &model, ctx: ctx}
 	return
 }
