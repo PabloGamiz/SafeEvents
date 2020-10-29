@@ -11,7 +11,7 @@ const (
 	// Database consultable by the app
 	Database = "safe-events-db"
 	// Timeout for any database request
-	Timeout = 3 * time.Second
+	Timeout = 3600 * time.Second
 
 	errNoMongoURI  = "No mongo uri has been provided"
 	errNoMongoUsr  = "No mongo user has been provided"

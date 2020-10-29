@@ -12,8 +12,8 @@ import (
 )
 
 var (
-	allInstancesByID    = &sync.Map{}
-	allInstancesByEmail = &sync.Map{}
+	AllInstancesByID    = &sync.Map{}
+	AllInstancesByEmail = &sync.Map{}
 )
 
 type sID string
@@ -23,19 +23,19 @@ func registerSession(session *Session) (err error) {
 	sid := sID(session.Cookie())
 	email := email(session.GetEmail())
 
-	if _, exists := allInstancesByID.Load(sid); exists {
+	if _, exists := AllInstancesByID.Load(sid); exists {
 		return fmt.Errorf("Session with the provided ID already exists")
-	} else if _, exists = allInstancesByEmail.Load(email); exists {
+	} else if _, exists = AllInstancesByEmail.Load(email); exists {
 		return fmt.Errorf("There is already a session for the provided user email")
 	}
 
-	allInstancesByID.Store(sid, session)
-	allInstancesByEmail.Store(email, session)
+	AllInstancesByID.Store(sid, session)
+	AllInstancesByEmail.Store(email, session)
 	return
 }
 
 func removeSession(sid sID) (err error) {
-	content, exists := allInstancesByID.Load(sid)
+	content, exists := AllInstancesByID.Load(sid)
 	if !exists {
 		return fmt.Errorf(errSessionNotExists, sid)
 	}
@@ -46,8 +46,8 @@ func removeSession(sid sID) (err error) {
 	}
 
 	email := email(session.GetEmail())
-	allInstancesByID.Delete(sid)
-	allInstancesByEmail.Delete(email)
+	AllInstancesByID.Delete(sid)
+	AllInstancesByEmail.Delete(email)
 	return
 }
 
@@ -66,7 +66,7 @@ func newSessionID() (id sID, err error) {
 func GetSessionByID(cookie string) (ctrl Controller, err error) {
 	sid := sID(cookie)
 
-	content, exists := allInstancesByID.Load(sid)
+	content, exists := AllInstancesByID.Load(sid)
 	if !exists {
 		err = fmt.Errorf(errSessionNotExists, cookie)
 		return
@@ -84,7 +84,7 @@ func GetSessionByID(cookie string) (ctrl Controller, err error) {
 func GetSessionByEmail(mail string) (ctrl Controller, err error) {
 	email := email(mail)
 
-	content, exists := allInstancesByEmail.Load(email)
+	content, exists := AllInstancesByEmail.Load(email)
 	if !exists {
 		err = fmt.Errorf(errSessionNotExists, email)
 		return

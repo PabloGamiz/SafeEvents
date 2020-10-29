@@ -15,16 +15,16 @@ type clientGateway struct {
 	ctx context.Context
 }
 
-func (client *clientGateway) Insert() (err error) {
+func (gw *clientGateway) Insert() (err error) {
 	var c *mongodb.Client
-	if c, err = mongo.NewMongoClient(client.ctx); err != nil {
+	if c, err = mongo.NewMongoClient(gw.ctx); err != nil {
 		return
 	}
 
-	defer c.Disconnect(client.ctx)
+	defer c.Disconnect(gw.ctx)
 	col := c.Database(mongo.Database).Collection(collection)
 	var result *mongodb.InsertOneResult
-	if result, err = col.InsertOne(client.ctx, client); err != nil {
+	if result, err = col.InsertOne(gw.ctx, gw.Controller); err != nil {
 		return
 	}
 
@@ -34,26 +34,26 @@ func (client *clientGateway) Insert() (err error) {
 		return
 	}
 
-	client.SetID(&parsed)
+	gw.SetID(parsed)
 	return
 }
 
-func (client *clientGateway) Update() (err error) {
+func (gw *clientGateway) Update() (err error) {
 	var c *mongodb.Client
-	if c, err = mongo.NewMongoClient(client.ctx); err != nil {
+	if c, err = mongo.NewMongoClient(gw.ctx); err != nil {
 		return
 	}
 
-	defer c.Disconnect(client.ctx)
+	defer c.Disconnect(gw.ctx)
 	return nil
 }
 
-func (client *clientGateway) Remove() (err error) {
+func (gw *clientGateway) Remove() (err error) {
 	var c *mongodb.Client
-	if c, err = mongo.NewMongoClient(client.ctx); err != nil {
+	if c, err = mongo.NewMongoClient(gw.ctx); err != nil {
 		return
 	}
 
-	defer c.Disconnect(client.ctx)
+	defer c.Disconnect(gw.ctx)
 	return nil
 }

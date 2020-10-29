@@ -59,21 +59,20 @@ func (tx *txSignin) Postcondition(ctx context.Context) (v interface{}, err error
 	// SIGNUP //
 	var gw clientGW.Gateway
 	if gw, err = clientGW.FindClientByEmail(ctx, tx.info.Email); err != nil {
-		log.Printf("Signing up a new user %s", tx.info.Email)
+		log.Printf("Signing up a new client %s", tx.info.Email)
 		if err = tx.registerNewClient(ctx); err != nil {
 			return
 		}
 	}
 
 	// LOGIN //
-	log.Printf("Loging in the user %s", tx.info.Email)
+	log.Printf("Loging in the client %s", tx.info.Email)
 	if gw, err = clientGW.FindClientByEmail(ctx, tx.info.Email); err != nil {
 		// At this point the client must be stored in the database
 		return
 	}
 
-	log.Printf("Got a duration for the current session of %v unix", tx.info.ExpiresIn)
-
+	log.Printf("Building session for client %s", gw.GetEmail())
 	deadline := time.Unix(tx.info.ExpiresIn, 0)
 	sessCtx, _ := context.WithDeadline(context.TODO(), deadline)
 	if sess, err = sessionMOD.NewSession(sessCtx, gw); err != nil {
@@ -81,6 +80,7 @@ func (tx *txSignin) Postcondition(ctx context.Context) (v interface{}, err error
 	}
 
 	response := tx.buildSessionResponseDTO(sess)
+	log.Printf("Got a cookie %s for client %v", response.Cookie, sess.GetEmail())
 	return response, nil
 }
 

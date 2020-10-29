@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/api"
+	"github.com/joho/godotenv"
 )
 
 const (
@@ -16,8 +17,9 @@ const (
 	infoSetup = "The server is being started on %s%s"
 	infoDone  = "The service has finished successfully"
 
-	errListenFailed = "Service has failed listening: %v"
-	errServeFailed  = "Service has failed serving: %v"
+	errDotenvLoad   = "Service has failed loading dotenv: %s"
+	errListenFailed = "Service has failed listening: %s"
+	errServeFailed  = "Service has failed serving: %s"
 
 	envPortKey = "SERVICE_PORT"
 	envNetwKey = "SERVICE_NETW"
@@ -50,6 +52,9 @@ func address() (address string) {
 func main() {
 	// to change the flags on the default logger
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	if err := godotenv.Load("../../testing.env"); err != nil {
+		log.Panicf(errDotenvLoad, err.Error())
+	}
 
 	address := address()
 	network := network()
