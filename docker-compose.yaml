@@ -44,9 +44,9 @@ services:
             MONGO_PWD: safe-events-backend
             MYSQL_HOST: safe-events-mysql
             MYSQL_PORT: 3306
-            MYSQL_USR: safe-events-backend
+            MYSQL_USR: backend
             MYSQL_PWD: backendpwd
-            MYSQL_DB: safe-events-db
+            MYSQL_DB: SafeEvents
             
 networks:
     # Database network is the bridge between domain environment and the sql databases
