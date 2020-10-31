@@ -38,6 +38,8 @@ github.com/alvidir/mastermind v0.0.0-20200707215215-d027836ca45e h1:tsaOiBYY47ec
 github.com/alvidir/tp-auth v0.0.0-20201013231921-efb4c73a10c7 h1:USsfpBCympQ1wjJgIy7V8CWPxvgC3wLSBG1TNg4gEb8=
 github.com/alvidir/util v0.0.0-20200928183113-0a80c7d7b41d h1:X5U1YinVsqX2RhH4zt5HzEdxHTuQ2t2I52mW3zS/6mo=
 github.com/alvidir/util v0.0.0-20200928183113-0a80c7d7b41d/go.mod h1:utm+V6pEDV/IS/cqbG6oAjwe1JsaIwGHq+RjNbc6QCE=
+github.com/alvidir/util v0.0.0-20201031005445-47c6877f5e28 h1:g+O8ww6I3UGGo1bZOiP2mu43uy0Iyuj724IPkMlfHOw=
+github.com/alvidir/util v0.0.0-20201031005445-47c6877f5e28/go.mod h1:utm+V6pEDV/IS/cqbG6oAjwe1JsaIwGHq+RjNbc6QCE=
 github.com/aws/aws-sdk-go v1.34.28 h1:sscPpn/Ns3i0F4HPEWAVcwdIRaZZCuL7llJ2/60yPIk=
 github.com/aws/aws-sdk-go v1.34.28/go.mod h1:H7NKnBqNVzoTJpGfLrQkkD+ytBA93eiDYi/+8rV9s48=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
@@ -55,6 +57,7 @@ github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7
 github.com/go-gl/glfw v0.0.0-20190409004039-e6da0acd62b1/go.mod h1:vR7hzQXu2zJy9AVAgeJqvqgH9Q5CA+iKCZ2gyEVpxRU=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20191125211704-12ad95a8df72/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200222043503-6f7a984d4dc4/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
+github.com/go-sql-driver/mysql v1.5.0 h1:ozyZYNQW3x3HtqT1jira07DN2PArx2v7/mN66gGcHOs=
 github.com/go-sql-driver/mysql v1.5.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
 github.com/go-stack/stack v1.8.0 h1:5SgMzNM5HxrEjV0ww2lTmX6E2Izsfxas4+YHWRs3Lsk=
 github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/melR3HDY=

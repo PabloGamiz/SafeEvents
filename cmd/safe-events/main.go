@@ -16,7 +16,7 @@ const (
 	infoSetup = "The server is being started on %s%s"
 	infoDone  = "The service has finished successfully"
 
-	errDotenvLoad   = "Service has failed loading dotenv: %s"
+	errDotenvConfig = "Service has failed setting up dotenv: %s"
 	errListenFailed = "Service has failed listening: %s"
 	errServeFailed  = "Service has failed serving: %s"
 
@@ -51,8 +51,8 @@ func address() (address string) {
 func main() {
 	// to change the flags on the default logger
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	//if err := godotenv.Load("../../testing.env"); err != nil {
-	//	log.Panicf(errDotenvLoad, err.Error())
+	//if err := godotenv.Load(); err != nil {
+	//	log.Panicf(errDotenvConfig, err.Error())
 	//}
 
 	address := address()
