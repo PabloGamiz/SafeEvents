@@ -7,6 +7,7 @@ import (
 
 	clientDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
 	clientGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/client"
+	"github.com/PabloGamiz/SafeEvents-Backend/google"
 	clientMOD "github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	sessionMOD "github.com/PabloGamiz/SafeEvents-Backend/model/session"
 	"google.golang.org/api/oauth2/v2"
@@ -39,13 +40,13 @@ func (tx *txSignin) registerNewClient(ctx context.Context) (err error) {
 
 // Precondition validates the transaction is ready to run
 func (tx *txSignin) Precondition() (err error) {
-	//tx.info, err = google.VerifyTokenID(tx.request.TokenID)
+	tx.info, err = google.VerifyTokenID(tx.request.TokenID)
 	return
 }
 
 // Postcondition creates new user and a opens its first session
 func (tx *txSignin) Postcondition(ctx context.Context) (v interface{}, err error) {
-	log.Printf("Got a Signin request for client" /*tx.info.Email*/)
+	log.Printf("Got a Signin request for client %s", tx.info.Email)
 
 	// SESSION //
 	var sess sessionMOD.Controller
