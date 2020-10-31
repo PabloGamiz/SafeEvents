@@ -11,6 +11,8 @@ services:
             - "dbdump:/docker-entrypoint-initdb.d"
         networks: 
             - database
+        ports:
+            - "3306:3306"
     
     myadmin:
         container_name: safe-events-myadmin
