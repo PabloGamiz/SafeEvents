@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"log"
+	"time"
 
 	clientDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
 	clientGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/client"
@@ -47,43 +48,38 @@ func (tx *txSignin) Postcondition(ctx context.Context) (v interface{}, err error
 	log.Printf("Got a Signin request for client" /*tx.info.Email*/)
 
 	// SESSION //
-	//var sess sessionMOD.Controller
-	//if sess, err = sessionMOD.GetSessionByEmail(tx.info.Email); err == nil {
-	//	log.Printf("The session for %s already exists", tx.info.Email)
-	//	response := tx.buildSessionResponseDTO(sess)
-	//	return response, nil
-	//}
-	//
-	//// SIGNUP //
-	//var gw clientGW.Gateway
-	//if gw, err = clientGW.FindClientByEmail(ctx, tx.info.Email); err != nil {
-	//	log.Printf("Signing up a new client %s", tx.info.Email)
-	//	if err = tx.registerNewClient(ctx); err != nil {
-	//		return
-	//	}
-	//}
-	//
-	//// LOGIN //
-	//log.Printf("Loging in the client %s", tx.info.Email)
-	//if gw, err = clientGW.FindClientByEmail(ctx, tx.info.Email); err != nil {
-	//	// At this point the client must be stored in the database
-	//	return
-	//}
-	//
-	//log.Printf("Building session for client %s", gw.GetEmail())
-	//deadline := time.Unix(tx.info.ExpiresIn, 0)
-	//sessCtx, _ := context.WithDeadline(context.TODO(), deadline)
-	//if sess, err = sessionMOD.NewSession(sessCtx, gw); err != nil {
-	//	return
-	//}
-
-	//response := tx.buildSessionResponseDTO(sess)
-	//log.Printf("Got a cookie %s for client %v", response.Cookie, sess.GetEmail())
-	response := &clientDTO.SigninResponseDTO{
-		Cookie:   "hello-world",
-		Deadline: 1234,
+	var sess sessionMOD.Controller
+	if sess, err = sessionMOD.GetSessionByEmail(tx.info.Email); err == nil {
+		log.Printf("The session for %s already exists", tx.info.Email)
+		response := tx.buildSessionResponseDTO(sess)
+		return response, nil
 	}
 
+	// SIGNUP //
+	var gw clientGW.Gateway
+	if gw, err = clientGW.FindClientByEmail(ctx, tx.info.Email); err != nil {
+		log.Printf("Signing up a new client %s", tx.info.Email)
+		if err = tx.registerNewClient(ctx); err != nil {
+			return
+		}
+	}
+
+	// LOGIN //
+	log.Printf("Loging in the client %s", tx.info.Email)
+	if gw, err = clientGW.FindClientByEmail(ctx, tx.info.Email); err != nil {
+		// At this point the client must be stored in the database
+		return
+	}
+
+	log.Printf("Building session for client %s", gw.GetEmail())
+	deadline := time.Unix(tx.info.ExpiresIn, 0)
+	sessCtx, _ := context.WithDeadline(context.TODO(), deadline)
+	if sess, err = sessionMOD.NewSession(sessCtx, gw); err != nil {
+		return
+	}
+
+	response := tx.buildSessionResponseDTO(sess)
+	log.Printf("Got a cookie %s for client %v", response.Cookie, sess.GetEmail())
 	return response, nil
 }
 
