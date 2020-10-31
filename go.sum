@@ -38,6 +38,7 @@ github.com/alvidir/mastermind v0.0.0-20200707215215-d027836ca45e h1:tsaOiBYY47ec
 github.com/alvidir/tp-auth v0.0.0-20201013231921-efb4c73a10c7 h1:USsfpBCympQ1wjJgIy7V8CWPxvgC3wLSBG1TNg4gEb8=
 github.com/alvidir/util v0.0.0-20200928183113-0a80c7d7b41d h1:X5U1YinVsqX2RhH4zt5HzEdxHTuQ2t2I52mW3zS/6mo=
 github.com/alvidir/util v0.0.0-20200928183113-0a80c7d7b41d/go.mod h1:utm+V6pEDV/IS/cqbG6oAjwe1JsaIwGHq+RjNbc6QCE=
+github.com/alvidir/util v0.0.0-20201031005445-47c6877f5e28 h1:g+O8ww6I3UGGo1bZOiP2mu43uy0Iyuj724IPkMlfHOw=
 github.com/aws/aws-sdk-go v1.34.28 h1:sscPpn/Ns3i0F4HPEWAVcwdIRaZZCuL7llJ2/60yPIk=
 github.com/aws/aws-sdk-go v1.34.28/go.mod h1:H7NKnBqNVzoTJpGfLrQkkD+ytBA93eiDYi/+8rV9s48=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
@@ -475,6 +476,8 @@ honnef.co/go/tools v0.0.0-20190523083050-ea95bdfd59fc/go.mod h1:rf3lG4BRIbNafJWh
 honnef.co/go/tools v0.0.1-2019.2.3/go.mod h1:a3bituU0lyd329TUQxRnasdCoJDkEUEAqEt0JzvZhAg=
 honnef.co/go/tools v0.0.1-2020.1.3/go.mod h1:X/FiERA/W4tHapMX5mGpAtMSVEeEUOyHaw9vFzvIQ3k=
 honnef.co/go/tools v0.0.1-2020.1.4/go.mod h1:X/FiERA/W4tHapMX5mGpAtMSVEeEUOyHaw9vFzvIQ3k=
+labix.org/v2/mgo v0.0.0-20140701140051-000000000287 h1:L0cnkNl4TfAXzvdrqsYEmxOHOCv2p5I3taaReO8BWFs=
+labix.org/v2/mgo v0.0.0-20140701140051-000000000287/go.mod h1:Lg7AYkt1uXJoR9oeSZ3W/8IXLdvOfIITgZnommstyz4=
 rsc.io/binaryregexp v0.2.0/go.mod h1:qTv7/COck+e2FymRvadv62gMdZztPaShugOCi3I+8D8=
 rsc.io/quote/v3 v3.1.0/go.mod h1:yEA65RcK8LyAZtP9Kv3t0HmxON59tX3rD+tICJqUlj0=
 rsc.io/sampler v1.3.0/go.mod h1:T1hPZKmBbMNahiBKFy5HrXp6adAjACjK9JXDnKaTXpA=
