@@ -1,13 +1,9 @@
 package event
 
-import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
-)
-
 // Controller represents an Event and its main data.
-type Controller struct {
-	SetID(primitive.ObjectID)
-	GetID() *primitive.ObjectID
+type Controller interface {
+	GetID()
+	SetID()
 	GetTitle() string
 	SetTitle(title string)
 	GetDescription() string

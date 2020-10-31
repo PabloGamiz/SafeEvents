@@ -28,7 +28,7 @@ services:
         image: safe-events/backend:0.1.0
         restart: always
         ports:
-            - 80:9090
+            - 8080:9090
         networks: 
             - database
         environment: 

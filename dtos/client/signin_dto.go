@@ -1,4 +1,4 @@
-package dtos
+package client
 
 // SigninRequestDTO represents the expected data from a Signin request
 type SigninRequestDTO struct {

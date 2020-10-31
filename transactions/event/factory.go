@@ -1,10 +1,10 @@
-package users
+package event
 
 import (
 	"github.com/alvidir/util/pattern/transaction"
 )
 
-// NewTxSignup builds a brand new transaction for Signup
+// NewTxListEvents builds a brand new transaction for List Events
 func NewTxListEvents() transaction.Tx {
 	body := &txListEvents{}
 	return transaction.NewTransaction(body)

@@ -3,6 +3,8 @@ package event
 import (
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
+
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
@@ -10,7 +12,7 @@ import (
 
 // Event represents the Event class from UML.
 type Event struct {
-	ID          string               `json:"id" bson:"_id"`
+	ID          primitive.ObjectID   `json:"id" bson:"_id"`
 	Title       string               `json:"title" bson:"title,omitempty"`
 	Description string               `json:"description" bson:"description,omitempty"`
 	Capacity    int                  `json:"capacity" bson:"capacity,omitempty"`
@@ -22,13 +24,12 @@ type Event struct {
 }
 
 // GetID return the ID of the Event.
-func (event *Event) GetID() string {
-	return event.ID
+func (event *Event) GetID() {
 }
 
 // SetID sets the Name of the Event.
-func (event *Event) SetID(id string) {
-	event.ID = id
+func (event *Event) SetID() {
+
 }
 
 // GetTitle return the Name of the Event.
