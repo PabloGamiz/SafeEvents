@@ -1,0 +1,1 @@
+CREATE DATABASE 'safe-events-db' IF NOT EXISTS;

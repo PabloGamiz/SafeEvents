@@ -1,41 +1,52 @@
 version: '3.8'
 
 services:
-    #database:
-    #    container_name: mongo
-    #    image: mongo:4.2.10
-    #    restart: on-failure
-    #    ports:
-    #        - 8080:27017
-    #    environment:
-    #        MONGO_INITDB_DATABASE: safe-events-db
-    #        MONGO_INITDB_ROOT_USERNAME: root
-    #        MONGO_INITDB_ROOT_PASSWORD: rootpwd
-    #    #env_file:
-    #    #    - .env
-    #    volumes:
-    #        - mongodb_data_volume:/data/db
-    #        #- ./.docker/mongodb/mongod.conf:/etc/mongod.conf
-    #        #- ./.docker/mongodb/initdb.d/:/docker-entrypoint-initdb.d/
-    #        #- ./.docker/mongodb/data/db/:/data/db/
-    #        #- ./.docker/mongodb/data/log/:/var/log/mongodb/
-    #
-    #    networks: 
-    #        - database
+    # DATABASE
+    mysql:
+        container_name: safe-events-mysql
+        image: mysql/mysql-server:latest
+        restart: on-failure
+        volumes:
+            - "dbdata:/var/lib/mysql"
+            - "dbdump:/docker-entrypoint-initdb.d"
+        networks: 
+            - database
     
+    myadmin:
+        container_name: safe-events-myadmin
+        image: phpmyadmin/phpmyadmin:latest
+        restart: always
+        depends_on:
+            - mysql
+        ports:
+            - "9090:80"
+        networks: 
+            - database
+        environment: 
+            PMA_HOST: safe-events-mysql
+            PMA_PORT: 3306
+            PMA_USER: myadmin
+            PMA_PASSWORD: myadminpwd
+    
+    # BAKCEND
     backend:
         container_name: safe-events
         image: safe-events/backend:0.1.0
         restart: always
         ports:
-            - 8080:9090
+            - 8080:8080
         networks: 
             - database
         environment: 
-            SERVICE_PORT: 9090
+            SERVICE_PORT: 8080
             SERVICE_NETW: tcp
             MONGO_USR: backend
             MONGO_PWD: safe-events-backend
+            MYSQL_HOST: safe-events-mysql
+            MYSQL_PORT: 3306
+            MYSQL_USR: safe-events-backend
+            MYSQL_PWD: backendpwd
+            MYSQL_DB: safe-events-db
             
 networks:
     # Database network is the bridge between domain environment and the sql databases
@@ -44,4 +55,5 @@ networks:
         driver: bridge
 
 volumes:
-    mongodb_data_volume:
+    dbdata:
+    dbdump:
