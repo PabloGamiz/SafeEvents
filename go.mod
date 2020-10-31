@@ -11,4 +11,5 @@ require (
 	go.mongodb.org/mongo-driver v1.4.2
 	google.golang.org/api v0.34.0
 	google.golang.org/grpc v1.33.0
+	labix.org/v2/mgo v0.0.0-20140701140051-000000000287
 )
