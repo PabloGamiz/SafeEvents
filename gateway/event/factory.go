@@ -2,6 +2,7 @@ package event
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 	"github.com/PabloGamiz/SafeEvents-Backend/mongo"
@@ -14,15 +15,22 @@ func NewEventGateway(ctx context.Context, event event.Controller) Gateway {
 	return &NewEventGateway{Controller: event, ctx: ctx}
 }
 
-// FindEventByName ???
-func FindEventByID(ctx context.Context, id string) (gw Gateway, err error) {
-	
-	col .= mongoEvent.Database(mongo.Database).Collection(collection)
-	model :=  &event.Event{}
-	if err = col.FindOne(ctx, bson.M{ /*"id": id*/ }).Decode(model); err != nil {
+// FindEventByName returns the gateway for the event that match the provided name
+func FindEventByName(ctx context.Context, name string) (gw Gateway, err error) {
+	var mongoEvent *mongodb.Event
+	if mongoEvent, err = mongo.NewMongoEvent(ctx); err != nil {
 		return
 	}
 
-	//gw = &eventGateway{Controller:model, ctx:ctx}
-	//return
+	defer mongoEvent.Disconnect(ctx)
+	col := mongoEvent.Database(mongo.Database).Collection(collection)
+
+	var model event.Event
+	if err = col.FindOne(ctx, bson.M{"name": name}).Decode(&model); err != nil {
+		err = fmt.Errorf("Got error %s, while searching for name %s", err.Error(), email)
+		return
+	}
+
+	gw = &eventGateway{Controller: &model, ctx: ctx}
+	return
 }

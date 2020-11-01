@@ -3,10 +3,12 @@ package event
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 
 	eventDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/event"
+	"github.com/PabloGamiz/SafeEvents-Backend/transactions/event"
 )
 
 func HandlePublicaEventRequest(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +21,7 @@ func HandlePublicaEventRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Setting up TxPublicaevent with the required values
-	txPublicaEvent := event.NewTxPublicaEvent(eventDTO)
+	txPublicaEvent := event.NewtxPublicaEvent(eventDTO)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel() // ensures the context is canceled, at least once, at the end of this function
 
@@ -37,11 +39,22 @@ func HandlePublicaEventRequest(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
-func HandleAllEventsRequest(w http.ResponseWriter, r *http.Request) {
-	events, err := dao.FindAll()
+func HandleGetEventRequest(w http.ResponseWriter, r *http.Request) {
+	// Expected data for a Event request
+	log.Printf("Handlering a single event request")
+
+	txGetEvent := event.NewtxGetEvent()
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel() // ensures the context is canceled, at least once, at the end of this function
+
+	txPublicaEvent.Execute(ctx)
+	result, err := txPublicaEvent.Result()
+
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, err.Error())
+		http.Error(w, err.Error(), htttp.StatusConflict)
 		return
 	}
-	respondWithJson(w, http.StatusOK, events)
+	// Sending response
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
 }

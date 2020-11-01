@@ -14,7 +14,7 @@ type eventGateway struct {
 }
 
 func (event *eventGateway) Insert(event Event) (err error) {
-	err:= db.C(COLLECTION).Insert(&amp; event)
+	err:= db.C(COLLECTION).InsertOne(&amp; event)
 	return err
 }
 
