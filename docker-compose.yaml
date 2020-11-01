@@ -25,10 +25,10 @@ services:
         networks: 
             - database
         environment: 
-            PMA_HOST: safe-events-mysql
-            PMA_PORT: 3306
-            PMA_USER: myadmin
-            PMA_PASSWORD: myadminpwd
+            PMA_HOST: ${PMA_HOST}
+            PMA_PORT: ${PMA_PORT}
+            PMA_USER: ${PMA_USER}
+            PMA_PASSWORD: ${PMA_PASSWORD}
     
     # BAKCEND
     backend:
@@ -40,15 +40,17 @@ services:
         networks: 
             - database
         environment: 
-            SERVICE_PORT: 8080
-            SERVICE_NETW: tcp
-            MONGO_USR: backend
-            MONGO_PWD: safe-events-backend
-            MYSQL_HOST: safe-events-mysql
-            MYSQL_PORT: 3306
-            MYSQL_USR: backend
-            MYSQL_PWD: backendpwd
-            MYSQL_DB: SafeEvents
+            TEST: ${TEST}
+            OPEN_NEBULA_IP: ${OPEN_NEBULA_IP}
+            SERVICE_PORT: ${SERVICE_PORT}
+            SERVICE_NETW: ${SERVICE_NETW}
+            MYSQL_USR: ${MYSQL_USR}
+            MYSQL_PWD: ${MYSQL_PWD}
+            MYSQL_HOST: ${MYSQL_HOST}
+            MYSQL_PORT: ${MYSQL_PORT}
+            MYSQL_USR: ${MYSQL_USR}
+            MYSQL_PWD: ${MYSQL_PWD}
+            MYSQL_DB: ${MYSQL_DB}
             
 networks:
     # Database network is the bridge between domain environment and the sql databases

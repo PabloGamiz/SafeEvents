@@ -1,5 +1,9 @@
 package product
 
+import (
+	"time"
+)
+
 // Product represents the product class from UML
 type Product struct {
 	ID          uint   `json:"id"`
@@ -7,6 +11,8 @@ type Product struct {
 	Description string `json:"description"`
 	Price       int    `json:"price"`
 	Status      Status `json:"status"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 // GetID return the ID of the Product.

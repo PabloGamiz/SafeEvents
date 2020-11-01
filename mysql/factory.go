@@ -3,10 +3,12 @@ package mysql
 import (
 	"database/sql"
 	"database/sql/driver"
+	"os"
 	"time"
 
-	"github.com/alvidir/util/config"
 	"github.com/go-sql-driver/mysql"
+	gormSqlDriver "gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 func initMysqlConn() (interface{}, error) {
@@ -14,10 +16,6 @@ func initMysqlConn() (interface{}, error) {
 }
 
 func newMysqlDriver() (driver driver.Connector, err error) {
-	var envs []string
-	if envs, err = config.CheckNemptyEnv(EnvMysqlURL, EnvMysqlUser, EnvMysqlPwd, EnvMysqlDB); err != nil {
-		return
-	}
 
 	conn := mysql.NewConfig()
 
@@ -26,20 +24,24 @@ func newMysqlDriver() (driver driver.Connector, err error) {
 	conn.ReadTimeout = Timeout
 	conn.WriteTimeout = Timeout
 
-	conn.Addr = envs[0]
-	conn.DBName = envs[3]
-	conn.Passwd = envs[2]
-	conn.User = envs[1]
-	conn.Net = "tcp"
+	conn.Addr = os.Getenv("OPEN_NEBULA_IP")
+	conn.DBName = os.Getenv("MYSQL_DB")
+	conn.User = os.Getenv("MYSQL_USR")
+	conn.Passwd = os.Getenv("backendpwd")
+	conn.Net = os.Getenv("SERVICE_NETW")
+	conn.ParseTime = true
 
 	return mysql.NewConnector(conn)
 }
 
 // OpenStream returns a gateway to the mysql database
-func OpenStream() (db *sql.DB, err error) {
+func OpenStream() (gormDB *gorm.DB, err error) {
 	var conn driver.Connector
 	if conn, err = getConnInstance(); err == nil {
-		db = sql.OpenDB(conn)
+		db := sql.OpenDB(conn)
+		gormDB, err = gorm.Open(gormSqlDriver.New(gormSqlDriver.Config{
+			Conn: db,
+		}), &gorm.Config{})
 	}
 
 	return

@@ -51,9 +51,6 @@ func address() (address string) {
 func main() {
 	// to change the flags on the default logger
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	//if err := godotenv.Load(); err != nil {
-	//	log.Panicf(errDotenvConfig, err.Error())
-	//}
 
 	address := address()
 	network := network()

@@ -12,4 +12,6 @@ require (
 	go.mongodb.org/mongo-driver v1.4.2
 	google.golang.org/api v0.34.0
 	google.golang.org/grpc v1.33.0
+	gorm.io/driver/mysql v1.0.3
+	gorm.io/gorm v1.20.5
 )
