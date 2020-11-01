@@ -3,8 +3,6 @@ package event
 import (
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
-
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
@@ -12,24 +10,22 @@ import (
 
 // Event represents the Event class from UML.
 type Event struct {
-	ID          primitive.ObjectID   `json:"id" bson:"_id"`
-	Title       string               `json:"title" bson:"title,omitempty"`
-	Description string               `json:"description" bson:"description,omitempty"`
-	Capacity    int                  `json:"capacity" bson:"capacity,omitempty"`
-	CheckInDate time.Time            `json:"checkInDate" bson:"checkInDate,omitempty"`
-	ClosureDate time.Time            `json:"closureDate" bson:"closureDate,omitempty"`
-	Location    location.Controller  `json:"location" bson:"location"`
-	Organizers  []client.Controller  `json:"organizers" bson:"organizers"`
-	Services    []service.Controller `json:"services" bson:"services"`
+	ID          uint              `json:"id"`
+	Title       string            `json:"title"`
+	Description string            `json:"description"`
+	Capacity    int               `json:"capacity"`
+	CheckInDate time.Time         `json:"checkInDate"`
+	ClosureDate time.Time         `json:"closureDate"`
+	Location    location.Location `json:"location"`
+	Organizers  []client.Client   `json:"organizers"`
+	Services    []service.Service `json:"services"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 // GetID return the ID of the Event.
-func (event *Event) GetID() {
-}
-
-// SetID sets the Name of the Event.
-func (event *Event) SetID() {
-
+func (event *Event) GetID() uint {
+	return event.ID
 }
 
 // GetTitle return the Name of the Event.
@@ -83,17 +79,17 @@ func (event *Event) SetClosureDate(closureDate time.Time) {
 }
 
 // GetLocation return the Location of the Event.
-func (event *Event) GetLocation() location.Controller {
+func (event *Event) GetLocation() location.Location {
 	return event.Location
 }
 
 // SetLocation sets the Location of the Event.
-func (event *Event) SetLocation(location location.Controller) {
+func (event *Event) SetLocation(location location.Location) {
 	event.Location = location
 }
 
 // GetOrganizers return the Organizers of the Event.
-func (event *Event) GetOrganizers() []client.Controller {
+func (event *Event) GetOrganizers() []client.Client {
 	return event.Organizers
 }
 
@@ -103,6 +99,6 @@ func (event *Event) GetServices() time.Time {
 }
 
 // SetServices sets the Services of the Event.
-func (event *Event) SetServices(services []service.Controller) {
+func (event *Event) SetServices(services []service.Service) {
 	event.Services = services
 }

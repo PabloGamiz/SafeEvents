@@ -1,6 +1,8 @@
 package service
 
 import (
+	"time"
+
 	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/product"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -14,6 +16,8 @@ type Service struct {
 	Kind        Kind               `json:"kind" bson:"kind,omitempty"`
 	Location    location.Location  `json:"location" bson:"location"`
 	Products    []product.Product  `json:"products" bson:"products"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 // GetID return the ID of the Service.
