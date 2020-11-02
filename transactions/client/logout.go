@@ -3,10 +3,13 @@ package client
 import (
 	"context"
 	"log"
+
+	clientDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
 )
 
 // txLogout represents an
 type txLogout struct {
+	request clientDTO.LogoutRequestDTO
 }
 
 // Precondition validates the transaction is ready to run
@@ -16,7 +19,7 @@ func (tx *txLogout) Precondition() (err error) {
 
 // Postcondition creates new user and a opens its first session
 func (tx *txLogout) Postcondition(ctx context.Context) (v interface{}, err error) {
-	log.Printf("Got a Logout request for client" /*tx.info.Email*/)
+	log.Printf("Got a Logout request for client")
 	return
 }
 

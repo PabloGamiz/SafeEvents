@@ -13,7 +13,8 @@ func NewServer() Server {
 	api := &api{}
 
 	router := mux.NewRouter()
-	router.HandleFunc(client.APIPath, client.HandleSigninRequest).Methods(http.MethodPost)
+	router.HandleFunc(client.APISigninPath, client.HandleSigninRequest).Methods(http.MethodPost)
+	router.HandleFunc(client.APILogoutPath, client.HandleLogoutRequest).Methods(http.MethodPut)
 	//router.HandleFunc("/client/{ID:[a-zA-Z0-9_]+}", api.getClient).Methods(http.MethodGet)
 
 	// Events router Handlers
