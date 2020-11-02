@@ -11,7 +11,7 @@ import (
 )
 
 func testInit() {
-	if err := godotenv.Load("../testing.env"); err != nil {
+	if err := godotenv.Load("../.env"); err != nil {
 		log.Panicf("Got %s while setting up dotenv", err.Error())
 	}
 }
