@@ -5,9 +5,14 @@ import (
 	"log"
 	"os"
 	"testing"
+
+	"github.com/joho/godotenv"
 )
 
 func TestMongoClientConnection(t *testing.T) {
+	if err := godotenv.Load("../.env"); err != nil {
+		t.Fatalf("Got error %s; while loading dotenv", err.Error())
+	}
 
 	log.Printf("USERNAME %s", os.Getenv("MONGO_USR"))
 	log.Printf("PASSWORD %s", os.Getenv("MONGO_PWD"))

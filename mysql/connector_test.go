@@ -1,43 +1,52 @@
 package mysql
 
 import (
+	"context"
+	"database/sql"
 	"testing"
+	"time"
+
+	"github.com/joho/godotenv"
 )
 
 func testInit() {
 }
 
 func TestConnector(t *testing.T) {
-	// testInit()
+	testInit()
 
-	// stream, err := OpenStream()
-	// if err != nil {
-	// 	t.Errorf("Got %v error while opening stream", err.Error())
-	// 	t.FailNow()
-	// }
+	if err := godotenv.Load("../.env"); err != nil {
+		t.Fatalf("Got error %s; while loading dotenv", err.Error())
+	}
 
-	// defer stream.Close()
+	stream, err := OpenStream()
+	if err != nil {
+		t.Errorf("Got %v error while opening stream", err.Error())
+		t.FailNow()
+	}
 
-	// ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
-	// defer cancel()
+	//defer stream.ConnPool.Close()
 
-	// query := "SELECT * FROM mastermind.Users"
-	// var rows *sql.Rows
-	// if rows, err = stream.QueryContext(ctx, query); err != nil {
-	// 	t.Errorf("Got %v error while executing query", err.Error())
-	// 	t.FailNow()
-	// }
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
 
-	// defer rows.Close()
+	query := "SELECT * FROM SafeEvents.Users"
+	var rows *sql.Rows
+	if rows, err = stream.ConnPool.QueryContext(ctx, query); err != nil {
+		t.Errorf("Got %v error while executing query", err.Error())
+		t.FailNow()
+	}
 
-	// var id, nickname, email string
-	// if ok := rows.Next(); !ok {
-	// 	t.Errorf("Got no row while getting values from first row")
-	// 	t.FailNow()
-	// }
+	defer rows.Close()
 
-	// if err := rows.Scan(&id, &nickname, &email); err != nil {
-	// 	t.Errorf("Got %v error while scanning row's values", err.Error())
-	// 	t.FailNow()
-	// }
+	var id, nickname, email string
+	if ok := rows.Next(); !ok {
+		t.Errorf("Got no row while getting values from first row")
+		t.FailNow()
+	}
+
+	if err := rows.Scan(&id, &nickname, &email); err != nil {
+		t.Errorf("Got %v error while scanning row's values", err.Error())
+		t.FailNow()
+	}
 }

@@ -6,8 +6,8 @@ import (
 
 // Product represents the product class from UML
 type Product struct {
-	ID          uint   `json:"id"`
-	Name        string `json:"name"`
+	ID          uint   `json:"id" sql:"AUTO_INCREMENT"`
+	Name        string `json:"name" gorm:"primary_key"`
 	Description string `json:"description"`
 	Price       int    `json:"price"`
 	Status      Status `json:"status"`

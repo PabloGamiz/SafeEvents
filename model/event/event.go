@@ -6,17 +6,19 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
+	"gorm.io/gorm"
 )
 
 // Event represents the Event class from UML.
 type Event struct {
-	ID          uint              `json:"id"`
-	Title       string            `json:"title"`
+	gorm.Model
+	ID          uint              `json:"id" sql:"AUTO_INCREMENT"`
+	Title       string            `json:"title" gorm:"primary_key"`
 	Description string            `json:"description"`
 	Capacity    int               `json:"capacity"`
 	CheckInDate time.Time         `json:"checkInDate"`
 	ClosureDate time.Time         `json:"closureDate"`
-	Location    location.Location `json:"location"`
+	Location    location.Location `json:"location" gorm:"foreignKey:location_id"`
 	Organizers  []client.Client   `json:"organizers"`
 	Services    []service.Service `json:"services"`
 	CreatedAt   time.Time

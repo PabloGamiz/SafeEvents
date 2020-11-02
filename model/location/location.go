@@ -1,11 +1,14 @@
 package location
 
+import "gorm.io/gorm"
+
 // Location represents the Location class from UML.
 type Location struct {
-	ID          uint   `json:"id"`
+	gorm.Model
+	ID          uint   `json:"id" sql:"AUTO_INCREMENT"`
 	Name        string `json:"name"`
 	Address     string `json:"address"`
-	Coordinates string `json:"coordinates"`
+	Coordinates string `json:"coordinates" gorm:"primary_key"`
 	Extension   int    `json:"extension"`
 }
 

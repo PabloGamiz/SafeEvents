@@ -10,12 +10,12 @@ import (
 
 // Service represents the product class from UML
 type Service struct {
-	ID          primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	Name        string             `json:"name" bson:"name,omitempty"`
-	Description string             `json:"description" bson:"description,omitempty"`
-	Kind        Kind               `json:"kind" bson:"kind,omitempty"`
-	Location    location.Location  `json:"location" bson:"location"`
-	Products    []product.Product  `json:"products" bson:"products"`
+	ID          primitive.ObjectID `json:"id" sql:"AUTO_INCREMENT"`
+	Name        string             `json:"name" gorm:"primary_key"`
+	Description string             `json:"description"`
+	Kind        Kind               `json:"kind"`
+	Location    location.Location  `json:"location"`
+	Products    []product.Product  `json:"products"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

@@ -27,7 +27,7 @@ func newMysqlDriver() (driver driver.Connector, err error) {
 	conn.Addr = os.Getenv("OPEN_NEBULA_IP")
 	conn.DBName = os.Getenv("MYSQL_DB")
 	conn.User = os.Getenv("MYSQL_USR")
-	conn.Passwd = os.Getenv("backendpwd")
+	conn.Passwd = os.Getenv("MYSQL_PWD")
 	conn.Net = os.Getenv("SERVICE_NETW")
 	conn.ParseTime = true
 

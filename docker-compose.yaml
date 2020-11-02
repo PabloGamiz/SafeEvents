@@ -51,6 +51,8 @@ services:
             MYSQL_USR: ${MYSQL_USR}
             MYSQL_PWD: ${MYSQL_PWD}
             MYSQL_DB: ${MYSQL_DB}
+            MONGO_USR: ${MONGO_USR}
+            MONGO_PWD: ${MONGO_PWD}
             
 networks:
     # Database network is the bridge between domain environment and the sql databases
