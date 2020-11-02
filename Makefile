@@ -16,7 +16,7 @@ test:
 	go test -v ./...
 
 deploy:
-	docker-compose -f docker-compose.yaml  --env-file .env up --remove-orphan
+	docker-compose -f docker-compose.yaml up --remove-orphan
 
 undeploy:
 	docker-compose -f docker-compose.yaml down
