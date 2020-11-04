@@ -2,15 +2,18 @@ package product
 
 import (
 	"time"
+
+	"gorm.io/gorm"
 )
 
 // Product represents the product class from UML
 type Product struct {
-	ID          uint   `json:"id" sql:"AUTO_INCREMENT"`
-	Name        string `json:"name" gorm:"primary_key"`
-	Description string `json:"description"`
-	Price       int    `json:"price"`
-	Status      Status `json:"status"`
+	gorm.Model
+	ID          uint   `json:"id" gorm:"primaryKey; autoIncrement:true"`
+	Name        string `json:"name" gorm:"not null;unique"`
+	Description string `json:"description" gorm:"not null"`
+	Price       int    `json:"price" gorm:"not null"`
+	Status      Status `json:"status" gorm:"not null"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

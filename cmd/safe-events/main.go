@@ -8,6 +8,8 @@ import (
 	"os"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/api"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
+	mysql "github.com/PabloGamiz/SafeEvents-Backend/mysql"
 )
 
 const (
@@ -48,6 +50,16 @@ func address() (address string) {
 	return
 }
 
+func test() {
+	db, err := mysql.OpenStream()
+	if err != nil {
+		log.Printf("Got %v error while opening stream", err.Error())
+		return
+	}
+
+	db.AutoMigrate(&event.Event{})
+}
+
 func main() {
 	// to change the flags on the default logger
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
@@ -55,6 +67,8 @@ func main() {
 	address := address()
 	network := network()
 	log.Printf(infoSetup, network, address)
+
+	test()
 
 	lis, err := net.Listen(network, address)
 	if err != nil {

@@ -5,28 +5,31 @@ import (
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/product"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"gorm.io/gorm"
 )
 
 // Service represents the product class from UML
 type Service struct {
-	ID          primitive.ObjectID `json:"id" sql:"AUTO_INCREMENT"`
-	Name        string             `json:"name" gorm:"primary_key"`
-	Description string             `json:"description"`
-	Kind        Kind               `json:"kind"`
-	Location    location.Location  `json:"location"`
-	Products    []product.Product  `json:"products"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	gorm.Model
+	ID          uint              `json:"id" gorm:"primaryKey; autoIncrement:true"`
+	Name        string            `json:"name" gorm:"not null;unique"`
+	Description string            `json:"description" gorm:"not null"`
+	Kind        Kind              `json:"kind" gorm:"not null"`
+	Location    location.Location `json:"location" gorm:"foreignkey:LocationID;not null"`
+	LocationID  uint64            `json:"-"`
+	Products    []product.Product `json:"products" gorm:"many2many:services_products"`
+	EventID     uint              `json:"-"`
+	CreatedAt   time.Time         `json:"createdAt"`
+	UpdatedAt   time.Time         `json:"updatedAt"`
 }
 
 // GetID return the ID of the Service.
-func (service *Service) GetID() primitive.ObjectID {
+func (service *Service) GetID() uint {
 	return service.ID
 }
 
 // SetID sets a new id to the model
-func (service *Service) SetID(id primitive.ObjectID) {
+func (service *Service) SetID(id uint) {
 	service.ID = id
 }
 
@@ -51,8 +54,8 @@ func (service *Service) SetDescription(description string) {
 }
 
 // GetKind return the Kind of the Service.
-func (service *Service) GetKind() Kind {
-	return service.Kind
+func (service *Service) GetKind() string {
+	return service.Kind.String()
 }
 
 // SetKind sets the Kind of the Service.

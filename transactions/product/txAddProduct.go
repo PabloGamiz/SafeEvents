@@ -4,6 +4,7 @@ import (
 	"context"
 
 	productDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/product"
+	productRepo "github.com/PabloGamiz/SafeEvents-Backend/repository/product"
 )
 
 // txSignin represents an
@@ -18,12 +19,9 @@ func (tx *txAddProduct) Precondition() (err error) {
 
 // Postcondition creates new user and a opens its first session
 func (tx *txAddProduct) Postcondition(ctx context.Context) (v interface{}, err error) {
-	// SESSION //
-	// var prodRepository productRepository.Repository
+	// TODO: Convertir productDTO a entity i passar-lo a AddProduct
 
-	// if response, err = prodRepository.AddProduct(); err == nil {
-	// 	return
-	// }
+	v, err = productRepo.Repository.AddProduct(tx.product)
 	return
 }
 

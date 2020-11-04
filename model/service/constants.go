@@ -18,3 +18,10 @@ const (
 	NUERSERY
 	OTHERS
 )
+
+func (k Kind) String() string {
+	return [...]string{"Groceries", "Information", "Drink",
+		"Security", "Bathrooms", "Pharmacy",
+		"Safe point", "Purple point", "Hydrogel dispenser",
+		"PCRs", "Nursery", "Others"}[k]
+}

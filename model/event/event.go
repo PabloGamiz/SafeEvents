@@ -12,17 +12,18 @@ import (
 // Event represents the Event class from UML.
 type Event struct {
 	gorm.Model
-	ID          uint              `json:"id" sql:"AUTO_INCREMENT"`
-	Title       string            `json:"title" gorm:"primary_key"`
+	ID          uint              `json:"id" gorm:"primaryKey; autoIncrement:true"`
+	Title       string            `json:"title" gorm:"not null;unique"`
 	Description string            `json:"description"`
-	Capacity    int               `json:"capacity"`
-	CheckInDate time.Time         `json:"checkInDate"`
-	ClosureDate time.Time         `json:"closureDate"`
-	Location    location.Location `json:"location" gorm:"foreignKey:location_id"`
-	Organizers  []client.Client   `json:"organizers"`
-	Services    []service.Service `json:"services"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	Capacity    int               `json:"capacity" gorm:"not null"`
+	CheckInDate time.Time         `json:"checkInDate" gorm:"not null"`
+	ClosureDate time.Time         `json:"closureDate" gorm:"not null"`
+	Location    location.Location `json:"location" gorm:"foreignkey:LocationID;not null"`
+	LocationID  uint64            `json:"-"`
+	Organizers  []client.Client   `json:"organizers" gorm:"many2many:events_organizers;"`
+	Services    []service.Service `json:"services" gorm:"foreignkey:EventID"`
+	CreatedAt   time.Time         `json:"createdAt"`
+	UpdatedAt   time.Time         `json:"updatedAt"`
 }
 
 // GetID return the ID of the Event.
