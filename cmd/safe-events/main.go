@@ -8,7 +8,9 @@ import (
 	"os"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/api"
-	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/product"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
 	mysql "github.com/PabloGamiz/SafeEvents-Backend/mysql"
 )
 
@@ -57,7 +59,25 @@ func test() {
 		return
 	}
 
-	db.AutoMigrate(&event.Event{})
+	// Migració de structs del Model (Es fa automatica si tenen els tags ben definits).
+	// db.AutoMigrate(&service.Service{})
+
+	// Afegir files a les taules de la BBDD. Em suposo que se li pot passar l'struct del model ja construit, no cal construir-lo "in situ".
+	db.Create(&service.Service{
+		Name:        "service test",
+		Description: "description of service test",
+		Kind:        1,
+		Location: location.Location{
+			Name:        "location test",
+			Address:     "address test",
+			Coordinates: "101010",
+			Extension:   10},
+		Products: []product.Product{{
+			Name:        "product test",
+			Description: "description of product test",
+			Price:       10,
+			Status:      1}}})
+
 }
 
 func main() {
