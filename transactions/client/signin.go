@@ -46,7 +46,7 @@ func (tx *txSignin) Precondition() (err error) {
 
 // Postcondition creates new user and a opens its first session
 func (tx *txSignin) Postcondition(ctx context.Context) (v interface{}, err error) {
-	log.Printf("Got a Signin request for client" /*tx.info.Email*/)
+	log.Printf("Got a Signin request for client %s", tx.info.Email)
 
 	// SESSION //
 	var sess sessionMOD.Controller
@@ -74,8 +74,8 @@ func (tx *txSignin) Postcondition(ctx context.Context) (v interface{}, err error
 
 	log.Printf("Building session for client %s", gw.GetEmail())
 	deadline := time.Unix(tx.info.ExpiresIn, 0)
-	sessCtx, _ := context.WithDeadline(context.TODO(), deadline)
-	if sess, err = sessionMOD.NewSession(sessCtx, gw); err != nil {
+	sessCtx, cancel := context.WithDeadline(context.TODO(), deadline)
+	if sess, err = sessionMOD.NewSession(sessCtx, cancel, gw); err != nil {
 		return
 	}
 

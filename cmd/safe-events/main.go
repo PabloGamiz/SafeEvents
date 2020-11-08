@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
 	"net/http"
-	"os"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/api"
+	"github.com/alvidir/util/config"
+	"github.com/joho/godotenv"
 )
 
 const (
@@ -16,50 +16,37 @@ const (
 	infoSetup = "The server is being started on %s%s"
 	infoDone  = "The service has finished successfully"
 
+	errConfigFailed = "Got %s, while setting up service configuration"
 	errDotenvConfig = "Service has failed setting up dotenv: %s"
 	errListenFailed = "Service has failed listening: %s"
 	errServeFailed  = "Service has failed serving: %s"
 
 	envPortKey = "SERVICE_PORT"
 	envNetwKey = "SERVICE_NETW"
-
-	defaultPort    = "9090"
-	defaultNetwork = "tcp"
 )
 
-func network() string {
-	if value, ok := os.LookupEnv(envNetwKey); ok {
-		return value
-	}
-
-	return defaultNetwork
-}
-
-func address() (address string) {
-	address = defaultPort
-	if value, ok := os.LookupEnv(envPortKey); ok {
-		address = value
-	}
-
-	if address[0] != ':' {
-		address = fmt.Sprintf(":%s", address)
-	}
-
-	return
+func getMainEnv() ([]string, error) {
+	return config.CheckNemptyEnv(
+		envPortKey, /*0*/
+		envNetwKey /*1*/)
 }
 
 func main() {
 	// to change the flags on the default logger
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	//if err := godotenv.Load(); err != nil {
-	//	log.Panicf(errDotenvConfig, err.Error())
-	//}
+	if err := godotenv.Load(); err != nil {
+		log.Panicf(errDotenvConfig, err.Error())
+	}
 
-	address := address()
-	network := network()
-	log.Printf(infoSetup, network, address)
+	envs, err := getMainEnv()
+	if err != nil {
+		log.Fatalf(errConfigFailed, err.Error())
+	}
 
-	lis, err := net.Listen(network, address)
+	address := ":" + envs[0]
+	log.Printf(infoSetup, envs[1], address)
+
+	lis, err := net.Listen(envs[1], address)
 	if err != nil {
 		log.Panicf(errListenFailed, err)
 	}

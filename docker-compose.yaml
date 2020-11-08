@@ -2,31 +2,31 @@ version: '3.8'
 
 services:
     # DATABASE
-    mysql:
-        container_name: safe-events-mysql
-        image: mysql/mysql-server:latest
-        restart: on-failure
-        volumes:
-            - "dbdata:/var/lib/mysql"
-            - "dbdump:/docker-entrypoint-initdb.d"
-        networks: 
-            - database
-    
-    myadmin:
-        container_name: safe-events-myadmin
-        image: phpmyadmin/phpmyadmin:latest
-        restart: always
-        depends_on:
-            - mysql
-        ports:
-            - "9090:80"
-        networks: 
-            - database
-        environment: 
-            PMA_HOST: safe-events-mysql
-            PMA_PORT: 3306
-            PMA_USER: myadmin
-            PMA_PASSWORD: myadminpwd
+    # mysql:
+    #     container_name: safe-events-mysql
+    #     image: mysql/mysql-server:latest
+    #     restart: on-failure
+    #     volumes:
+    #         - "dbdata:/var/lib/mysql"
+    #         - "dbdump:/docker-entrypoint-initdb.d"
+    #     networks: 
+    #         - database
+    # 
+    # myadmin:
+    #     container_name: safe-events-myadmin
+    #     image: phpmyadmin/phpmyadmin:latest
+    #     restart: always
+    #     depends_on:
+    #         - mysql
+    #     ports:
+    #         - "9090:80"
+    #     networks: 
+    #         - database
+    #     environment: 
+    #         PMA_HOST: safe-events-mysql
+    #         PMA_PORT: 3306
+    #         PMA_USER: myadmin
+    #         PMA_PASSWORD: myadminpwd
     
     # BAKCEND
     backend:
@@ -37,16 +37,6 @@ services:
             - 8080:8080
         networks: 
             - database
-        environment: 
-            SERVICE_PORT: 8080
-            SERVICE_NETW: tcp
-            MONGO_USR: backend
-            MONGO_PWD: safe-events-backend
-            MYSQL_HOST: safe-events-mysql
-            MYSQL_PORT: 3306
-            MYSQL_USR: backend
-            MYSQL_PWD: backendpwd
-            MYSQL_DB: SafeEvents
             
 networks:
     # Database network is the bridge between domain environment and the sql databases

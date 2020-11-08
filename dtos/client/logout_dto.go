@@ -8,5 +8,5 @@ type LogoutRequestDTO struct {
 // LogoutResponseDTO represents the provided data in front of a Signin response
 type LogoutResponseDTO struct {
 	Cookie   string `json:"cookie"`
-	Deadline int64  `json:"timeout"`
+	Deadline int64  `json:"deadline"`
 }

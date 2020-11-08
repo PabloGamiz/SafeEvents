@@ -1,6 +1,6 @@
 package client
 
 const (
-	collection              = "clients"
-	errInsertOneResultParse = "Got an error while parsing InsertOneResult: %+v"
+	errNotFoundByEmail = "Not found client with email %s"
+	queryFindByEmail   = "email = ?"
 )

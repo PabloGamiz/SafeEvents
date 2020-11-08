@@ -2,7 +2,6 @@ package mysql
 
 import (
 	"database/sql/driver"
-	"os"
 
 	"github.com/alvidir/util/pattern/singleton"
 )
@@ -10,10 +9,6 @@ import (
 // Single connInstance of Client
 var (
 	connInstance = singleton.NewSingleton(initMysqlConn)
-
-	mysqlURL  = os.Getenv(EnvMysqlURL)
-	mysqlUser = os.Getenv(EnvMysqlUser)
-	mysqlPwd  = os.Getenv(EnvMysqlPwd)
 )
 
 // getConnInstance returns the single instance of database.Connector. Multiple calls returns the same instance

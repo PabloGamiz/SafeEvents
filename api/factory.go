@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/api/client"
-	"github.com/PabloGamiz/SafeEvents-Backend/api/events"
 	"github.com/gorilla/mux"
 )
 
@@ -18,7 +17,7 @@ func NewServer() Server {
 	//router.HandleFunc("/client/{ID:[a-zA-Z0-9_]+}", api.getClient).Methods(http.MethodGet)
 
 	// Events router Handlers
-	router.HandleFunc("/events/list", events.HandleListEventsRequest).Methods(http.MethodGet)
+	// router.HandleFunc("/events/list", events.HandleListEventsRequest).Methods(http.MethodGet)
 
 	api.router = router
 	return api
