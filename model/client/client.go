@@ -1,21 +1,22 @@
 package client
 
-type client struct {
-	id       string
-	name     string
-	email    string
-	password string
-	verified bool
+import (
+	"gorm.io/gorm"
+)
+
+// Client its the main data object fro a client
+type Client struct {
+	gorm.Model
+	ID    uint   `json:"id" gorm:"primaryKey; autoIncrement:true"`
+	Email string `json:"email" gorm:"not null"`
 }
 
-func (client *client) GetID() string {
-	return client.id
+// GetID return the id of the client
+func (client *Client) GetID() uint {
+	return client.ID
 }
 
-func (client *client) GetName() string {
-	return client.name
-}
-
-func (client *client) GetEmail() string {
-	return client.email
+// GetEmail return the email of the client
+func (client *Client) GetEmail() string {
+	return client.Email
 }
