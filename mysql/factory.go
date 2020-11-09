@@ -3,9 +3,9 @@ package mysql
 import (
 	"database/sql"
 	"database/sql/driver"
-	"os"
 	"time"
 
+	"github.com/alvidir/util/config"
 	"github.com/go-sql-driver/mysql"
 	gormSqlDriver "gorm.io/driver/mysql"
 	"gorm.io/gorm"
