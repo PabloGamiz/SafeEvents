@@ -8,7 +8,7 @@ import (
 )
 
 type clientGateway struct {
-	*client.Client
+	client.Controller
 	ctx context.Context
 }
 
@@ -18,7 +18,7 @@ func (gw *clientGateway) Insert() (err error) {
 		return
 	}
 
-	db.Create(gw.Client)
+	db.Create(gw.Controller)
 	return
 }
 

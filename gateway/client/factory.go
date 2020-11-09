@@ -33,8 +33,8 @@ func OpenClientStream() (db *gorm.DB, err error) {
 }
 
 // NewClientGateway builds a gateway for the provided client
-func NewClientGateway(ctx context.Context, client *client.Client) Gateway {
-	return &clientGateway{Client: client, ctx: ctx}
+func NewClientGateway(ctx context.Context, client client.Controller) Gateway {
+	return &clientGateway{Controller: client, ctx: ctx}
 }
 
 // FindClientByEmail returns the gateway for the client that match the provided mail
