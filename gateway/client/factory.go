@@ -12,8 +12,7 @@ import (
 )
 
 var (
-	mu    sync.Mutex
-	touch bool = false
+	once sync.Once
 )
 
 // OpenClientStream opens an stream ensuring the client's table does exists
@@ -23,14 +22,12 @@ func OpenClientStream() (db *gorm.DB, err error) {
 		return
 	}
 
-	if !touch {
-		mu.Lock()
-		defer mu.Unlock()
-		if !touch {
-			db.AutoMigrate(&client.Client{})
-			touch = true
-		}
-	}
+	once.Do(func() {
+		// Automigrate must be called only once for each gateway, and allways on the stream's opening call.
+		// This makes sure the client struct has its own table on the database. So model updates are only
+		// migrable to the database rebooting the server (not on-the-run).
+		db.AutoMigrate(&client.Client{})
+	})
 
 	return
 }
