@@ -12,7 +12,9 @@ import (
 )
 
 var (
-	AllInstancesByID    = &sync.Map{}
+	// AllInstancesByID stores all sessions indexed by its ID
+	AllInstancesByID = &sync.Map{}
+	// AllInstancesByEmail stores all sessions indexed by its email
 	AllInstancesByEmail = &sync.Map{}
 )
 
@@ -99,7 +101,7 @@ func GetSessionByEmail(mail string) (ctrl Controller, err error) {
 }
 
 // NewSession returns a brand new session for the provided client
-func NewSession(ctx context.Context, client client.Controller) (ctrl Controller, err error) {
+func NewSession(ctx context.Context, cancel context.CancelFunc, client client.Controller) (ctrl Controller, err error) {
 	if _, ok := ctx.Deadline(); !ok {
 		err = fmt.Errorf(errNoDeadline)
 		return
@@ -114,6 +116,7 @@ func NewSession(ctx context.Context, client client.Controller) (ctrl Controller,
 	session := &Session{
 		Context:    ctx,
 		Controller: client,
+		cancel:     cancel,
 		cookie:     cookie,
 	}
 

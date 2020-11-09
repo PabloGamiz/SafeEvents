@@ -29,7 +29,7 @@ func TestGetSessionByEmail(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.TODO(), 60*time.Second)
 	defer cancel()
 
-	subject, err := NewSession(ctx, client)
+	subject, err := NewSession(ctx, cancel, client)
 	if err != nil {
 		t.Fatalf("Got error %s, while getting new session", err.Error())
 	}

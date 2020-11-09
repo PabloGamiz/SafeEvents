@@ -1,21 +1,19 @@
 package client
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"gorm.io/gorm"
+)
 
 // Client its the main data object fro a client
 type Client struct {
-	ID    primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	Email string             `json:"email" bson:"email"`
-}
-
-// SetID sets a new id to the model
-func (client *Client) SetID(id primitive.ObjectID) {
-	client.ID = id
+	gorm.Model
+	ID    uint   `json:"id" gorm:"primaryKey; autoIncrement:true"`
+	Email string `json:"email" gorm:"not null"`
 }
 
 // GetID return the id of the client
-func (client *Client) GetID() *primitive.ObjectID {
-	return &client.ID
+func (client *Client) GetID() uint {
+	return client.ID
 }
 
 // GetEmail return the email of the client

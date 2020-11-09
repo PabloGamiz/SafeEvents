@@ -2,33 +2,31 @@ version: '3.8'
 
 services:
     # DATABASE
-    mysql:
-        container_name: safe-events-mysql
-        image: mysql/mysql-server:latest
-        restart: on-failure
-        volumes:
-            - "dbdata:/var/lib/mysql"
-            - "dbdump:/docker-entrypoint-initdb.d"
-        networks: 
-            - database
-        ports:
-            - "3306:3306"
-    
-    myadmin:
-        container_name: safe-events-myadmin
-        image: phpmyadmin/phpmyadmin:latest
-        restart: always
-        depends_on:
-            - mysql
-        ports:
-            - "9090:80"
-        networks: 
-            - database
-        environment: 
-            PMA_HOST: ${PMA_HOST}
-            PMA_PORT: ${PMA_PORT}
-            PMA_USER: ${PMA_USER}
-            PMA_PASSWORD: ${PMA_PASSWORD}
+    # mysql:
+    #     container_name: safe-events-mysql
+    #     image: mysql/mysql-server:latest
+    #     restart: on-failure
+    #     volumes:
+    #         - "dbdata:/var/lib/mysql"
+    #         - "dbdump:/docker-entrypoint-initdb.d"
+    #     networks: 
+    #         - database
+    # 
+    # myadmin:
+    #     container_name: safe-events-myadmin
+    #     image: phpmyadmin/phpmyadmin:latest
+    #     restart: always
+    #     depends_on:
+    #         - mysql
+    #     ports:
+    #         - "9090:80"
+    #     networks: 
+    #         - database
+    #     environment: 
+    #         PMA_HOST: safe-events-mysql
+    #         PMA_PORT: 3306
+    #         PMA_USER: myadmin
+    #         PMA_PASSWORD: myadminpwd
     
     # BAKCEND
     backend:
@@ -39,20 +37,6 @@ services:
             - 8080:8080
         networks: 
             - database
-        environment: 
-            TEST: ${TEST}
-            OPEN_NEBULA_IP: ${OPEN_NEBULA_IP}
-            SERVICE_PORT: ${SERVICE_PORT}
-            SERVICE_NETW: ${SERVICE_NETW}
-            MYSQL_USR: ${MYSQL_USR}
-            MYSQL_PWD: ${MYSQL_PWD}
-            MYSQL_HOST: ${MYSQL_HOST}
-            MYSQL_PORT: ${MYSQL_PORT}
-            MYSQL_USR: ${MYSQL_USR}
-            MYSQL_PWD: ${MYSQL_PWD}
-            MYSQL_DB: ${MYSQL_DB}
-            MONGO_USR: ${MONGO_USR}
-            MONGO_PWD: ${MONGO_PWD}
             
 networks:
     # Database network is the bridge between domain environment and the sql databases
