@@ -20,9 +20,13 @@ func (tx *txPublicaEvent) publicaNewEvent(ctx context.Context) (err error) {
 	return gw.Insert()
 }
 
-func (tx *txPublicaEvent) Precondition() (err error) { //Comprova que existeixi l'event
-	if gw, err = eventGW.FindEventByID(ctx, tx.request.ID) err != nil {
-		return
+func (tx *txPublicaEvent) Precondition(ctx context.Context) (err error) { //Comprova que no existeixi l'event
+	if gw, err := eventGW.FindEventByName(ctx, bson.D{{"name", tx.requested.name}}).Decode(&result)
+	if err != nil {
+		// ErrNoDocuments means that the filter did not match any documents in the collection
+		if err != mongo.ErrNoDocuments {
+			return err
+		}
 	}
 }
 

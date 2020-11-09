@@ -22,8 +22,9 @@ func (event *eventGateway) Update() (err error) {
 
 }
 
-func (event *eventGateway) Remove() (err error) {
-
+func (event *eventGateway) Remove(event Event) (err error) {
+	result, err := db.C(COLLECTION).DeleteOne(context.Background(), bson.D{ {"name", event.name},},)
+	return err
 }
 
 func (event *eventGateway) FindAll() (err, error) {

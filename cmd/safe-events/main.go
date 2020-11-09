@@ -17,6 +17,8 @@ const (
 	infoSetup = "The server is being started on %s%s"
 	infoDone  = "The service has finished successfully"
 
+	errConfigFailed = "Got %s, while setting up service configuration"
+	errDotenvConfig = "Service has failed setting up dotenv: %s"
 	errListenFailed = "Service has failed listening: %v"
 	errServeFailed  = "Service has failed serving: %v"
 
