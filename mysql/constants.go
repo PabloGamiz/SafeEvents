@@ -1,8 +1,6 @@
 package mysql
 
-import (
-	"time"
-)
+import "time"
 
 const (
 	// EnvMysqlUsr represents the environment variable where the mysql's username is located

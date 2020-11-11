@@ -21,7 +21,6 @@ func HandleListEventsRequest(w http.ResponseWriter, r *http.Request) {
 
 	txListEvents.Execute(ctx)
 	result, err := txListEvents.Result()
-
 	if err != nil {
 		// If err != nil it means the transaction has failed
 		http.Error(w, err.Error(), http.StatusConflict)

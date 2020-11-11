@@ -96,9 +96,14 @@ func (event *Event) GetOrganizers() []client.Client {
 	return event.Organizers
 }
 
+// SetOrganizers sets the Organizers of the Event.
+func (event *Event) SetOrganizers(organizers []client.Client) {
+	event.Organizers = organizers
+}
+
 // GetServices return the Services of the Event.
-func (event *Event) GetServices() time.Time {
-	return event.CheckInDate
+func (event *Event) GetServices() []service.Service {
+	return event.Services
 }
 
 // SetServices sets the Services of the Event.

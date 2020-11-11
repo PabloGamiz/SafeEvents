@@ -3,6 +3,8 @@ package event
 import (
 	"context"
 	"log"
+
+	eventGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/event"
 )
 
 // txSignup represents an
@@ -17,9 +19,8 @@ func (tx *txListEvents) Precondition() error {
 // Postcondition creates new user and a opens its first session
 func (tx *txListEvents) Postcondition(context.Context) (interface{}, error) {
 	log.Printf("Got a List Events request")
-	response := "test"
-
-	return response, nil
+	events, err := eventGW.FindAll()
+	return events, err
 }
 
 // Commit commits the transaction result
