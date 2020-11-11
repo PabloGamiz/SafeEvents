@@ -1,6 +1,8 @@
 package event
 
 import (
+	"time"
+
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
@@ -17,8 +19,8 @@ type Controller interface {
 	SetCapacity(capacity int)
 	GetCheckInDate() int64
 	SetCheckInDate(checkInDate int64)
-	GetClosureDate() int64
-	SetClosureDate(closureDate int64)
+	GetClosureDate() time.Time
+	SetClosureDate(closureDate time.Time)
 	GetLocation() location.Location
 	SetLocation(location location.Location)
 	GetOrganizers() []client.Client

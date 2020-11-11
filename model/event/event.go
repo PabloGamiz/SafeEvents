@@ -6,12 +6,10 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
-	"gorm.io/gorm"
 )
 
 // Event represents the Event class from UML.
 type Event struct {
-	gorm.Model
 	ID          uint              `json:"id" gorm:"primaryKey; autoIncrement:true"`
 	Title       string            `json:"title" gorm:"not null;unique"`
 	Description string            `json:"description"`
@@ -96,9 +94,14 @@ func (event *Event) GetOrganizers() []client.Client {
 	return event.Organizers
 }
 
+// SetOrganizers sets the Organizers of the Event.
+func (event *Event) SetOrganizers(organizers []client.Client) {
+	event.Organizers = organizers
+}
+
 // GetServices return the Services of the Event.
-func (event *Event) GetServices() int64 {
-	return event.CheckInDate
+func (event *Event) GetServices() []service.Service {
+	return event.Services
 }
 
 // SetServices sets the Services of the Event.

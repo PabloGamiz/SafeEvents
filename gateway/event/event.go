@@ -14,7 +14,7 @@ type eventGateway struct {
 
 func (gw *eventGateway) Insert() (err error) {
 	var db *gorm.DB
-	if db, err = OpenClientStream(); err != nil {
+	if db, err = OpenEventStream(); err != nil {
 		return
 	}
 

@@ -11,14 +11,14 @@ func NewTxListEvents() transaction.Tx {
 	return transaction.NewTransaction(body)
 }
 
-// NewtxPublicaEvent builds a brand new transaction for Publica_event
-func NewtxPublicaEvent(request eventDTO.DTO) transaction.Tx {
+// NewTxPublicaEvent builds a brand new transaction for Publica_event
+func NewTxPublicaEvent(request eventDTO.DTO) transaction.Tx {
 	body := &txPublicaEvent{request: request}
 	return transaction.NewTransaction(body)
 }
 
-// NewtxGetEvent builds a brand new transaction for Publica_event
-func NewtxGetEvent(request eventDTO.DTO) transaction.Tx {
+// NewTxGetEvent builds a brand new transaction for Publica_event
+func NewTxGetEvent(request eventDTO.DTO) transaction.Tx {
 	body := &txGetEvent{request: request}
 	return transaction.NewTransaction(body)
 }

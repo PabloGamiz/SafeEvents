@@ -6,6 +6,7 @@ import (
 
 	eventDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/event"
 	eventGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/event"
+	eventMOD "github.com/PabloGamiz/SafeEvents-Backend/model/event"
 )
 
 // txPublicaEvent represents an
@@ -13,28 +14,23 @@ type txPublicaEvent struct {
 	request eventDTO.DTO
 }
 
-func (tx *txPublicaEvent) publicaNewEvent(ctx context.Context) (err error) {
-	gw := eventGW.NewEventGateway(ctx, request)
-	return gw.Insert()
-}
-
-func (tx *txPublicaEvent) Precondition(ctx context.Context) (err error) { //Comprova que no existeixi l'event
+func (tx *txPublicaEvent) Precondition() (err error) { //Comprova que no existeixi l'event
 	return
 }
 
-func (tx *txPublicaEvent) PostCondition(ctx context.Context) (err error) {
+func (tx *txPublicaEvent) Postcondition(ctx context.Context) (interface{}, error) {
 	log.Printf("Got a Publica Event request for event %s", tx.request.Title)
 
-	var gw eventGW.Gateway
-	if gw, err = tx.publicaNewEvent(ctx); err != nil {
-		return
+	evnt := &eventMOD.Event{
+		Title: tx.request.Title,
 	}
+	gw := eventGW.NewEventGateway(ctx, evnt)
+	err := gw.Insert()
 
-	response := &eventDTO.DTO
-	return response, nil
+	return gw, err
 }
 
-func (tx *txPublicaEvent) commit() error {
+func (tx *txPublicaEvent) Commit() error {
 	return nil
 }
 
