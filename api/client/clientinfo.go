@@ -10,25 +10,16 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/transactions/client"
 )
 
-//Com fer lo de obtindre l'email i fer un dto
-//Com funciona lo del context i el timeout o si s'ha de canviar a la tansaction
-
 func HandleClientInfoRequest(w http.ResposeWriter, r *http.Request) {
 	log.Printf("Handlering a Client Info request")
 
 	//Expected a email in the URI or a header?
 	var clientInfoDTO clientDTO.clientInfoRequestDTO
-
-	//npi de com es fa :(
-
-	//From the uri
-	string uri = r.GetRequestURI();
-	int lastindex = uri.LastindexOf("=")
-	string email = uri.Substring(uri.length(),lastIndex)
-
-	//From the header
-	string email = r.Header.Get("email")
-
+	if err := json.NewDecoder(r.Body).Decode(&clientInfoDTO); err != nil {
+		//The json sent does not match with the expected DTO
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	//Setting up TxClientInfo with the required values
 	txClientInfo := client.NewTxClientInfo(clientInfoDTO)
