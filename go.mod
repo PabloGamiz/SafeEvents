@@ -14,4 +14,5 @@ require (
 	google.golang.org/grpc v1.33.0
 	gorm.io/driver/mysql v1.0.3
 	gorm.io/gorm v1.20.5
+	labix.org/v2/mgo v0.0.0-20140701140051-000000000287
 )

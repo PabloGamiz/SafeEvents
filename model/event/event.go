@@ -16,7 +16,7 @@ type Event struct {
 	Title       string            `json:"title" gorm:"not null;unique"`
 	Description string            `json:"description"`
 	Capacity    int               `json:"capacity" gorm:"not null"`
-	CheckInDate time.Time         `json:"checkInDate" gorm:"not null"`
+	CheckInDate int64             `json:"checkInDate" gorm:"not null"`
 	ClosureDate time.Time         `json:"closureDate" gorm:"not null"`
 	Location    location.Location `json:"location" gorm:"foreignkey:LocationID;not null"`
 	LocationID  uint64            `json:"-"`
@@ -62,12 +62,12 @@ func (event *Event) SetCapacity(capacity int) {
 }
 
 // GetCheckInDate return the ChekInDate of the Event.
-func (event *Event) GetCheckInDate() time.Time {
+func (event *Event) GetCheckInDate() int64 {
 	return event.CheckInDate
 }
 
 // SetCheckInDate sets the CheckInDate of the Event.
-func (event *Event) SetCheckInDate(checkInDate time.Time) {
+func (event *Event) SetCheckInDate(checkInDate int64) {
 	event.CheckInDate = checkInDate
 }
 
@@ -97,7 +97,7 @@ func (event *Event) GetOrganizers() []client.Client {
 }
 
 // GetServices return the Services of the Event.
-func (event *Event) GetServices() time.Time {
+func (event *Event) GetServices() int64 {
 	return event.CheckInDate
 }
 

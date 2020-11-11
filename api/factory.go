@@ -16,6 +16,9 @@ func NewServer() Server {
 	router := mux.NewRouter()
 	router.HandleFunc(client.APIPath, client.HandleSigninRequest).Methods(http.MethodPost)
 	router.HandleFunc(event.APILISTEVENTS, event.HandleListEventsRequest).Methods(http.MethodGet)
+	router.HandleFunc(event.APILISTEVENTS, event.HandlePublicaEventRequest).Methods(http.MethodPost)
+	router.HandleFunc(event.APILISTEVENTS, event.HandleGetEventRequest).Methods(http.MethodGet)
+
 	//router.HandleFunc("/client/{ID:[a-zA-Z0-9_]+}", api.getClient).Methods(http.MethodGet)
 
 	api.router = router
