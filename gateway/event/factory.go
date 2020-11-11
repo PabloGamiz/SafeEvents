@@ -9,6 +9,7 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 var (
@@ -47,7 +48,7 @@ func FindAll() (events []event.Event, err error) {
 		return
 	}
 
-	db.Find(&events)
+	db.Preload("Services.Location").Preload("Services.Products").Preload(clause.Associations).Find(&events)
 	if len(events) == 0 {
 		err = fmt.Errorf(errNoEventsOnDatabase)
 		return
