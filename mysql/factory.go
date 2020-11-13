@@ -3,6 +3,7 @@ package mysql
 import (
 	"database/sql"
 	"database/sql/driver"
+	"fmt"
 	"time"
 
 	"github.com/alvidir/util/config"
@@ -49,6 +50,7 @@ func newMysqlDriver() (driver driver.Connector, err error) {
 	conn.DBName = envs[4]
 	conn.ParseTime = true
 
+	fmt.Println(conn.Addr)
 	return mysql.NewConnector(conn)
 }
 

@@ -38,13 +38,16 @@ func HandleListEventsRequest(w http.ResponseWriter, r *http.Request) {
 func HandlePublicaEventRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a Publica Esdeveniment request")
 
+	// Expected data for a Publica request
 	var publicaDTO eventDTO.DTO
-	txPublicaEvent := event.NewTxPublicaEvent(publicaDTO)
 	if err := json.NewDecoder(r.Body).Decode(&publicaDTO); err != nil {
 		// If some error just happened it means the provided Json does not match with the expected DTO
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	// Setting up TxPublicaEvent with the required values
+	txPublicaEvent := event.NewTxPublicaEvent(publicaDTO)
 
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel() // ensures the context is canceled, at least once, at the end of this function

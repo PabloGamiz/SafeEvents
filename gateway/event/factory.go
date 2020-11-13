@@ -12,22 +12,25 @@ import (
 )
 
 var (
-	once sync.Once
+	mu    sync.Mutex
+	touch bool = false
 )
 
-// OpenEventStream opens an stream ensuring the Event's table does exists
+// OpenEventStream opens an stream ensuring the client's table does exists
 func OpenEventStream() (db *gorm.DB, err error) {
 	if db, err = mysql.OpenStream(); err != nil {
-		log.Fatalf("Got %v error while opening stream", err.Error())
+		log.Fatalf("Got an error while opening stream: %v", err.Error())
 		return
 	}
 
-	once.Do(func() {
-		// Automigrate must be called only once for each gateway, and allways on the stream's opening call.
-		// This makes sure the Event struct has its own table on the database. So model updates are only
-		// migrable to the database rebooting the server (not on-the-run).
-		db.AutoMigrate(&event.Event{})
-	})
+	if !touch {
+		mu.Lock()
+		defer mu.Unlock()
+		if !touch {
+			db.AutoMigrate(&event.Event{})
+			touch = true
+		}
+	}
 
 	return
 }

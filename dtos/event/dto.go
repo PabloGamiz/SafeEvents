@@ -1,6 +1,8 @@
 package event
 
 import (
+	"time"
+
 	client_api "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
 	location_api "github.com/PabloGamiz/SafeEvents-Backend/dtos/location"
 	service_api "github.com/PabloGamiz/SafeEvents-Backend/dtos/service"
@@ -13,8 +15,8 @@ type DTO struct {
 	Description string             `json:"description"`
 	Capacity    int                `json:"capacity"`
 	Organizers  []client_api.DTO   `json:"organizers"`
-	CheckInDate uint64             `json:"checkInDate"`
-	ClosureDate uint64             `json:"closureDate"`
+	CheckInDate time.Time          `json:"checkInDate"`
+	ClosureDate time.Time          `json:"closureDate"`
 	Locations   []location_api.DTO `json:"locations"`
 	Services    []service_api.DTO  `json:"services"`
 }
