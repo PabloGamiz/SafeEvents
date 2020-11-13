@@ -13,8 +13,7 @@ import (
 )
 
 var (
-	mu    sync.Mutex
-	touch bool = false
+	once sync.Once
 )
 
 // OpenEventStream opens an stream ensuring the client's table does exists
@@ -24,15 +23,9 @@ func OpenEventStream() (db *gorm.DB, err error) {
 		return
 	}
 
-	if !touch {
-		mu.Lock()
-		defer mu.Unlock()
-		if !touch {
-			db.AutoMigrate(&event.Event{})
-			touch = true
-		}
-	}
-
+	once.Do(func() {
+		db.AutoMigrate(&event.Event{})
+	})
 	return
 }
 
