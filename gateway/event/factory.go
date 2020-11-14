@@ -46,11 +46,14 @@ func FindEventByID(ctx context.Context, ID int) (gw Gateway, err error) {
 	if db, err = OpenEventStream(); err != nil {
 		return
 	}
-	var event event.Event
-	notR := db.Where("ID = ?", ID).Find(&event)
-	if notR != nil {
+	var events []event.Event
+	db.Where("id = ?", ID).Find(&events)
+	if len(events) == 0 {
 		err = fmt.Errorf(errNotFoundByID, ID)
 		return
 	}
+
+	gw = NewEventGateway(ctx, &events[0])
+
 	return
 }

@@ -71,12 +71,14 @@ func HandleGetEventRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a single event request")
 
 	var geteventDTO eventDTO.DTO
-	txGetEvent := event.NewTxGetEvent(geteventDTO)
 	if err := json.NewDecoder(r.Body).Decode(&geteventDTO); err != nil {
 		// If some error just happened it means the provided Json does not match with the expected DTO
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	// Setting up txGetEvent with the required values
+	txGetEvent := event.NewTxGetEvent(geteventDTO)
 
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel() // ensures the context is canceled, at least once, at the end of this function
