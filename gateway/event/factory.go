@@ -5,6 +5,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
+	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 	"github.com/PabloGamiz/SafeEvents-Backend/mongo"
 	"go.mongodb.org/mongo-driver/bson"
 	mongodb "go.mongodb.org/mongo-driver/mongo"

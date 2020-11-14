@@ -1,7 +1,7 @@
 package event
 
 // Controller represents an Event and its main data.
-type Controller struct {
+type Controller interface {
 	// SetID(primitive.ObjectID)
 	// GetID() *primitive.ObjectID
 	// GetTitle() string
