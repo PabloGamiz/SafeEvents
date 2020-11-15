@@ -2,9 +2,9 @@ package ticket
 
 import (
 	"context"
-	"log"
 
 	ticketDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/ticket"
+	eventGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/ticket"
 )
 
 // txPurchase represents an
@@ -23,7 +23,8 @@ func (tx *txPurchase) Precondition() (err error) {
 
 // Postcondition creates new user and a opens its first session
 func (tx *txPurchase) Postcondition(ctx context.Context) (v interface{}, err error) {
-	log.Printf("Got a Purchase request from client %v", tx.request.ClientID)
+	//log.Printf("Got a Purchase request from client %v", tx.request.ClientID)
+	eventGW.FindEventByID()
 
 	response := tx.buildPurchaseResponseDTO()
 	return response, nil
