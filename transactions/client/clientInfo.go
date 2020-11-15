@@ -5,6 +5,7 @@ import (
 	"log"
 
 	clientDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
+	clientGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/client"
 	clientMOD "github.com/PabloGamiz/SafeEvents-Backend/model/client"
 )
 
@@ -30,8 +31,8 @@ func (tx *txClientInfo) Precondition() error {
 // Postcondition creates new user and a opens its first session
 func (tx *txClientInfo) Postcondition(context.Context) (v interface{}, err error) {
 	log.Printf("Got a Client Info request")
-	var client clientInfoResponseDTO
-	if client, err = clientInfoDTO.FindClientByEmail(ctx, tx.info.Email); err != nil {
+	var gw clientGW.Gateway
+	if gw, err = clientInfoDTO.FindClientByID(ctx, tx.request.ID); err != nil {
 		//Do something
 		return
 	}

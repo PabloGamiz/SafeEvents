@@ -55,3 +55,24 @@ func FindClientByEmail(ctx context.Context, email string) (gw Gateway, err error
 
 	return
 }
+
+func FindClientByID(ctx context.Context, ID int) (gw Gateway, err error) {
+	var db *gorm.DB
+	if db, err = OpenClientStream(); err != nil {
+		return
+	}
+
+	var client client.Client
+	//&client o client
+	result := db.Where(queryFindByID, ID).Find(&client)
+
+	if result.Error != nil {
+		err = fmt.Errorf(errNotFoundByID, ID)
+		return
+	}
+
+	//&client o client
+	gw = NewClientGateway(ctx, &client)
+
+	return
+}
