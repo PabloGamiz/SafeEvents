@@ -10,25 +10,23 @@ import (
 
 // Event represents the Event class from UML.
 type Event struct {
-	ID          string               `json:"id" bson:"_id"`
-	Title       string               `json:"title" bson:"title,omitempty"`
-	Description string               `json:"description" bson:"description,omitempty"`
-	Capacity    int                  `json:"capacity" bson:"capacity,omitempty"`
-	CheckInDate time.Time            `json:"checkInDate" bson:"checkInDate,omitempty"`
-	ClosureDate time.Time            `json:"closureDate" bson:"closureDate,omitempty"`
-	Location    location.Controller  `json:"location" bson:"location"`
-	Organizers  []client.Controller  `json:"organizers" bson:"organizers"`
-	Services    []service.Controller `json:"services" bson:"services"`
+	ID          uint              `json:"id" gorm:"primaryKey; autoIncrement:true"`
+	Title       string            `json:"title" gorm:"not null;unique"`
+	Description string            `json:"description"`
+	Capacity    int               `json:"capacity" gorm:"not null"`
+	CheckInDate int64             `json:"checkInDate" gorm:"not null"`
+	ClosureDate time.Time         `json:"closureDate" gorm:"not null"`
+	Location    location.Location `json:"location" gorm:"foreignkey:LocationID;not null"`
+	LocationID  uint64            `json:"-"`
+	Organizers  []client.Client   `json:"organizers" gorm:"many2many:events_organizers;"`
+	Services    []service.Service `json:"services" gorm:"foreignkey:EventID"`
+	CreatedAt   time.Time         `json:"createdAt"`
+	UpdatedAt   time.Time         `json:"updatedAt"`
 }
 
 // GetID return the ID of the Event.
-func (event *Event) GetID() string {
+func (event *Event) GetID() uint {
 	return event.ID
-}
-
-// SetID sets the Name of the Event.
-func (event *Event) SetID(id string) {
-	event.ID = id
 }
 
 // GetTitle return the Name of the Event.
@@ -62,12 +60,12 @@ func (event *Event) SetCapacity(capacity int) {
 }
 
 // GetCheckInDate return the ChekInDate of the Event.
-func (event *Event) GetCheckInDate() time.Time {
+func (event *Event) GetCheckInDate() int64 {
 	return event.CheckInDate
 }
 
 // SetCheckInDate sets the CheckInDate of the Event.
-func (event *Event) SetCheckInDate(checkInDate time.Time) {
+func (event *Event) SetCheckInDate(checkInDate int64) {
 	event.CheckInDate = checkInDate
 }
 
@@ -82,26 +80,31 @@ func (event *Event) SetClosureDate(closureDate time.Time) {
 }
 
 // GetLocation return the Location of the Event.
-func (event *Event) GetLocation() location.Controller {
+func (event *Event) GetLocation() location.Location {
 	return event.Location
 }
 
 // SetLocation sets the Location of the Event.
-func (event *Event) SetLocation(location location.Controller) {
+func (event *Event) SetLocation(location location.Location) {
 	event.Location = location
 }
 
 // GetOrganizers return the Organizers of the Event.
-func (event *Event) GetOrganizers() []client.Controller {
+func (event *Event) GetOrganizers() []client.Client {
 	return event.Organizers
 }
 
+// SetOrganizers sets the Organizers of the Event.
+func (event *Event) SetOrganizers(organizers []client.Client) {
+	event.Organizers = organizers
+}
+
 // GetServices return the Services of the Event.
-func (event *Event) GetServices() time.Time {
-	return event.CheckInDate
+func (event *Event) GetServices() []service.Service {
+	return event.Services
 }
 
 // SetServices sets the Services of the Event.
-func (event *Event) SetServices(services []service.Controller) {
+func (event *Event) SetServices(services []service.Service) {
 	event.Services = services
 }

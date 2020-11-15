@@ -1,24 +1,26 @@
 package product
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 // Product represents the product class from UML
 type Product struct {
-	ID          primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	Name        string             `json:"name" bson:"name,omitempty"`
-	Description string             `json:"description" bson:"description,omitempty"`
-	Price       int                `json:"price" bson:"price,omitempty"`
-	Status      Status             `json:"status" bson:"status,omitempty"`
+	gorm.Model
+	ID          uint   `json:"id" gorm:"primaryKey; autoIncrement:true"`
+	Name        string `json:"name" gorm:"not null;unique"`
+	Description string `json:"description" gorm:"not null"`
+	Price       int    `json:"price" gorm:"not null"`
+	Status      Status `json:"status" gorm:"not null"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 // GetID return the ID of the Product.
-func (product *Product) GetID() primitive.ObjectID {
+func (product *Product) GetID() uint {
 	return product.ID
-}
-
-// SetID sets a new id to the model
-func (product *Product) SetID(id primitive.ObjectID) { //TODO: El tipus del ID ha de ser primitive.ObjectID o int o string (...) ?
-	product.ID = id
 }
 
 // GetName return the Name of the Product.

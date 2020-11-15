@@ -1,4 +1,4 @@
-package users
+package event
 
 import (
 	"context"
@@ -17,7 +17,7 @@ func (tx *txListEvents) Precondition() error {
 // Postcondition creates new user and a opens its first session
 func (tx *txListEvents) Postcondition(context.Context) (interface{}, error) {
 	log.Printf("Got a List Events request")
-	response := // TODO: Set a fake EventDTO as the response and test the api call on postman.
+	response := "test"
 
 	return response, nil
 }
