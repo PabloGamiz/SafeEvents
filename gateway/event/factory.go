@@ -11,16 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-<<<<<<< HEAD
-	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
-	"github.com/PabloGamiz/SafeEvents-Backend/mongo"
-	"go.mongodb.org/mongo-driver/bson"
-	mongodb "go.mongodb.org/mongo-driver/mongo"
-=======
-var (
-	once sync.Once
->>>>>>> feature/event-management/publica_i_consulta_especifica
-)
+var once sync.Once
 
 // OpenEventStream opens an stream ensuring the Event's table does exists
 func OpenEventStream() (db *gorm.DB, err error) {

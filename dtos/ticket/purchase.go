@@ -5,6 +5,7 @@ type PurchaseRequestDTO struct {
 	ClientID uint `json:"client_id"`
 	EventID  uint `json:"event_id"`
 	Option   uint `json:"option"`
+	HowMany  uint `json:"how_many"`
 }
 
 // PurchaseResponseDTO is the response for a purchase request

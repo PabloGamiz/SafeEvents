@@ -6,15 +6,12 @@ import (
 	"net/http"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/api"
-<<<<<<< HEAD
-	"github.com/alvidir/util/config"
-	"github.com/joho/godotenv"
-=======
 	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/product"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
 	mysql "github.com/PabloGamiz/SafeEvents-Backend/mysql"
->>>>>>> feature/event-management/publica_i_consulta_especifica
+	"github.com/alvidir/util/config"
+	"github.com/joho/godotenv"
 )
 
 const (
