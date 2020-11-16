@@ -9,6 +9,7 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 var (
@@ -47,7 +48,7 @@ func FindEventByID(ctx context.Context, ID int) (gw Gateway, err error) {
 		return
 	}
 	var events []event.Event
-	db.Where("id = ?", ID).Find(&events)
+	db.Preload("Services.Location").Preload("Services.Products").Preload(clause.Associations).Where("id = ?", ID).Find(&events)
 	if len(events) == 0 {
 		err = fmt.Errorf(errNotFoundByID, ID)
 		return
