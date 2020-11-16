@@ -30,10 +30,6 @@ func OpenEventStream() (db *gorm.DB, err error) {
 	return
 }
 
-// NewEventGateway builds a gateway for the provided client
-func NewEventGateway(ctx context.Context, event *event.Event) Gateway {
-	return &eventGateway{Event: event, ctx: ctx}
-}
 
 // FindAll returns the gateway for finding all the events loaded on the BBDD
 func FindAll(ctx context.Context) (events []event.Controller, err error) {
@@ -54,5 +50,27 @@ func FindAll(ctx context.Context) (events []event.Controller, err error) {
 	for index, event := range eventsMOD {
 		events[index] = NewEventGateway(ctx, &event)
 	}
+	return
+}
+
+func NewEventGateway(ctx context.Context, event event.Controller) Gateway {
+// NewEventGateway builds a gateway for the provided event
+	return &eventGateway{Controller: event, ctx: ctx}
+}
+// FindEventByID returns the gateway for the event that match the provided name
+func FindEventByID(ctx context.Context, ID int) (gw Gateway, err error) {
+	var db *gorm.DB
+	if db, err = OpenEventStream(); err != nil {
+		return
+	}
+	var events []event.Event
+	db.Preload("Services.Location").Preload("Services.Products").Preload(clause.Associations).Where("id = ?", ID).Find(&events)
+	if len(events) == 0 {
+		err = fmt.Errorf(errNotFoundByID, ID)
+		return
+	}
+
+	gw = NewEventGateway(ctx, &events[0])
+
 	return
 }

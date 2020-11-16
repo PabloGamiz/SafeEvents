@@ -8,7 +8,7 @@ import (
 )
 
 type eventGateway struct {
-	*event.Event
+	event.Controller
 	ctx context.Context
 }
 
@@ -18,7 +18,7 @@ func (gw *eventGateway) Insert() (err error) {
 		return
 	}
 
-	db.Create(gw.Event)
+	db.Create(gw.Controller)
 	return
 }
 
@@ -27,5 +27,9 @@ func (gw *eventGateway) Update() (err error) {
 }
 
 func (gw *eventGateway) Remove() (err error) {
+	return nil
+}
+
+func (gw *eventGateway) FindAll() (err error) {
 	return nil
 }
