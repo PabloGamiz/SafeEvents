@@ -2,39 +2,50 @@ package event
 
 import (
 	"context"
+	"fmt"
+	"log"
+	"sync"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
-
-	"github.com/PabloGamiz/SafeEvents-Backend/mongo"
-	"go.mongodb.org/mongo-driver/bson"
-	mongodb "go.mongodb.org/mongo-driver/mongo"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
+	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
+	"gorm.io/gorm"
 )
+
+var once sync.Once
+
+// OpenEventStream opens an stream ensuring the Event's table does exists
+func OpenEventStream() (db *gorm.DB, err error) {
+	if db, err = mysql.OpenStream(); err != nil {
+		log.Fatalf("Got %v error while opening stream", err.Error())
+		return
+	}
+
+	once.Do(func() {
+		// Automigrate must be called only once for each gateway, and allways on the stream's opening call.
+		// This makes sure the Event struct has its own table on the database. So model updates are only
+		// migrable to the database rebooting the server (not on-the-run).
+		db.AutoMigrate(&event.Event{})
+	})
+
+	return
+}
 
 // NewEventGateway builds a gateway for the provided event
 func NewEventGateway(ctx context.Context, event event.Controller) Gateway {
 	return &eventGateway{Controller: event, ctx: ctx}
 }
 
-// FindEventByID returns the gateway for the event that match the provided Id
-func FindEventByID(ctx context.Context, id string) (gw Gateway, err error) {
-	var mongoClient *mongodb.Client
-	if mongoClient, err = mongo.NewMongoClient(ctx); err != nil {
+// FindEventByID returns the gateway for the event that match the provided name
+func FindEventByID(ctx context.Context, ID int) (gw Gateway, err error) {
+	var db *gorm.DB
+	if db, err = OpenEventStream(); err != nil {
 		return
 	}
-
-	defer mongoClient.Disconnect(ctx)
-	col := mongoClient.Database(mongo.Database).Collection(collection)
-
-	var model event.Event
-	objectID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
+	var event event.Event
+	notR := db.Where("ID = ?", ID).Find(&event)
+	if notR != nil {
+		err = fmt.Errorf(errNotFoundByID, ID)
 		return
 	}
-
-	if err = col.FindOne(ctx, bson.M{"_id": objectID}).Decode(model); err != nil {
-		return
-	}
-
-	gw = &locationGateway{Controller: &model, ctx: ctx}
 	return
 }

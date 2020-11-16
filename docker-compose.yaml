@@ -6,6 +6,8 @@ services:
     #     container_name: safe-events-mysql
     #     image: mysql/mysql-server:latest
     #     restart: on-failure
+    #     ports:
+    #         - "3306:3306"
     #     volumes:
     #         - "dbdata:/var/lib/mysql"
     #         - "dbdump:/docker-entrypoint-initdb.d"

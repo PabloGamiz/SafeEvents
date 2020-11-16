@@ -1,6 +1,6 @@
 package service
 
-// Kind represents the ServiceKind enum
+// Kind represents the kind enum
 type Kind int
 
 // Kind possible values
@@ -18,3 +18,10 @@ const (
 	NUERSERY
 	OTHERS
 )
+
+func (k Kind) String() string {
+	return [...]string{"Groceries", "Information", "Drink",
+		"Security", "Bathrooms", "Pharmacy",
+		"Safe point", "Purple point", "Hydrogel dispenser",
+		"PCRs", "Nursery", "Others"}[k]
+}
