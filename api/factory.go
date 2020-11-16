@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/api/client"
+	"github.com/PabloGamiz/SafeEvents-Backend/api/event"
 	"github.com/gorilla/mux"
 )
 
@@ -12,16 +13,16 @@ func NewServer() Server {
 	api := &api{}
 
 	router := mux.NewRouter()
+
+	// Client router Handlers
 	router.HandleFunc(client.APISigninPath, client.HandleSigninRequest).Methods(http.MethodPost)
 	router.HandleFunc(client.APILogoutPath, client.HandleLogoutRequest).Methods(http.MethodPut)
-	//router.HandleFunc("/client/{ID:[a-zA-Z0-9_]+}", api.getClient).Methods(http.MethodGet)
 	router.HandleFunc(client.APIClientInfoPath, client.HandleClientInfoRequest).Methods(http.MethodGet)
+
 	// Events router Handlers
-	// router.HandleFunc("/events/list", events.HandleListEventsRequest).Methods(http.MethodGet)
-	// router.HandleFunc(client.APIPath, client.HandleSigninRequest).Methods(http.MethodPost)
-	// router.HandleFunc(event.APILISTEVENTS, event.HandleListEventsRequest).Methods(http.MethodGet)
-	// router.HandleFunc(event.APIPubliEvent, event.HandlePublicaEventRequest).Methods(http.MethodPost)
-	// router.HandleFunc(event.APIGetEvent, event.HandleGetEventRequest).Methods(http.MethodGet)
+	router.HandleFunc(event.APIListEvents, event.HandleListEventsRequest).Methods(http.MethodGet)
+	router.HandleFunc(event.APIPubliEvent, event.HandlePublicaEventRequest).Methods(http.MethodPost)
+	router.HandleFunc(event.APIGetEvent, event.HandleGetEventRequest).Methods(http.MethodGet)
 
 	api.router = router
 	return api

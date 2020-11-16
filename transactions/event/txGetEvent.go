@@ -20,7 +20,7 @@ func (tx *txGetEvent) Precondition() error {
 
 // Postcondition creates new user and a opens its first session
 func (tx *txGetEvent) Postcondition(ctx context.Context) (interface{}, error) {
-	log.Printf("Got a Event request for event %s", tx.request.Title)
+	log.Printf("Got a Event request for event with and ID of %d ", tx.request.ID)
 	var gw eventGW.Gateway
 	var err error
 	gw, err = eventGW.FindEventByID(ctx, tx.request.ID)

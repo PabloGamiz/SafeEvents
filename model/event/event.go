@@ -15,7 +15,7 @@ type Event struct {
 	Description string            `json:"description"`
 	Capacity    int               `json:"capacity" gorm:"not null"`
 	Price       float32           `json:"price" gorm:"not null"`
-	CheckInDate int64             `json:"checkInDate" gorm:"not null"`
+	CheckInDate time.Time         `json:"checkInDate" gorm:"not null"`
 	ClosureDate time.Time         `json:"closureDate" gorm:"not null"`
 	Location    location.Location `json:"location" gorm:"foreignkey:LocationID;not null"`
 	LocationID  uint64            `json:"-"`
@@ -71,12 +71,12 @@ func (event *Event) SetPrice(price float32) {
 }
 
 // GetCheckInDate return the ChekInDate of the Event.
-func (event *Event) GetCheckInDate() int64 {
+func (event *Event) GetCheckInDate() time.Time {
 	return event.CheckInDate
 }
 
 // SetCheckInDate sets the CheckInDate of the Event.
-func (event *Event) SetCheckInDate(checkInDate int64) {
+func (event *Event) SetCheckInDate(checkInDate time.Time) {
 	event.CheckInDate = checkInDate
 }
 

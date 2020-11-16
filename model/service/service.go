@@ -5,12 +5,10 @@ import (
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/product"
-	"gorm.io/gorm"
 )
 
 // Service represents the product class from UML
 type Service struct {
-	gorm.Model
 	ID          uint              `json:"id" gorm:"primaryKey; autoIncrement:true"`
 	Name        string            `json:"name" gorm:"not null;unique"`
 	Description string            `json:"description" gorm:"not null"`

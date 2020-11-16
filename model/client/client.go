@@ -1,12 +1,7 @@
 package client
 
-import (
-	"gorm.io/gorm"
-)
-
 // Client its the main data object fro a client
 type Client struct {
-	gorm.Model
 	ID    uint   `json:"id" gorm:"primaryKey; autoIncrement:true"`
 	Email string `json:"email" gorm:"not null"`
 }
