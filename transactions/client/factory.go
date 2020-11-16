@@ -16,3 +16,8 @@ func NewTxLogout(request clientDTO.LogoutRequestDTO) transaction.Tx {
 	body := &txLogout{request: request}
 	return transaction.NewTransaction(body)
 }
+
+func NewTxClientInfo(request clientDTO.ClientInfoRequestDTO) transaction.Tx {
+	body := &txClientInfo{request: request}
+	return transaction.NewTransaction(body)
+}

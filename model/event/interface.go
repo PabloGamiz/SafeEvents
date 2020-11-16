@@ -17,6 +17,8 @@ type Controller interface {
 	SetDescription(description string)
 	GetCapacity() int
 	SetCapacity(capacity int)
+	GetPrice() float32
+	SetPrice(float32)
 	GetCheckInDate() time.Time
 	SetCheckInDate(checkInDate time.Time)
 	GetClosureDate() time.Time

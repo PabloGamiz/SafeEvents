@@ -13,9 +13,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-var (
-	once sync.Once
-)
+var once sync.Once
 
 // OpenEventStream opens an stream ensuring the client's table does exists
 func OpenEventStream() (db *gorm.DB, err error) {
