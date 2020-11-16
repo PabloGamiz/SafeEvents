@@ -1,8 +1,7 @@
 package client
 
-// Client represents a client and it's main data
-type Client interface {
-	GetID() string
-	GetName() string
+// Controller represents a client and it's main data
+type Controller interface {
+	GetID() uint
 	GetEmail() string
 }
