@@ -2,20 +2,49 @@ package ticket
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	ticketDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/ticket"
 	clientGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/client"
 	eventGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/event"
+	ticketGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/ticket"
+	ticketMOD "github.com/PabloGamiz/SafeEvents-Backend/model/ticket"
 )
 
 // txPurchase represents an
 type txPurchase struct {
-	request ticketDTO.PurchaseRequestDTO
+	request   ticketDTO.PurchaseRequestDTO
+	purchased []ticketGW.Gateway
 }
 
 func (tx *txPurchase) buildPurchaseResponseDTO() *ticketDTO.PurchaseResponseDTO {
-	return &ticketDTO.PurchaseResponseDTO{}
+	ticketsID := make([]uint, len(tx.purchased))
+	for index, ticket := range tx.purchased {
+		ticketsID[index] = ticket.GetID()
+	}
+
+	return &ticketDTO.PurchaseResponseDTO{
+		TicketsID: ticketsID,
+	}
+}
+
+func (tx *txPurchase) buildNewTicket(ctx context.Context) (gw ticketGW.Gateway, err error) {
+	tick := &ticketMOD.Ticket{
+		ClientID: tx.request.ClientID,
+		EventID:  tx.request.EventID,
+	}
+
+	gw = ticketGW.NewTicketGateway(ctx, tick)
+	if err = gw.Insert(); err != nil {
+		return
+	}
+
+	if got := ticketMOD.Option(tx.request.Option); got == ticketMOD.BOUGHT {
+		err = gw.Buy()
+	}
+
+	return
 }
 
 // Precondition validates the transaction is ready to run
@@ -26,14 +55,33 @@ func (tx *txPurchase) Precondition() (err error) {
 // Postcondition creates new user and a opens its first session
 func (tx *txPurchase) Postcondition(ctx context.Context) (v interface{}, err error) {
 	log.Printf("Got a Purchase request from client %v", tx.request.ClientID)
-	var client clientGW.Gateway
-	if client, err = clientGW.FindClientByID(ctx, tx.request.ClientID); err != nil {
+	// make sure the client exists
+	if _, err = clientGW.FindClientByID(ctx, tx.request.ClientID); err != nil {
 		return
 	}
 
+	// make sure the event exists
 	var event eventGW.Gateway
 	if event, err = eventGW.FindEventByID(ctx, int(tx.request.EventID)); err != nil {
 		return
+	}
+
+	var tickets []ticketMOD.Controller
+	if tickets, err = ticketGW.GetTicketsByEventID(tx.request.EventID); err != nil {
+		return
+	}
+
+	if len(tickets)+tx.request.HowMany > event.GetCapacity() {
+		err = fmt.Errorf(errNotStock)
+		return
+	}
+
+	// foreach ticket to purchase
+	tx.purchased = make([]ticketGW.Gateway, tx.request.HowMany)
+	for it := 0; it < tx.request.HowMany; it++ {
+		if tx.purchased[it], err = tx.buildNewTicket(ctx); err != nil {
+			return
+		}
 	}
 
 	response := tx.buildPurchaseResponseDTO()
@@ -41,11 +89,13 @@ func (tx *txPurchase) Postcondition(ctx context.Context) (v interface{}, err err
 }
 
 // Commit commits the transaction result
-func (tx *txPurchase) Commit() error {
-	return nil
+func (tx *txPurchase) Commit() (err error) {
+	return
 }
 
 // Rollback rollbacks any change caused while the transaction
 func (tx *txPurchase) Rollback() {
-
+	for _, ticket := range tx.purchased {
+		ticket.Remove()
+	}
 }

@@ -14,6 +14,7 @@ type Event struct {
 	Title       string            `json:"title" gorm:"not null;unique"`
 	Description string            `json:"description"`
 	Capacity    int               `json:"capacity" gorm:"not null"`
+	Price       float32           `json:"price" gorm:"not null"`
 	CheckInDate int64             `json:"checkInDate" gorm:"not null"`
 	ClosureDate time.Time         `json:"closureDate" gorm:"not null"`
 	Location    location.Location `json:"location" gorm:"foreignkey:LocationID;not null"`
@@ -57,6 +58,16 @@ func (event *Event) GetCapacity() int {
 // SetCapacity sets the Capacity of the Event.
 func (event *Event) SetCapacity(capacity int) {
 	event.Capacity = capacity
+}
+
+// GetPrice return the price of one ticket for the Event.
+func (event *Event) GetPrice() float32 {
+	return event.Price
+}
+
+// SetPrice sets the price of one ticket for the Event.
+func (event *Event) SetPrice(price float32) {
+	event.Price = price
 }
 
 // GetCheckInDate return the ChekInDate of the Event.
