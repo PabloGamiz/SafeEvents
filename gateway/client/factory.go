@@ -79,15 +79,15 @@ func FindClientByID(ctx context.Context, ID uint) (gw Gateway, err error) {
 		return
 	}
 
-	var client client.Client
-	result := db.Where(queryFindByID, ID).Find(&client)
+	var clients []client.Client
+	db.Where(queryFindByID, ID).Find(&clients)
 
-	if result.Error != nil {
+	if len(clients) == 0 {
 		err = fmt.Errorf(errNotFoundByID, ID)
 		return
 	}
 
-	gw = NewClientGateway(ctx, &client)
+	gw = NewClientGateway(ctx, &clients[0])
 
 	return
 }
