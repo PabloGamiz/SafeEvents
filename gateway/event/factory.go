@@ -28,7 +28,6 @@ func OpenEventStream() (db *gorm.DB, err error) {
 	return
 }
 
-
 // FindAll returns the gateway for finding all the events loaded on the BBDD
 func FindAll(ctx context.Context) (events []event.Controller, err error) {
 	var eventsMOD []event.Event
@@ -51,10 +50,11 @@ func FindAll(ctx context.Context) (events []event.Controller, err error) {
 	return
 }
 
-func NewEventGateway(ctx context.Context, event event.Controller) Gateway {
 // NewEventGateway builds a gateway for the provided event
+func NewEventGateway(ctx context.Context, event event.Controller) Gateway {
 	return &eventGateway{Controller: event, ctx: ctx}
 }
+
 // FindEventByID returns the gateway for the event that match the provided name
 func FindEventByID(ctx context.Context, ID int) (gw Gateway, err error) {
 	var db *gorm.DB
