@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os/user"
 	"sync"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
@@ -24,7 +25,7 @@ func OpenEventStream() (db *gorm.DB, err error) {
 	}
 
 	once.Do(func() {
-		db.AutoMigrate(&event.Event{})
+		db.AutoMigrate(&event.Event{}, &user.User{})
 	})
 	return
 }
@@ -35,17 +36,23 @@ func NewEventGateway(ctx context.Context, event *event.Event) Gateway {
 }
 
 // FindAll returns the gateway for finding all the events loaded on the BBDD
-func FindAll() (events []event.Event, err error) {
+func FindAll(ctx context.Context) (events []event.Controller, err error) {
+	var eventsMOD []event.Event
+
 	var db *gorm.DB
 	if db, err = OpenEventStream(); err != nil {
 		return
 	}
 
-	db.Preload("Services.Location").Preload("Services.Products").Preload(clause.Associations).Find(&events)
-	if len(events) == 0 {
+	db.Preload("Services.Location").Preload("Services.Products").Preload(clause.Associations).Find(&eventsMOD)
+	if len(eventsMOD) == 0 {
 		err = fmt.Errorf(errNoEventsOnDatabase)
 		return
 	}
 
+	events = make([]event.Controller, len(eventsMOD))
+	for index, event := range eventsMOD {
+		events[index] = NewEventGateway(ctx, &event)
+	}
 	return
 }

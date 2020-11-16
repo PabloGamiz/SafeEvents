@@ -17,9 +17,9 @@ func (tx *txListEvents) Precondition() error {
 }
 
 // Postcondition creates new user and a opens its first session
-func (tx *txListEvents) Postcondition(context.Context) (interface{}, error) {
+func (tx *txListEvents) Postcondition(ctx context.Context) (interface{}, error) {
 	log.Printf("Got a List Events request")
-	events, err := eventGW.FindAll()
+	events, err := eventGW.FindAll(ctx)
 	return events, err
 }
 
