@@ -52,6 +52,7 @@ func FindClientByEmail(ctx context.Context, email string) (gw Gateway, err error
 	}
 
 	gw = NewClientGateway(ctx, &clients[0])
+
 	return
 }
 
@@ -63,31 +64,14 @@ func FindClientByID(ctx context.Context, ID uint) (gw Gateway, err error) {
 	}
 
 	var client client.Client
-	notR := db.Where("ID = ?", ID).Find(&client)
-	if notR != nil {
+	result := db.Where(queryFindByID, ID).Find(&client)
+
+	if result.Error != nil {
 		err = fmt.Errorf(errNotFoundByID, ID)
 		return
 	}
 
 	gw = NewClientGateway(ctx, &client)
-	return
-}
-
-func FindClientByID(ctx context.Context, ID uint) (gw Gateway, err error) {
-	var db *gorm.DB
-	if db, err = OpenClientStream(); err != nil {
-		return
-	}
-
-	var clients []client.Client
-	db.Where(queryFindByID, ID).Find(&clients)
-
-	if len(clients) == 0 {
-		err = fmt.Errorf(errNotFoundByID, ID)
-		return
-	}
-
-	gw = NewClientGateway(ctx, &clients[0])
 
 	return
 }

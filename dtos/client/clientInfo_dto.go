@@ -1,4 +1,4 @@
-package dtos
+package client
 
 // ClientInfoRequestDTO represents the expected data from a Client Info request
 type ClientInfoRequestDTO struct {
