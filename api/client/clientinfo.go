@@ -7,14 +7,15 @@ import (
 	"net/http"
 	"time"
 
+	clientDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/transactions/client"
 )
 
-func HandleClientInfoRequest(w http.ResposeWriter, r *http.Request) {
+func HandleClientInfoRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a Client Info request")
 
 	//Expected a email in the URI or a header?
-	var clientInfoDTO clientDTO.clientInfoRequestDTO
+	var clientInfoDTO clientDTO.ClientInfoRequestDTO
 	if err := json.NewDecoder(r.Body).Decode(&clientInfoDTO); err != nil {
 		//The json sent does not match with the expected DTO
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -26,7 +27,7 @@ func HandleClientInfoRequest(w http.ResposeWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 
-	txClientInfo.execute()
+	txClientInfo.Execute(ctx)
 	result, err := txClientInfo.Result()
 
 	if err != nil {
