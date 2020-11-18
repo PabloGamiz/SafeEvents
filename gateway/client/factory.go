@@ -63,7 +63,7 @@ func FindClientByID(ctx context.Context, ID uint) (gw Gateway, err error) {
 	}
 
 	var client client.Client
-	notR := db.Where("ID = ?", ID).Find(&client)
+	notR := db.Where(queryFindByID, ID).Find(&client)
 	if notR != nil {
 		err = fmt.Errorf(errNotFoundByID, ID)
 		return

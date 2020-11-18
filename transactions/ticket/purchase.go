@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/PabloGamiz/SafeEvents-Backend/model/session"
+
 	ticketDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/ticket"
-	clientGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/client"
 	eventGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/event"
 	ticketGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/ticket"
 	ticketMOD "github.com/PabloGamiz/SafeEvents-Backend/model/ticket"
@@ -15,6 +16,7 @@ import (
 // txPurchase represents an
 type txPurchase struct {
 	request   ticketDTO.PurchaseRequestDTO
+	sessCtrl  session.Controller
 	purchased []ticketGW.Gateway
 }
 
@@ -31,7 +33,7 @@ func (tx *txPurchase) buildPurchaseResponseDTO() *ticketDTO.PurchaseResponseDTO 
 
 func (tx *txPurchase) buildNewTicket(ctx context.Context) (gw ticketGW.Gateway, err error) {
 	tick := &ticketMOD.Ticket{
-		ClientID: tx.request.ClientID,
+		ClientID: tx.sessCtrl.GetID(),
 		EventID:  tx.request.EventID,
 	}
 
@@ -49,16 +51,16 @@ func (tx *txPurchase) buildNewTicket(ctx context.Context) (gw ticketGW.Gateway, 
 
 // Precondition validates the transaction is ready to run
 func (tx *txPurchase) Precondition() (err error) {
+	// make sure the session exists
+	if tx.sessCtrl, err = session.GetSessionByID(tx.request.Cookie); err != nil {
+		return
+	}
 	return
 }
 
 // Postcondition creates new user and a opens its first session
 func (tx *txPurchase) Postcondition(ctx context.Context) (v interface{}, err error) {
-	log.Printf("Got a Purchase request from client %v", tx.request.ClientID)
-	// make sure the client exists
-	if _, err = clientGW.FindClientByID(ctx, tx.request.ClientID); err != nil {
-		return
-	}
+	log.Printf("Got a Purchase request from client %v", tx.sessCtrl.GetID())
 
 	// make sure the event exists
 	var event eventGW.Gateway
