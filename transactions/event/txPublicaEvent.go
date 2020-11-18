@@ -25,6 +25,7 @@ func (tx *txPublicaEvent) Postcondition(ctx context.Context) (interface{}, error
 		Title:       tx.request.Title,
 		Description: tx.request.Description,
 		Capacity:    tx.request.Capacity,
+		Price:       tx.request.Price,
 		CheckInDate: tx.request.CheckInDate,
 		ClosureDate: tx.request.ClosureDate,
 		LocationID:  uint64(tx.request.Locations.ID),
