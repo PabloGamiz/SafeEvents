@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	clientDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
@@ -13,6 +14,8 @@ import (
 
 func HandleClientInfoRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a Client Info request")
+
+	var clientInfoDTO clientDTO.ClientInfoRequestDTO
 
 	//Get the id from the URL
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
