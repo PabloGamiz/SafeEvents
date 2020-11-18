@@ -52,6 +52,7 @@ func FindClientByEmail(ctx context.Context, email string) (gw Gateway, err error
 	}
 
 	gw = NewClientGateway(ctx, &clients[0])
+
 	return
 }
 
@@ -63,12 +64,14 @@ func FindClientByID(ctx context.Context, ID uint) (gw Gateway, err error) {
 	}
 
 	var client client.Client
-	notR := db.Where(queryFindByID, ID).Find(&client)
-	if notR != nil {
+	result := db.Where(queryFindByID, ID).Find(&client)
+
+	if result.Error != nil {
 		err = fmt.Errorf(errNotFoundByID, ID)
 		return
 	}
 
 	gw = NewClientGateway(ctx, &client)
+
 	return
 }

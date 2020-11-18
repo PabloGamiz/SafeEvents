@@ -65,7 +65,7 @@ func newSessionID() (id sID, err error) {
 }
 
 // GetSessionByID returns the session with the provided cookie, if exists
-func GetSessionByID(cookie string) (ctrl Controller, err error) {
+func GetSessionByID(cookie string) (ctrl *Session, err error) {
 	sid := sID(cookie)
 
 	content, exists := AllInstancesByID.Load(sid)
@@ -83,7 +83,7 @@ func GetSessionByID(cookie string) (ctrl Controller, err error) {
 }
 
 // GetSessionByEmail returns the session with the provided email, if exists
-func GetSessionByEmail(mail string) (ctrl Controller, err error) {
+func GetSessionByEmail(mail string) (ctrl *Session, err error) {
 	email := email(mail)
 
 	content, exists := AllInstancesByEmail.Load(email)
@@ -101,7 +101,7 @@ func GetSessionByEmail(mail string) (ctrl Controller, err error) {
 }
 
 // NewSession returns a brand new session for the provided client
-func NewSession(ctx context.Context, cancel context.CancelFunc, client client.Controller) (ctrl Controller, err error) {
+func NewSession(ctx context.Context, cancel context.CancelFunc, client *client.Client) (ctrl *Session, err error) {
 	if _, ok := ctx.Deadline(); !ok {
 		err = fmt.Errorf(errNoDeadline)
 		return
@@ -114,10 +114,10 @@ func NewSession(ctx context.Context, cancel context.CancelFunc, client client.Co
 
 	cookie := string(sid)
 	session := &Session{
-		Context:    ctx,
-		Controller: client,
-		cancel:     cancel,
-		cookie:     cookie,
+		Client:  client,
+		Context: ctx,
+		cancel:  cancel,
+		cookie:  cookie,
 	}
 
 	err = registerSession(session)
