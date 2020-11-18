@@ -73,3 +73,16 @@ func FindEventByID(ctx context.Context, ID int) (gw Gateway, err error) {
 
 	return
 }
+
+/*
+func FindEventsByClientID(ctx context.Context, ID int) (gw Gateway, err error) {
+	var db *gorm.DB
+	if db, err = OpenEventStream(); err != nil {
+		return
+	}
+
+	var events []event.Event
+
+	return
+}
+*/

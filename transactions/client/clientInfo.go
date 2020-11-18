@@ -37,8 +37,14 @@ func (tx *txClientInfo) Postcondition(ctx context.Context) (v interface{}, err e
 	log.Printf("Got a Event request for client %d", tx.request.ID)
 	var ctrl clientMOD.Controller
 	if ctrl, err = clientGW.FindClientByID(ctx, tx.request.ID); err != nil {
-
+		return
 	}
+	/*
+		var events eventMOD.Controller
+		if events, err = eventGW.FindEventsByClientID(ctx, tx.request.ID); err != nil {
+			return
+		}
+	*/
 	response := tx.buildClientInfoDTO(ctrl)
 	return response, err
 
