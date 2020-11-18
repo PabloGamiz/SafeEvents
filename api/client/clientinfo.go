@@ -21,6 +21,7 @@ func buildClientInfoRequestDTO(id uint) clientDTO.ClientInfoRequestDTO {
 func HandleClientInfoRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a Client Info request")
 
+	//Get the id from the URL
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
 		log.Printf("Error no id found")
