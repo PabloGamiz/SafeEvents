@@ -3,6 +3,8 @@ package event
 import (
 	"time"
 
+	"github.com/PabloGamiz/SafeEvents-Backend/model/feedback"
+
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
@@ -10,19 +12,20 @@ import (
 
 // Event represents the Event class from UML.
 type Event struct {
-	ID          uint              `json:"id" gorm:"primaryKey; autoIncrement:true"`
-	Title       string            `json:"title" gorm:"not null;unique"`
-	Description string            `json:"description"`
-	Capacity    int               `json:"capacity" gorm:"not null"`
-	Price       float32           `json:"price" gorm:"not null"`
-	CheckInDate time.Time         `json:"checkInDate" gorm:"not null"`
-	ClosureDate time.Time         `json:"closureDate" gorm:"not null"`
-	Location    location.Location `json:"location" gorm:"foreignkey:LocationID;not null"`
-	LocationID  uint64            `json:"-"`
-	Organizers  []client.Client   `json:"organizers" gorm:"many2many:events_organizers;"`
-	Services    []service.Service `json:"services" gorm:"foreignkey:EventID"`
-	CreatedAt   time.Time         `json:"createdAt"`
-	UpdatedAt   time.Time         `json:"updatedAt"`
+	ID          uint                `json:"id" gorm:"primaryKey; autoIncrement:true"`
+	Title       string              `json:"title" gorm:"not null;unique"`
+	Description string              `json:"description"`
+	Capacity    int                 `json:"capacity" gorm:"not null"`
+	Price       float32             `json:"price" gorm:"not null"`
+	CheckInDate time.Time           `json:"checkInDate" gorm:"not null"`
+	ClosureDate time.Time           `json:"closureDate" gorm:"not null"`
+	Location    location.Location   `json:"location" gorm:"foreignkey:LocationID;not null"`
+	LocationID  uint64              `json:"-"`
+	Organizers  []client.Client     `json:"organizers" gorm:"many2many:events_organizers;"`
+	Services    []service.Service   `json:"services" gorm:"foreignkey:EventID"`
+	Feedbacks   []feedback.Feedback `json:"feedbacks" gorm:"foreignkey:EventID"`
+	CreatedAt   time.Time           `json:"createdAt"`
+	UpdatedAt   time.Time           `json:"updatedAt"`
 }
 
 // GetID return the ID of the Event.

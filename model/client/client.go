@@ -2,7 +2,7 @@ package client
 
 // Client its the main data object fro a client
 type Client struct {
-	ID    uint   `json:"id" gorm:"primaryKey; autoIncrement:true"`
+	ID    uint   `json:"-" gorm:"primaryKey; autoIncrement:true"`
 	Email string `json:"email" gorm:"not null"`
 }
 
