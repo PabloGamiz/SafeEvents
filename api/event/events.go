@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	eventDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/event"
@@ -92,6 +93,46 @@ func HandleGetEventRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Sending response
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
+}
+
+func buildListFavoritesRequestDTO(id uint) eventDTO.ListFavoritesRequestDTO {
+	return eventDTO.ListFavoritesRequestDTO{
+		ID: id,
+	}
+}
+
+// HandleListFavoritesRequest attends a list of favorites events request
+func HandleListFavoritesRequest(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Handlering a List Favorites request")
+
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || id < 1 {
+		log.Printf("Error no id found")
+		http.Error(w, err.Error(), http.StatusConflict)
+		return
+	}
+
+	uid := uint(id)
+
+	req := buildListFavoritesRequestDTO(uid)
+
+	// Setting uo TxListFavorites with the required values
+	txClientInfo := event.NewTxClientInfo(req)
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+
+	txListFavorites.Execute(ctx)
+	result, err := txListFavorites.Result()
+
+	if err != nil {
+		//Transaction has failed
+		http.Error(w, err.Error(), http.StatusConflict)
+		return
+	}
+
+	//sending response
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(result)
 }
