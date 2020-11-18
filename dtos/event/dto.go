@@ -15,6 +15,7 @@ type DTO struct {
 	Description string            `json:"description"`
 	Capacity    int               `json:"capacity"`
 	Organizers  []client_api.DTO  `json:"organizers"`
+	Price       float32           `json:"price"`
 	CheckInDate time.Time         `json:"checkInDate"`
 	ClosureDate time.Time         `json:"closureDate"`
 	Locations   location_api.DTO  `json:"locations"`
