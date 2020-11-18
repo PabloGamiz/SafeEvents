@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	eventDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/event"
@@ -69,11 +70,15 @@ func HandlePublicaEventRequest(w http.ResponseWriter, r *http.Request) {
 func HandleGetEventRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a single event request")
 
-	var geteventDTO eventDTO.DTO
-	if err := json.NewDecoder(r.Body).Decode(&geteventDTO); err != nil {
-		// If some error just happened it means the provided Json does not match with the expected DTO
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	//Obte el id passat com a parametre a la url
+	idR, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || idR < 1 {
+		http.NotFound(w, r)
 		return
+	}
+
+	geteventDTO := eventDTO.DTO{
+		ID: idR,
 	}
 
 	// Setting up txGetEvent with the required values
