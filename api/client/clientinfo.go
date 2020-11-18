@@ -14,11 +14,11 @@ import (
 func HandleClientInfoRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a Client Info request")
 
-	//Expected a email in the URI or a header?
-	var clientInfoDTO clientDTO.ClientInfoRequestDTO
-	if err := json.NewDecoder(r.Body).Decode(&clientInfoDTO); err != nil {
-		//The json sent does not match with the expected DTO
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	//Get the id from the URL
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || id < 1 {
+		log.Printf("Error no id found")
+		http.Error(w, err.Error(), http.StatusConflict)
 		return
 	}
 
