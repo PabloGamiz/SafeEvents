@@ -12,10 +12,14 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/transactions/client"
 )
 
+func buildClientInfoRequestDTO(id uint) clientDTO.ClientInfoRequestDTO {
+	return clientDTO.ClientInfoRequestDTO{
+		ID: id,
+	}
+}
+
 func HandleClientInfoRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a Client Info request")
-
-	var clientInfoDTO clientDTO.ClientInfoRequestDTO
 
 	//Get the id from the URL
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
@@ -25,8 +29,12 @@ func HandleClientInfoRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	uid := uint(id)
+
+	req := buildClientInfoRequestDTO(uid)
+
 	//Setting up TxClientInfo with the required values
-	txClientInfo := client.NewTxClientInfo(clientInfoDTO)
+	txClientInfo := client.NewTxClientInfo(req)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 
