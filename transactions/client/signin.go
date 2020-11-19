@@ -8,6 +8,7 @@ import (
 	clientDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
 	clientGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/google"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	clientMOD "github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	sessionMOD "github.com/PabloGamiz/SafeEvents-Backend/model/session"
 	"google.golang.org/api/oauth2/v2"
@@ -57,8 +58,8 @@ func (tx *txSignin) Postcondition(ctx context.Context) (v interface{}, err error
 	}
 
 	// SIGNUP //
-	var gw clientGW.Gateway
-	if gw, err = clientGW.FindClientByEmail(ctx, tx.info.Email); err != nil {
+	var ctrl client.Controller
+	if ctrl, err = client.FindClientByEmail(ctx, tx.info.Email); err != nil {
 		log.Printf("Signing up a new client %s", tx.info.Email)
 		if err = tx.registerNewClient(ctx); err != nil {
 			return
@@ -67,15 +68,15 @@ func (tx *txSignin) Postcondition(ctx context.Context) (v interface{}, err error
 
 	// LOGIN //
 	log.Printf("Loging in the client %s", tx.info.Email)
-	if gw, err = clientGW.FindClientByEmail(ctx, tx.info.Email); err != nil {
+	if ctrl, err = client.FindClientByEmail(ctx, tx.info.Email); err != nil {
 		// At this point the client must be stored in the database
 		return
 	}
 
-	log.Printf("Building session for client %s", gw.GetEmail())
+	log.Printf("Building session for client %s", ctrl.GetEmail())
 	deadline := time.Unix(tx.info.ExpiresIn, 0)
 	sessCtx, cancel := context.WithDeadline(context.TODO(), deadline)
-	if sess, err = sessionMOD.NewSession(sessCtx, cancel, gw); err != nil {
+	if sess, err = sessionMOD.NewSession(sessCtx, cancel, ctrl); err != nil {
 		return
 	}
 

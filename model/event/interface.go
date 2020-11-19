@@ -3,7 +3,6 @@ package event
 import (
 	"time"
 
-	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
 )
@@ -25,8 +24,6 @@ type Controller interface {
 	SetClosureDate(closureDate time.Time)
 	GetLocation() location.Location
 	SetLocation(location location.Location)
-	GetOrganizers() []client.Client
-	SetOrganizers(organizers []client.Client)
 	GetServices() []service.Service
 	SetServices(services []service.Service)
 }

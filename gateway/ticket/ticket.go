@@ -14,7 +14,7 @@ type ticketGateway struct {
 
 func (gw *ticketGateway) Insert() (err error) {
 	var db *gorm.DB
-	if db, err = OpenTicketStream(); err != nil {
+	if db, err = ticket.OpenTicketStream(); err != nil {
 		return
 	}
 
@@ -23,9 +23,21 @@ func (gw *ticketGateway) Insert() (err error) {
 }
 
 func (gw *ticketGateway) Update() (err error) {
-	return nil
+	var db *gorm.DB
+	if db, err = ticket.OpenTicketStream(); err != nil {
+		return
+	}
+
+	db.Save(gw.Controller)
+	return
 }
 
 func (gw *ticketGateway) Remove() (err error) {
-	return nil
+	var db *gorm.DB
+	if db, err = ticket.OpenTicketStream(); err != nil {
+		return
+	}
+
+	db.Delete(gw.Controller)
+	return
 }

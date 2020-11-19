@@ -5,12 +5,14 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	clientDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/transactions/client"
 )
 
+// HandleClientInfoRequest ...
 func HandleClientInfoRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a Client Info request")
 
@@ -19,6 +21,13 @@ func HandleClientInfoRequest(w http.ResponseWriter, r *http.Request) {
 	if err != nil || id < 1 {
 		log.Printf("Error no id found")
 		http.Error(w, err.Error(), http.StatusConflict)
+		return
+	}
+
+	var clientInfoDTO clientDTO.ClientInfoRequestDTO
+	if err := json.NewDecoder(r.Body).Decode(&clientInfoDTO); err != nil {
+		// If some error just happened it means the provided Json does not match with the expected DTO
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 

@@ -6,8 +6,10 @@ import (
 	"log"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/session"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/ticket"
 
 	ticketDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/ticket"
+	"github.com/PabloGamiz/SafeEvents-Backend/gateway/client"
 	eventGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/event"
 	ticketGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/ticket"
 	ticketMOD "github.com/PabloGamiz/SafeEvents-Backend/model/ticket"
@@ -18,6 +20,7 @@ type txPurchase struct {
 	request   ticketDTO.PurchaseRequestDTO
 	sessCtrl  session.Controller
 	purchased []ticketGW.Gateway
+	ctx       context.Context
 }
 
 func (tx *txPurchase) buildPurchaseResponseDTO() *ticketDTO.PurchaseResponseDTO {
@@ -33,19 +36,18 @@ func (tx *txPurchase) buildPurchaseResponseDTO() *ticketDTO.PurchaseResponseDTO 
 
 func (tx *txPurchase) buildNewTicket(ctx context.Context) (gw ticketGW.Gateway, err error) {
 	tick := &ticketMOD.Ticket{
-		ClientID: tx.sessCtrl.GetID(),
-		EventID:  tx.request.EventID,
+		AssistantID: tx.sessCtrl.GetID(),
+		EventID:     tx.request.EventID,
 	}
 
 	gw = ticketGW.NewTicketGateway(ctx, tick)
-	if err = gw.Insert(); err != nil {
-		return
-	}
-
 	if got := ticketMOD.Option(tx.request.Option); got == ticketMOD.BOUGHT {
-		err = gw.Buy()
+		if err = gw.Activate(); err != nil {
+			return
+		}
 	}
 
+	err = gw.Insert()
 	return
 }
 
@@ -68,8 +70,8 @@ func (tx *txPurchase) Postcondition(ctx context.Context) (v interface{}, err err
 		return
 	}
 
-	var tickets []ticketMOD.Controller
-	if tickets, err = ticketGW.GetTicketsByEventID(tx.request.EventID); err != nil {
+	var tickets []ticket.Controller
+	if tickets, err = ticket.GetTicketsByEventID(tx.request.EventID); err != nil {
 		return
 	}
 
@@ -86,13 +88,19 @@ func (tx *txPurchase) Postcondition(ctx context.Context) (v interface{}, err err
 		}
 	}
 
+	tx.ctx = ctx
 	response := tx.buildPurchaseResponseDTO()
 	return response, nil
 }
 
 // Commit commits the transaction result
 func (tx *txPurchase) Commit() (err error) {
-	return
+	for _, ticket := range tx.purchased {
+		tx.sessCtrl.GetAssistant().AddPurchase(ticket)
+	}
+
+	clientGW := client.NewClientGateway(tx.ctx, tx.sessCtrl)
+	return clientGW.Update()
 }
 
 // Rollback rollbacks any change caused while the transaction

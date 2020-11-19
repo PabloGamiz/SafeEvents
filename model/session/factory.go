@@ -101,7 +101,7 @@ func GetSessionByEmail(mail string) (ctrl *Session, err error) {
 }
 
 // NewSession returns a brand new session for the provided client
-func NewSession(ctx context.Context, cancel context.CancelFunc, client *client.Client) (ctrl *Session, err error) {
+func NewSession(ctx context.Context, cancel context.CancelFunc, client client.Controller) (ctrl *Session, err error) {
 	if _, ok := ctx.Deadline(); !ok {
 		err = fmt.Errorf(errNoDeadline)
 		return
@@ -114,10 +114,10 @@ func NewSession(ctx context.Context, cancel context.CancelFunc, client *client.C
 
 	cookie := string(sid)
 	session := &Session{
-		Client:  client,
-		Context: ctx,
-		cancel:  cancel,
-		cookie:  cookie,
+		Controller: client,
+		Context:    ctx,
+		cancel:     cancel,
+		cookie:     cookie,
 	}
 
 	err = registerSession(session)

@@ -13,10 +13,10 @@ type Ticket struct {
 	gorm.Model
 	ID          uint   `json:"id" gorm:"primaryKey; autoIncrement:true"`
 	Description string `json:"description" gorm:"not null"`
-	//Event       *event.Event `json:"-" gorm:"foreingkey:EventID"`
-	//EventID     uint         `json:"event_id"`
-	Option Option `json:"option" gorm:"not null"`
-	QrCode string `json:"qr_code" gorm:"unique"`
+	EventID     uint   `json:"event_id"`
+	AssistantID uint   `json:"assistant_id"`
+	Option      Option `json:"option" gorm:"not null"`
+	QrCode      string `json:"qr_code" gorm:"unique"`
 }
 
 func (ticket *Ticket) generateQrCode() (err error) {
@@ -32,8 +32,8 @@ func (ticket *Ticket) generateQrCode() (err error) {
 	return
 }
 
-// Buy checks the ticket as bought, elsewhere its just booked
-func (ticket *Ticket) Buy() (err error) {
+// Activate checks the ticket as bought, elsewhere its just booked
+func (ticket *Ticket) Activate() (err error) {
 	if err = ticket.generateQrCode(); err != nil {
 		return
 	}
