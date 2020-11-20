@@ -4,8 +4,8 @@ const (
 	errAssertionFailed = "Assertion has failed, expecting *Client type"
 	errClientNotExists = "Client for %d does not exists"
 
-	errNotFoundByID    = "Not found client with ID %v"
-	errNotFoundByEmail = "Not found client with email %s"
+	errNotFoundByID    = "Got %v, while looking up for client with ID %v"
+	errNotFoundByEmail = "Got %v while looking up for client with email %v"
 
 	queryFindByEmail = "email = ?"
 	queryFindByID    = "ID = ?"

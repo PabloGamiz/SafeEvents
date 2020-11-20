@@ -22,5 +22,5 @@ undeploy:
 	docker-compose -f docker-compose.yaml down
 
 mysql:
-	docker logs ${MYSQL_CONTAINER_NAME} 2>&1 | grep GENERATED
+	#docker logs ${MYSQL_CONTAINER_NAME} 2>&1 | grep GENERATED
 	docker exec -it ${MYSQL_CONTAINER_NAME} mysql -uroot -p

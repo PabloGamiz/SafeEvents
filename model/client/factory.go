@@ -6,6 +6,8 @@ import (
 	"log"
 	"sync"
 
+	"github.com/PabloGamiz/SafeEvents-Backend/model/client/assistant"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/client/organizer"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
 	"gorm.io/gorm"
 )
@@ -23,7 +25,7 @@ func OpenClientStream() (db *gorm.DB, err error) {
 		// Automigrate must be called only once for each gateway, and allways on the stream's opening call.
 		// This makes sure the client struct has its own table on the database. So model updates are only
 		// migrable to the database rebooting the server (not on-the-run).
-		db.AutoMigrate(&Client{})
+		db.AutoMigrate(&Client{}, &organizer.Organizer{}, &assistant.Assistant{})
 	})
 
 	return
@@ -36,16 +38,22 @@ func FindClientByEmail(ctx context.Context, email string) (ctrl Controller, err 
 		return
 	}
 
-	var client *Client
-	db.Where(queryFindByEmail, email).Find(client)
-	if client == nil {
-		err = fmt.Errorf(errNotFoundByEmail, email)
+	var clients []*Client
+	if result := db.Where(queryFindByEmail, email).Find(&clients); result.Error != nil {
+		err = fmt.Errorf(errNotFoundByEmail, result.Error.Error(), email)
 		return
 	}
 
-	client.Assists.SetParent(client)
-	client.Organize.SetParent(client)
-	return
+	client := clients[0]
+	if assistant := client.Assists; assistant != nil {
+		assistant.SetParent(client)
+	}
+
+	if organizer := client.Organize; organizer != nil {
+		organizer.SetParent(client)
+	}
+
+	return client, nil
 }
 
 // FindClientByID returns the gateway for the client that match the provided mail
@@ -55,15 +63,20 @@ func FindClientByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 		return
 	}
 
-	var client *Client
-	result := db.Where(queryFindByID, ID).Find(&client)
-
-	if result.Error != nil {
-		err = fmt.Errorf(errNotFoundByID, ID)
+	var clients []*Client
+	if result := db.Where(queryFindByID, ID).Find(&clients); result.Error != nil {
+		err = fmt.Errorf(errNotFoundByID, result.Error.Error(), ID)
 		return
 	}
 
-	client.Assists.SetParent(client)
-	client.Organize.SetParent(client)
-	return
+	client := clients[0]
+	if assistant := client.Assists; assistant != nil {
+		assistant.SetParent(client)
+	}
+
+	if organizer := client.Organize; organizer != nil {
+		organizer.SetParent(client)
+	}
+
+	return client, nil
 }
