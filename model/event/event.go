@@ -3,29 +3,27 @@ package event
 import (
 	"time"
 
-	"github.com/PabloGamiz/SafeEvents-Backend/model/feedback"
-
-	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/ticket"
 )
 
 // Event represents the Event class from UML.
 type Event struct {
-	ID          uint                `json:"id" gorm:"primaryKey; autoIncrement:true"`
-	Title       string              `json:"title" gorm:"not null;unique"`
-	Description string              `json:"description"`
-	Capacity    int                 `json:"capacity" gorm:"not null"`
-	Price       float32             `json:"price" gorm:"not null"`
-	CheckInDate time.Time           `json:"checkInDate" gorm:"not null"`
-	ClosureDate time.Time           `json:"closureDate" gorm:"not null"`
-	Location    location.Location   `json:"location" gorm:"foreignkey:LocationID;not null"`
-	LocationID  uint64              `json:"-"`
-	Organizers  []client.Client     `json:"organizers" gorm:"many2many:events_organizers;"`
-	Services    []service.Service   `json:"services" gorm:"foreignkey:EventID"`
-	Feedbacks   []feedback.Feedback `json:"feedbacks" gorm:"foreignkey:EventID"`
-	CreatedAt   time.Time           `json:"createdAt"`
-	UpdatedAt   time.Time           `json:"updatedAt"`
+	ID          uint              `json:"id" gorm:"primaryKey; autoIncrement:true"`
+	Title       string            `json:"title" gorm:"not null;unique"`
+	Description string            `json:"description"`
+	Capacity    int               `json:"capacity" gorm:"not null"`
+	Taken       int               `json:"taken" gorm:"not null"` // How many tickets have been purchased; Capacity - Taken = available_tickets
+	Price       float32           `json:"price" gorm:"not null"`
+	CheckInDate time.Time         `json:"checkInDate" gorm:"not null"`
+	ClosureDate time.Time         `json:"closureDate" gorm:"not null"`
+	Location    location.Location `json:"location" gorm:"foreignkey:LocationID;not null"`
+	LocationID  uint64            `json:"-"`
+	Tickets     []*ticket.Ticket  `json:"tickets" gorm:"foreignkey:EventID"`
+	Services    []service.Service `json:"services" gorm:"foreignkey:EventID"`
+	CreatedAt   time.Time         `json:"createdAt"`
+	UpdatedAt   time.Time         `json:"updatedAt"`
 }
 
 // GetID return the ID of the Event.
@@ -101,16 +99,6 @@ func (event *Event) GetLocation() location.Location {
 // SetLocation sets the Location of the Event.
 func (event *Event) SetLocation(location location.Location) {
 	event.Location = location
-}
-
-// GetOrganizers return the Organizers of the Event.
-func (event *Event) GetOrganizers() []client.Client {
-	return event.Organizers
-}
-
-// SetOrganizers sets the Organizers of the Event.
-func (event *Event) SetOrganizers(organizers []client.Client) {
-	event.Organizers = organizers
 }
 
 // GetServices return the Services of the Event.

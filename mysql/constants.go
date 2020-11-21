@@ -10,7 +10,7 @@ const (
 	// EnvMysqlDB represents the environment variable where the mysql's database name is located
 	EnvMysqlDB = "MYSQL_DB"
 	// EnvMysqlHost represents the environment variable where the mysql's host is located
-	EnvMysqlHost = "OPEN_NEBULA_IP"
+	EnvMysqlHost = "MYSQL_HOST"
 	// EnvMysqlNetw represents the environment variable where the mysql's network is located
 	EnvMysqlNetw = "SERVICE_NETW"
 	// EnvMysqlPort represents the environment variable where the mysql's port is located

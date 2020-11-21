@@ -8,8 +8,8 @@ import (
 
 // Session its the main data object fro a client
 type Session struct {
-	context.Context                      // session context with deadline
 	client.Controller                    // client associated to this session
+	context.Context                      // session context with deadline
 	cancel            context.CancelFunc // session context canceler
 	cookie            string             // session ID
 	token             string             // google token for this session
