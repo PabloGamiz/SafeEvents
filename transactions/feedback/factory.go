@@ -16,3 +16,9 @@ func NewTxPUTFeedback(request feedbackDTO.RequestDTO) transaction.Tx {
 	body := &txPUTFeedback{request: request}
 	return transaction.NewTransaction(body)
 }
+
+// NewTxDELETEFeedback builds a brand new transaction for editing a feedback
+func NewTxDELETEFeedback(request feedbackDTO.RequestDTO) transaction.Tx {
+	body := &txPUTFeedback{request: request}
+	return transaction.NewTransaction(body)
+}
