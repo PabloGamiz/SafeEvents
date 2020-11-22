@@ -21,7 +21,7 @@ func (tx *txPublicaEvent) Precondition() (err error) { //Comprova que no existei
 func (tx *txPublicaEvent) Postcondition(ctx context.Context) (interface{}, error) {
 	log.Printf("Got a Publica Event request for event %s", tx.request.Title)
 
-	evnt := &eventMOD.Event{
+	event := &eventMOD.Event{
 		Title:       tx.request.Title,
 		Description: tx.request.Description,
 		Capacity:    tx.request.Capacity,
@@ -30,7 +30,7 @@ func (tx *txPublicaEvent) Postcondition(ctx context.Context) (interface{}, error
 		ClosureDate: tx.request.ClosureDate,
 		LocationID:  uint64(tx.request.Locations.ID),
 	}
-	gw := eventGW.NewEventGateway(ctx, evnt)
+	gw := eventGW.NewEventGateway(ctx, event)
 	err := gw.Insert()
 
 	return gw, err

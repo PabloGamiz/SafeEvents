@@ -4,10 +4,10 @@ import (
 	"context"
 	"log"
 
-	eventGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/event"
+	eventMOD "github.com/PabloGamiz/SafeEvents-Backend/model/event"
 )
 
-// txSignup represents an
+// txListEvents represents the list events transaction
 type txListEvents struct {
 }
 
@@ -16,10 +16,10 @@ func (tx *txListEvents) Precondition() error {
 	return nil
 }
 
-// Postcondition creates new user and a opens its first session
+// Postcondition lists events from the database
 func (tx *txListEvents) Postcondition(ctx context.Context) (interface{}, error) {
 	log.Printf("Got a List Events request")
-	events, err := eventGW.FindAll(ctx)
+	events, err := eventMOD.FindAll(ctx)
 	return events, err
 }
 

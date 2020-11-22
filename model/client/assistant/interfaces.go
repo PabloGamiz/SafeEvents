@@ -8,6 +8,7 @@ type Parent interface {
 
 // Controller for Assistant
 type Controller interface {
+	GetID() uint
 	AddPurchase(ctrl ticket.Controller) int
 	RemovePurchase(ctrl ticket.Controller)
 	GetPurchased() []ticket.Controller

@@ -3,7 +3,7 @@ package event
 import (
 	"time"
 
-	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/feedback"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
 )
 
@@ -22,8 +22,9 @@ type Controller interface {
 	SetCheckInDate(checkInDate time.Time)
 	GetClosureDate() time.Time
 	SetClosureDate(closureDate time.Time)
-	GetLocation() location.Location
-	SetLocation(location location.Location)
-	GetServices() []service.Service
-	SetServices(services []service.Service)
+	GetLocation() string
+	SetLocation(location string)
+	GetServices() []service.Controller
+	// SetServices(ctrl []service.Controller) int
+	GetFeedbacks() []feedback.Controller
 }
