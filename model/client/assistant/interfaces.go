@@ -12,4 +12,5 @@ type Controller interface {
 	RemovePurchase(ctrl ticket.Controller)
 	GetPurchased() []ticket.Controller
 	GetNewPurchased() []ticket.Controller
+	SetParent(Parent)
 }

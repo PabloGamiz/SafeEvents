@@ -8,6 +8,7 @@ import (
 type Assistant struct {
 	ID           uint             `json:"id" gorm:"primaryKey; autoIncrement:true"`
 	Purchased    []*ticket.Ticket `json:"purchased" gorm:"foreignkey:AssistantID;"`
+	ClientID     uint             `json:"-"`
 	newPurchased []ticket.Controller
 	parent       Parent
 }
