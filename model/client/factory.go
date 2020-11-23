@@ -38,22 +38,21 @@ func FindClientByEmail(ctx context.Context, email string) (ctrl Controller, err 
 		return
 	}
 
-	var clients []*Client
-	if result := db.Where(queryFindByEmail, email).Find(&clients); result.Error != nil {
+	var client Client
+	if result := db.Where(queryFindByEmail, email).Find(&client); result.Error != nil {
 		err = fmt.Errorf(errNotFoundByEmail, result.Error.Error(), email)
 		return
 	}
 
-	client := clients[0]
-	if assistant := client.Assists; assistant != nil {
-		assistant.SetParent(client)
+	if client.GetID() == 0 {
+		err = fmt.Errorf(errNotFoundByEmail, "no value", email)
+		return
 	}
 
-	if organizer := client.Organize; organizer != nil {
-		organizer.SetParent(client)
-	}
+	client.GetAssistant().SetParent(client)
+	client.GetOrganizer().SetParent(client)
 
-	return client, nil
+	return &client, nil
 }
 
 // FindClientByID returns the gateway for the client that match the provided mail
@@ -63,20 +62,19 @@ func FindClientByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 		return
 	}
 
-	var clients []*Client
-	if result := db.Where(queryFindByID, ID).Find(&clients); result.Error != nil {
-		err = fmt.Errorf(errNotFoundByID, result.Error.Error(), ID)
+	var client Client
+	if db = db.Where(queryFindByID, ID).Find(&client); db.Error != nil {
+		err = fmt.Errorf(errNotFoundByID, db.Error.Error(), ID)
 		return
 	}
 
-	client := clients[0]
-	if assistant := client.Assists; assistant != nil {
-		assistant.SetParent(client)
+	if client.GetID() == 0 {
+		err = fmt.Errorf(errNotFoundByID, "no value", ID)
+		return
 	}
 
-	if organizer := client.Organize; organizer != nil {
-		organizer.SetParent(client)
-	}
+	client.GetAssistant().SetParent(client)
+	client.GetOrganizer().SetParent(client)
 
-	return client, nil
+	return &client, nil
 }

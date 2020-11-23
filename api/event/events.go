@@ -78,7 +78,7 @@ func HandleGetEventRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	geteventDTO := eventDTO.DTO{
-		ID: idR,
+		ID: uint(idR),
 	}
 
 	// Setting up txGetEvent with the required values

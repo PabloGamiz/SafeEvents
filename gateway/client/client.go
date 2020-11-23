@@ -19,8 +19,7 @@ func (gw *clientGateway) Insert() (err error) {
 		return
 	}
 
-	db.Create(gw.Controller)
-	return
+	return db.Create(gw.Controller).Error
 }
 
 func (gw *clientGateway) Update() (err error) {
@@ -29,10 +28,15 @@ func (gw *clientGateway) Update() (err error) {
 		return
 	}
 
-	db.Save(gw.Controller)
+	if db = db.Save(gw.Controller); db.Error != nil {
+		return db.Error
+	}
+
 	for _, tkt := range gw.GetAssistant().GetNewPurchased() {
 		ticketGW := ticket.NewTicketGateway(gw.ctx, tkt)
-		ticketGW.Update()
+		if err = ticketGW.Update(); err != nil {
+			return
+		}
 	}
 
 	return nil
@@ -44,6 +48,5 @@ func (gw *clientGateway) Remove() (err error) {
 		return
 	}
 
-	db.Delete(gw.Controller)
-	return nil
+	return db.Delete(gw.Controller).Error
 }

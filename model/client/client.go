@@ -8,13 +8,11 @@ import (
 
 // Client its the main data object fro a client
 type Client struct {
-	ID          uint                 `json:"id" gorm:"primaryKey; autoIncrement:true"`
-	Email       string               `json:"email" gorm:"not null; unique"`
-	Organize    *organizer.Organizer `json:"organize" gorm:"foreignkey:OrganizerID"`
-	Assists     *assistant.Assistant `json:"assists" gorm:"foreignkey:AssistantID"`
-	Favs        []*event.Event       `json:"favs" gorm:"many2many:clients_favs;"`
-	OrganizerID uint
-	AssistantID uint
+	ID       uint                `json:"id" gorm:"primaryKey; autoIncrement:true"`
+	Email    string              `json:"email" gorm:"not null; unique"`
+	Organize organizer.Organizer `json:"organize" gorm:"foreignKey:ClientID"`
+	Assists  assistant.Assistant `json:"assists" gorm:"foreignKey:ClientID"`
+	Favs     []*event.Event      `json:"favs" gorm:"many2many:clients_favs;"`
 }
 
 // GetID return the id of the client
@@ -29,10 +27,10 @@ func (client *Client) GetEmail() string {
 
 // GetAssistant returns the assistant role of the client
 func (client *Client) GetAssistant() assistant.Controller {
-	return nil //client.Assists
+	return &client.Assists
 }
 
 // GetOrganizer returns the organizer role of the client
 func (client *Client) GetOrganizer() organizer.Controller {
-	return nil //client.Organize
+	return &client.Organize
 }
