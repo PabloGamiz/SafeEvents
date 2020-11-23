@@ -4,6 +4,3 @@ package event
 type ListFavoritesRequestDTO struct {
 	ID uint `json:"id"`
 }
-
-type ClientInfoResponseDTO struct {
-}
