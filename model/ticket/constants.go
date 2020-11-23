@@ -8,4 +8,6 @@ const (
 	BOOKED Option = iota
 	BOUGHT
 	CHECKED
+
+	queryFindByEventID = "EventID = ?"
 )

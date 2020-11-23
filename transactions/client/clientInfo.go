@@ -5,7 +5,7 @@ import (
 	"log"
 
 	clientDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
-	clientGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/client"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	clientMOD "github.com/PabloGamiz/SafeEvents-Backend/model/client"
 )
 
@@ -36,7 +36,7 @@ func (tx *txClientInfo) Precondition() error {
 func (tx *txClientInfo) Postcondition(ctx context.Context) (v interface{}, err error) {
 	log.Printf("Got a Event request for client %d", tx.request.ID)
 	var ctrl clientMOD.Controller
-	if ctrl, err = clientGW.FindClientByID(ctx, tx.request.ID); err != nil {
+	if ctrl, err = client.FindClientByID(ctx, tx.request.ID); err != nil {
 		return
 	}
 	/*
