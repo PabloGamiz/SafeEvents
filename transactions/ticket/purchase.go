@@ -2,12 +2,15 @@ package ticket
 
 import (
 	"context"
-	"fmt"
 	"log"
 
-	ticketDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/ticket"
-	clientGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/client"
 	eventGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/event"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
+	eventMOD "github.com/PabloGamiz/SafeEvents-Backend/model/event"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/session"
+
+	ticketDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/ticket"
+	"github.com/PabloGamiz/SafeEvents-Backend/gateway/client"
 	ticketGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/ticket"
 	ticketMOD "github.com/PabloGamiz/SafeEvents-Backend/model/ticket"
 )
@@ -15,7 +18,11 @@ import (
 // txPurchase represents an
 type txPurchase struct {
 	request   ticketDTO.PurchaseRequestDTO
+	sessCtrl  session.Controller
 	purchased []ticketGW.Gateway
+	eventCtrl event.Controller
+	ctx       context.Context
+	taked     bool
 }
 
 func (tx *txPurchase) buildPurchaseResponseDTO() *ticketDTO.PurchaseResponseDTO {
@@ -31,50 +38,42 @@ func (tx *txPurchase) buildPurchaseResponseDTO() *ticketDTO.PurchaseResponseDTO 
 
 func (tx *txPurchase) buildNewTicket(ctx context.Context) (gw ticketGW.Gateway, err error) {
 	tick := &ticketMOD.Ticket{
-		ClientID: tx.request.ClientID,
-		EventID:  tx.request.EventID,
+		AssistantID: tx.sessCtrl.GetID(),
+		EventID:     tx.request.EventID,
 	}
 
 	gw = ticketGW.NewTicketGateway(ctx, tick)
-	if err = gw.Insert(); err != nil {
-		return
-	}
-
 	if got := ticketMOD.Option(tx.request.Option); got == ticketMOD.BOUGHT {
-		err = gw.Buy()
+		if err = gw.Activate(); err != nil {
+			return
+		}
 	}
 
+	err = gw.Insert()
 	return
 }
 
 // Precondition validates the transaction is ready to run
 func (tx *txPurchase) Precondition() (err error) {
+	// make sure the session exists
+	tx.sessCtrl, err = session.GetSessionByID(tx.request.Cookie)
 	return
 }
 
 // Postcondition creates new user and a opens its first session
 func (tx *txPurchase) Postcondition(ctx context.Context) (v interface{}, err error) {
-	log.Printf("Got a Purchase request from client %v", tx.request.ClientID)
-	// make sure the client exists
-	if _, err = clientGW.FindClientByID(ctx, tx.request.ClientID); err != nil {
-		return
-	}
+	log.Printf("Got a Purchase request from client %v", tx.sessCtrl.GetID())
 
 	// make sure the event exists
-	var event eventGW.Gateway
-	if event, err = eventGW.FindEventByID(ctx, int(tx.request.EventID)); err != nil {
+	if tx.eventCtrl, err = eventMOD.FindEventByID(ctx, tx.request.EventID); err != nil {
 		return
 	}
 
-	var tickets []ticketMOD.Controller
-	if tickets, err = ticketGW.GetTicketsByEventID(tx.request.EventID); err != nil {
+	if err = tx.eventCtrl.TakeTickets(tx.request.HowMany); err != nil {
 		return
 	}
 
-	if len(tickets)+tx.request.HowMany > event.GetCapacity() {
-		err = fmt.Errorf(errNotStock)
-		return
-	}
+	tx.taked = true
 
 	// foreach ticket to purchase
 	tx.purchased = make([]ticketGW.Gateway, tx.request.HowMany)
@@ -84,17 +83,32 @@ func (tx *txPurchase) Postcondition(ctx context.Context) (v interface{}, err err
 		}
 	}
 
+	tx.ctx = ctx
 	response := tx.buildPurchaseResponseDTO()
 	return response, nil
 }
 
 // Commit commits the transaction result
 func (tx *txPurchase) Commit() (err error) {
-	return
+	for _, ticket := range tx.purchased {
+		tx.sessCtrl.GetAssistant().AddPurchase(ticket)
+	}
+
+	eventgw := eventGW.NewEventGateway(tx.ctx, tx.eventCtrl)
+	if err = eventgw.Update(); err != nil {
+		return
+	}
+
+	clientgw := client.NewClientGateway(tx.ctx, tx.sessCtrl)
+	return clientgw.Update()
 }
 
 // Rollback rollbacks any change caused while the transaction
 func (tx *txPurchase) Rollback() {
+	if tx.taked {
+		tx.eventCtrl.TakeTickets(-tx.request.HowMany)
+	}
+
 	for _, ticket := range tx.purchased {
 		ticket.Remove()
 	}

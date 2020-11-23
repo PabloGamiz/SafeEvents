@@ -17,6 +17,7 @@ func NewTxLogout(request clientDTO.LogoutRequestDTO) transaction.Tx {
 	return transaction.NewTransaction(body)
 }
 
+// NewTxClientInfo builds a brand new transaction for client info consulting
 func NewTxClientInfo(request clientDTO.ClientInfoRequestDTO) transaction.Tx {
 	body := &txClientInfo{request: request}
 	return transaction.NewTransaction(body)

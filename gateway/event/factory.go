@@ -2,31 +2,9 @@ package event
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"os/user"
-	"sync"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
-	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
-	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
-
-var once sync.Once
-
-// OpenEventStream opens an stream ensuring the client's table does exists
-func OpenEventStream() (db *gorm.DB, err error) {
-	if db, err = mysql.OpenStream(); err != nil {
-		log.Fatalf("Got an error while opening stream: %v", err.Error())
-		return
-	}
-
-	once.Do(func() {
-		db.AutoMigrate(&event.Event{}, &user.User{})
-	})
-	return
-}
 
 // NewEventGateway builds a gateway for the provided event
 func NewEventGateway(ctx context.Context, event event.Controller) Gateway {
