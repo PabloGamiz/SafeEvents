@@ -34,3 +34,7 @@ func (client *Client) GetAssistant() assistant.Controller {
 func (client *Client) GetOrganizer() organizer.Controller {
 	return &client.Organize
 }
+
+func (client *Client) GetFavs() []*event.Event {
+	return client.Favs
+}
