@@ -35,6 +35,7 @@ func (client *Client) GetOrganizer() organizer.Controller {
 	return &client.Organize
 }
 
+// GetFavs returns the favorite events of the client
 func (client *Client) GetFavs() []*event.Event {
 	return client.Favs
 }

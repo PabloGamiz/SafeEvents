@@ -123,7 +123,7 @@ func HandleListFavoritesRequest(w http.ResponseWriter, r *http.Request) {
 	req := buildListFavoritesRequestDTO(uid)
 
 	// Setting uo TxListFavorites with the required values
-	txClientInfo := event.NewTxClientInfo(req)
+	txListFavorites := event.NewTxListFavorites(req)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 
