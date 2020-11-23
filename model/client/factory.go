@@ -78,3 +78,31 @@ func FindClientByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 
 	return &client, nil
 }
+
+// AddOrganizer ...
+func AddOrganizer(ctx context.Context, EventID uint, ID uint) (ctrl Controller, err error) {
+	var db *gorm.DB
+	if db, err = OpenClientStream(); err != nil {
+		return
+	}
+	clt, err := FindClientByID(ctx, ID)
+	org := clt.GetOrganizer()
+	db.Model(&org).Association("organizers_events").Append(ID)
+	return ctrl, err
+}
+
+// AddFav ...
+func AddFav(ctx context.Context, EventID uint, ID uint) (ctrl Controller, err error) {
+	var db *gorm.DB
+	if db, err = OpenClientStream(); err != nil {
+		return
+	}
+	var client *Client
+	result := db.Where(&client).Update("favs", EventID)
+	if result.Error != nil {
+		err = fmt.Errorf("Error AddFav %d", ID)
+		return
+	}
+	//SET PARENT????
+	return
+}

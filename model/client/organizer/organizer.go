@@ -18,3 +18,9 @@ func (o *Organizer) SetParent(p Parent) {
 		o.parent = p
 	}
 }
+
+// AddEvent adds a new event that organizes the client
+func (o *Organizer) AddEvent(ctrl *event.Event) int {
+	o.Organize = append(o.Organize, ctrl)
+	return len(o.Organize)
+}
