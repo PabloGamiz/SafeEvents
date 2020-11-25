@@ -3,6 +3,7 @@ package event
 import (
 	"context"
 
+	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 	"gorm.io/gorm"
 )
@@ -18,8 +19,8 @@ func (gw *eventGateway) Insert() (err error) {
 		return
 	}
 
-	db.Create(gw.Controller)
-	return
+	return db.Create(gw.Controller).Error
+
 }
 
 func (gw *eventGateway) Update() (err error) {
@@ -27,7 +28,12 @@ func (gw *eventGateway) Update() (err error) {
 }
 
 func (gw *eventGateway) Remove() (err error) {
-	return nil
+	var db *gorm.DB
+	if db, err = client.OpenClientStream(); err != nil {
+		return
+	}
+
+	return db.Delete(gw.Controller).Error
 }
 
 func (gw *eventGateway) FindAll() (err error) {

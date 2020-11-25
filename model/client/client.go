@@ -34,3 +34,13 @@ func (client *Client) GetAssistant() assistant.Controller {
 func (client *Client) GetOrganizer() organizer.Controller {
 	return &client.Organize
 }
+
+// AddFav add a new favourite event to the client
+func (client *Client) AddFav(ctrl *event.Event) {
+	client.Favs = append(client.Favs, ctrl)
+}
+
+// GetFavs returns the events that the client has in favourite
+func (client *Client) GetFavs() []*event.Event {
+	return client.Favs
+}

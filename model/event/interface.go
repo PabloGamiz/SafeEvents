@@ -8,6 +8,7 @@ import (
 
 // Controller represents an Event and its main data.
 type Controller interface {
+	GetEvent() *Event
 	GetID() uint
 	GetTitle() string
 	SetTitle(title string)

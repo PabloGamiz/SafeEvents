@@ -20,4 +20,5 @@ type DTO struct {
 	Price       float32           `json:"price"`
 	Location    string            `json:"location"`
 	Services    []service_api.DTO `json:"services"`
+	Image       string            `json:"image"`
 }

@@ -10,4 +10,5 @@ type Gateway interface {
 	Insert() error
 	Update() error
 	Remove() error
+	AddFavorit() error
 }
