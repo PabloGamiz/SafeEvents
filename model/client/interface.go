@@ -12,5 +12,7 @@ type Controller interface {
 	GetEmail() string
 	GetAssistant() assistant.Controller
 	GetOrganizer() organizer.Controller
+	AddFav(ctrl *event.Event)
+	RemoveFav(ctrl *event.Event)
 	GetFavs() []*event.Event
 }

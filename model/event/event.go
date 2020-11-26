@@ -22,7 +22,13 @@ type Event struct {
 	Services    []service.Service `json:"services" gorm:"foreignkey:EventID"`
 	CreatedAt   time.Time         `json:"createdAt"`
 	UpdatedAt   time.Time         `json:"updatedAt"`
+	Image       string            `json:"image" gorm:"not null"`
 	mu          sync.Mutex
+}
+
+//CHAPUZA
+func (event *Event) GetEvent() *Event {
+	return event
 }
 
 // GetID return the ID of the Event.
@@ -108,6 +114,16 @@ func (event *Event) GetServices() []service.Service {
 // SetServices sets the Services of the Event.
 func (event *Event) SetServices(services []service.Service) {
 	event.Services = services
+}
+
+// GetImage return the path of the Image.
+func (event *Event) GetImage() string {
+	return event.Image
+}
+
+// SetImage sets the path of the Image.
+func (event *Event) SetImage(image string) {
+	event.Image = image
 }
 
 // TakeTickets takes as much tickets as set on n, if there is not enought capacity an error its thrown

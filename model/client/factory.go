@@ -8,7 +8,9 @@ import (
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client/assistant"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client/organizer"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
+
 	"gorm.io/gorm"
 )
 
@@ -77,4 +79,9 @@ func FindClientByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 	client.GetOrganizer().SetParent(client)
 
 	return &client, nil
+}
+
+// AddOrganizer ...
+func AddOrganizer(ctx context.Context, evnt event.Controller, clt Controller) (ctrl Controller, err error) {
+	return
 }

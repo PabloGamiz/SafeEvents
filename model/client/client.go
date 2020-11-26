@@ -35,7 +35,23 @@ func (client *Client) GetOrganizer() organizer.Controller {
 	return &client.Organize
 }
 
-// GetFavs returns the favorite events of the client
+// AddFav add a new favourite event to the client
+func (client *Client) AddFav(ctrl *event.Event) {
+	client.Favs = append(client.Favs, ctrl)
+}
+
+// RemoveFav add a new favourite event to the client
+func (client *Client) RemoveFav(ctrl *event.Event) {
+	index := 0
+	for _, i := range client.Favs {
+		if i.ID != ctrl.ID {
+			client.Favs[index] = i
+			index++
+		}
+	}
+}
+
+// GetFavs returns the events that the client has in favourite
 func (client *Client) GetFavs() []*event.Event {
 	return client.Favs
 }
