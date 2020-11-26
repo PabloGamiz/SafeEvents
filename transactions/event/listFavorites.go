@@ -7,14 +7,20 @@ import (
 	eventDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/event"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	clientMOD "github.com/PabloGamiz/SafeEvents-Backend/model/client"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/session"
 )
 
 type txListFavorites struct {
 	request    eventDTO.ListFavoritesRequestDTO
 	clientCtrl client.Controller
+	sessCtrl   session.Controller
 }
 
 func (tx *txListFavorites) Precondition() error {
+	/*
+		tx.sessCtrl, err = session.GetSessionByID(tx.request.Cookie)
+		return
+	*/
 	return nil
 }
 
@@ -27,7 +33,7 @@ func (tx *txListFavorites) Postcondition(ctx context.Context) (v interface{}, er
 		return
 	}
 
-	events := tx.clientCtrl.GetFavs()
+	events, err := clientMOD.FindAllFavs(ctx, tx.clientCtrl)
 
 	return events, err
 }
