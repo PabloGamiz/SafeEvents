@@ -13,6 +13,7 @@ type txClientInfo struct {
 	request clientDTO.ClientInfoRequestDTO
 }
 
+/*
 func (tx *txClientInfo) buildClientInfoDTO(ctrl clientMOD.Controller) *clientDTO.ClientInfoResponseDTO {
 	//username := client.Username()
 	email := ctrl.GetEmail()
@@ -26,6 +27,7 @@ func (tx *txClientInfo) buildClientInfoDTO(ctrl clientMOD.Controller) *clientDTO
 		//Events:   events,
 	}
 }
+*/
 
 func (tx *txClientInfo) Precondition() error {
 	//Comprovar que els elements son correctes
@@ -34,7 +36,7 @@ func (tx *txClientInfo) Precondition() error {
 
 // Postcondition creates new user and a opens its first session
 func (tx *txClientInfo) Postcondition(ctx context.Context) (v interface{}, err error) {
-	log.Printf("Got a Event request for client %d", tx.request.ID)
+	log.Printf("Got a client info request for client %d", tx.request.ID)
 	var ctrl clientMOD.Controller
 	if ctrl, err = client.FindClientByID(ctx, tx.request.ID); err != nil {
 		return
@@ -45,8 +47,9 @@ func (tx *txClientInfo) Postcondition(ctx context.Context) (v interface{}, err e
 			return
 		}
 	*/
-	response := tx.buildClientInfoDTO(ctrl)
-	return response, err
+	//response := tx.buildClientInfoDTO(ctrl)
+	//return response, err
+	return ctrl, err
 
 }
 
