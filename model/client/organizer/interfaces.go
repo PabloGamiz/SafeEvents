@@ -9,6 +9,6 @@ type Parent interface {
 // Controller for Organizer
 type Controller interface {
 	SetParent(Parent)
-	AddEvent(ctrl *event.Event) //
+	AddEvent(ctrl *event.Event)
 	GetEventOrg() []*event.Event
 }

@@ -12,8 +12,8 @@ import (
 )
 
 // HandleClientAddFavRequest ...
-func HandleClientAddFavRequest(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Handlering an Add Fav Request")
+func HandleClientDelFavRequest(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Handlering a Delete Fav Request")
 
 	var FavDTO clientDTO.ClientFavDTO
 	if err := json.NewDecoder(r.Body).Decode(&FavDTO); err != nil {
@@ -23,12 +23,12 @@ func HandleClientAddFavRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Setting up TxAddFav with the required values
-	txAddFav := client.NewTxAddFav(FavDTO)
+	txDelFav := client.NewTxDelFav(FavDTO)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 
-	txAddFav.Execute(ctx)
-	result, err := txAddFav.Result()
+	txDelFav.Execute(ctx)
+	result, err := txDelFav.Result()
 
 	if err != nil {
 		//Transaction has failed
