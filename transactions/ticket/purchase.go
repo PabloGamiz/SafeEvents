@@ -10,7 +10,7 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/model/session"
 
 	ticketDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/ticket"
-	"github.com/PabloGamiz/SafeEvents-Backend/gateway/client"
+	clientGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/client"
 	ticketGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/ticket"
 	ticketMOD "github.com/PabloGamiz/SafeEvents-Backend/model/ticket"
 )
@@ -69,13 +69,13 @@ func (tx *txPurchase) Postcondition(ctx context.Context) (v interface{}, err err
 		return
 	}
 
+	// making sure there are enought tikets to purchase
 	if err = tx.eventCtrl.TakeTickets(tx.request.HowMany); err != nil {
 		return
 	}
 
-	tx.taked = true
-
 	// foreach ticket to purchase
+	tx.taked = true
 	tx.purchased = make([]ticketGW.Gateway, tx.request.HowMany)
 	for it := 0; it < tx.request.HowMany; it++ {
 		if tx.purchased[it], err = tx.buildNewTicket(ctx); err != nil {
@@ -90,6 +90,8 @@ func (tx *txPurchase) Postcondition(ctx context.Context) (v interface{}, err err
 
 // Commit commits the transaction result
 func (tx *txPurchase) Commit() (err error) {
+	log.Println("On commit!")
+	// adding tickets to user
 	for _, ticket := range tx.purchased {
 		tx.sessCtrl.GetAssistant().AddPurchase(ticket)
 	}
@@ -99,7 +101,7 @@ func (tx *txPurchase) Commit() (err error) {
 		return
 	}
 
-	clientgw := client.NewClientGateway(tx.ctx, tx.sessCtrl)
+	clientgw := clientGW.NewClientGateway(tx.ctx, tx.sessCtrl)
 	return clientgw.Update()
 }
 

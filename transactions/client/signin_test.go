@@ -19,7 +19,7 @@ func newTestTokenInfo() *oauth2.Tokeninfo {
 	}
 }
 
-func TestPostcondition(t *testing.T) {
+func TestSignin_postcondition(t *testing.T) {
 	if err := godotenv.Load("../../.env"); err != nil {
 		t.Fatalf("Got error %s; while loading dotenv", err.Error())
 	}

@@ -19,7 +19,15 @@ func (gw *clientGateway) Insert() (err error) {
 		return
 	}
 
-	return db.Create(gw.Controller).Error
+	if err = db.Create(gw.Controller).Error; err != nil {
+		return
+	}
+
+	if err = db.Create(gw.Controller.GetAssistant()).Error; err != nil {
+		return
+	}
+
+	return db.Create(gw.Controller.GetOrganizer()).Error
 }
 
 func (gw *clientGateway) Update() (err error) {
@@ -29,6 +37,14 @@ func (gw *clientGateway) Update() (err error) {
 	}
 
 	if db = db.Save(gw.Controller); db.Error != nil {
+		return db.Error
+	}
+
+	if db = db.Save(gw.Controller.GetAssistant()); db.Error != nil {
+		return db.Error
+	}
+
+	if db = db.Save(gw.Controller.GetOrganizer()); db.Error != nil {
 		return db.Error
 	}
 
