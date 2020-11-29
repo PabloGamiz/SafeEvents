@@ -8,16 +8,7 @@ import (
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/session"
 	"github.com/joho/godotenv"
-	"google.golang.org/api/oauth2/v2"
 )
-
-func newTestTokenInfo() *oauth2.Tokeninfo {
-	return &oauth2.Tokeninfo{
-		Email:     "testing@gmail.com",
-		ExpiresIn: 1,
-		UserId:    "1234",
-	}
-}
 
 func TestSignin_postcondition(t *testing.T) {
 	if err := godotenv.Load("../../.env"); err != nil {
@@ -25,7 +16,7 @@ func TestSignin_postcondition(t *testing.T) {
 	}
 
 	subject := &txSignin{
-		info: newTestTokenInfo(),
+		info: newDummyTokenInfo(),
 	}
 
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)

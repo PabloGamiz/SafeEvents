@@ -4,19 +4,18 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"io"
-
-	"gorm.io/gorm"
+	"time"
 )
 
 // Ticket its the main data object fro a Ticket
 type Ticket struct {
-	gorm.Model
-	ID          uint   `json:"id" gorm:"primaryKey; autoIncrement:true"`
-	Description string `json:"description" gorm:"not null"`
-	EventID     uint   `json:"event_id"`
-	AssistantID uint   `json:"assistant_id"`
-	Option      Option `json:"option" gorm:"not null"`
-	QrCode      string `json:"qr_code" gorm:"unique"`
+	ID          uint      `json:"id" gorm:"primaryKey; autoIncrement:true"`
+	Description string    `json:"description" gorm:"not null"`
+	EventID     uint      `json:"event_id"`
+	AssistantID uint      `json:"assistant_id"`
+	Option      Option    `json:"option" gorm:"not null"`
+	QrCode      string    `json:"qr_code" gorm:"unique"`
+	CreatedAt   time.Time `json:"createdAt"`
 }
 
 func (ticket *Ticket) generateQrCode() (err error) {
@@ -45,4 +44,14 @@ func (ticket *Ticket) Activate() (err error) {
 // GetID return the id of the ticket
 func (ticket *Ticket) GetID() uint {
 	return ticket.ID
+}
+
+// GetOption return the purchase option of the ticket
+func (ticket *Ticket) GetOption() Option {
+	return ticket.Option
+}
+
+// GetCreatedAt return the creation time of the ticket
+func (ticket *Ticket) GetCreatedAt() time.Time {
+	return ticket.CreatedAt
 }

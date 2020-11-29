@@ -1,19 +1,12 @@
 package main
 
 import (
-	"context"
 	"log"
 	"net"
 	"net/http"
-	"time"
-
-	"github.com/PabloGamiz/SafeEvents-Backend/model/client/assistant"
-	"github.com/PabloGamiz/SafeEvents-Backend/model/client/organizer"
-
-	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
-	"github.com/PabloGamiz/SafeEvents-Backend/model/session"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/api"
+	clientTX "github.com/PabloGamiz/SafeEvents-Backend/transactions/client"
 	"github.com/alvidir/util/config"
 	"github.com/joho/godotenv"
 )
@@ -39,29 +32,6 @@ func getMainEnv() ([]string, error) {
 		envNetwKey /*1*/)
 }
 
-func setupDummyUser() error {
-	testUser := &client.Client{
-		ID:    0,
-		Email: "testing@gmail.com",
-		Organize: organizer.Organizer{
-			ID: 0,
-		},
-		Assists: assistant.Assistant{
-			ID: 0,
-		},
-	}
-
-	ctx := context.Background()
-	ctx, cancel := context.WithDeadline(ctx, time.Now().Add(9000*time.Hour))
-	sess, err := session.NewSession(ctx, cancel, testUser)
-	if err != nil {
-		return err
-	}
-
-	log.Printf("Dummy cookie: %v", sess.Cookie())
-	return nil
-}
-
 func main() {
 	// to change the flags on the default logger
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
@@ -69,7 +39,7 @@ func main() {
 		log.Panicf(errDotenvConfig, err.Error())
 	}
 
-	if err := setupDummyUser(); err != nil {
+	if err := clientTX.SetupDummyUser(); err != nil {
 		log.Fatalf("Got %v, while setting up the dummy user", err.Error())
 	}
 

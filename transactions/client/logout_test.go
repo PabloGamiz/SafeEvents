@@ -21,7 +21,7 @@ func TestLogout_postcondition(t *testing.T) {
 	}
 
 	signin := &txSignin{
-		info: newTestTokenInfo(),
+		info: newDummyTokenInfo(),
 	}
 
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)

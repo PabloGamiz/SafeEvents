@@ -18,16 +18,25 @@ func (gw *eventGateway) Insert() (err error) {
 		return
 	}
 
-	db.Create(gw.Controller)
-	return
+	return db.Create(gw.Controller).Error
 }
 
 func (gw *eventGateway) Update() (err error) {
-	return nil
+	var db *gorm.DB
+	if db, err = event.OpenEventStream(); err != nil {
+		return
+	}
+
+	return db.Save(gw.Controller).Error
 }
 
 func (gw *eventGateway) Remove() (err error) {
-	return nil
+	var db *gorm.DB
+	if db, err = event.OpenEventStream(); err != nil {
+		return
+	}
+
+	return db.Delete(gw.Controller).Error
 }
 
 func (gw *eventGateway) FindAll() (err error) {

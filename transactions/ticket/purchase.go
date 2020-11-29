@@ -3,11 +3,13 @@ package ticket
 import (
 	"context"
 	"log"
+	"time"
 
 	eventGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/event"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 	eventMOD "github.com/PabloGamiz/SafeEvents-Backend/model/event"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/session"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/ticket"
 
 	ticketDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/ticket"
 	clientGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/client"
@@ -37,9 +39,11 @@ func (tx *txPurchase) buildPurchaseResponseDTO() *ticketDTO.PurchaseResponseDTO 
 }
 
 func (tx *txPurchase) buildNewTicket(ctx context.Context) (gw ticketGW.Gateway, err error) {
+	assistID := tx.sessCtrl.GetAssistant().GetID()
 	tick := &ticketMOD.Ticket{
-		AssistantID: tx.sessCtrl.GetID(),
+		AssistantID: assistID,
 		EventID:     tx.request.EventID,
+		CreatedAt:   time.Now(),
 	}
 
 	gw = ticketGW.NewTicketGateway(ctx, tick)
@@ -50,6 +54,31 @@ func (tx *txPurchase) buildNewTicket(ctx context.Context) (gw ticketGW.Gateway, 
 	}
 
 	err = gw.Insert()
+	return
+}
+
+func (tx *txPurchase) releaseBookedTickets() (err error) {
+	var tickets []ticket.Controller
+	if tickets, err = ticketMOD.GetTicketsByEventID(tx.eventCtrl.GetID()); err != nil {
+		return
+	}
+
+	released := 0
+	for _, ticket := range tickets {
+		if ticket.GetOption() == ticketMOD.BOOKED {
+			created := ticket.GetCreatedAt()
+			if diff := time.Now().Sub(created); diff > 24*time.Hour {
+				gwTicket := ticketGW.NewTicketGateway(tx.ctx, ticket)
+				if err = gwTicket.Remove(); err != nil {
+					break // not returning, due n could be greater than 0; so the TakenTickets substract must be done
+				}
+
+				released++
+			}
+		}
+	}
+
+	tx.eventCtrl.TakeTickets(-released)
 	return
 }
 
@@ -71,7 +100,15 @@ func (tx *txPurchase) Postcondition(ctx context.Context) (v interface{}, err err
 
 	// making sure there are enought tikets to purchase
 	if err = tx.eventCtrl.TakeTickets(tx.request.HowMany); err != nil {
-		return
+		// if there are no enought tickets, try to release the booked ones
+		if err = tx.releaseBookedTickets(); err != nil {
+			return
+		}
+
+		// try again to purchase tickets
+		if err = tx.eventCtrl.TakeTickets(tx.request.HowMany); err != nil {
+			return
+		}
 	}
 
 	// foreach ticket to purchase
@@ -90,7 +127,6 @@ func (tx *txPurchase) Postcondition(ctx context.Context) (v interface{}, err err
 
 // Commit commits the transaction result
 func (tx *txPurchase) Commit() (err error) {
-	log.Println("On commit!")
 	// adding tickets to user
 	for _, ticket := range tx.purchased {
 		tx.sessCtrl.GetAssistant().AddPurchase(ticket)

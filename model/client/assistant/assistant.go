@@ -37,6 +37,7 @@ func (a *Assistant) locateTicket(ctrl ticket.Controller) (index int, ok bool) {
 func (a *Assistant) SetParent(p Parent) {
 	if a.parent == nil {
 		a.parent = p
+		a.ClientID = p.GetID()
 	}
 }
 
@@ -111,4 +112,9 @@ func (a *Assistant) GetPurchased() (ctrls []ticket.Controller) {
 func (a *Assistant) GetNewPurchased() []ticket.Controller {
 	return a.newPurchased
 
+}
+
+// GetID returns the assistant ID
+func (a *Assistant) GetID() uint {
+	return a.ID
 }

@@ -34,6 +34,6 @@ func GetTicketsByEventID(id uint) (tickets []Controller, err error) {
 		return
 	}
 
-	db.Where(queryFindByEventID, id).Find(&tickets)
+	db.Table("tickets").Where(queryFindByEventID, id).Find(&tickets)
 	return
 }

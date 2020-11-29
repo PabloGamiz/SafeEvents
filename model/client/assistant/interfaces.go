@@ -4,6 +4,7 @@ import "github.com/PabloGamiz/SafeEvents-Backend/model/ticket"
 
 // Parent is the Client who is being Assistant of some events
 type Parent interface {
+	GetID() uint
 }
 
 // Controller for Assistant
@@ -13,4 +14,5 @@ type Controller interface {
 	GetPurchased() []ticket.Controller
 	GetNewPurchased() []ticket.Controller
 	SetParent(Parent)
+	GetID() uint
 }

@@ -74,7 +74,7 @@ func (tx *txSignin) Postcondition(ctx context.Context) (v interface{}, err error
 	}
 
 	log.Printf("Building session for client %s", ctrl.GetEmail())
-	deadline := time.Unix(3600 /*tx.info.ExpiresIn*/, 0)
+	deadline := time.Unix(tx.info.ExpiresIn, 0)
 	sessCtx, cancel := context.WithDeadline(context.TODO(), deadline)
 	if sess, err = sessionMOD.NewSession(sessCtx, cancel, ctrl); err != nil {
 		return

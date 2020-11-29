@@ -28,7 +28,7 @@ func (gw *ticketGateway) Update() (err error) {
 		return
 	}
 
-	db.Save(gw.Controller)
+	db.Table("tickets").Updates(gw.Controller)
 	return
 }
 
@@ -38,6 +38,6 @@ func (gw *ticketGateway) Remove() (err error) {
 		return
 	}
 
-	db.Delete(gw.Controller)
+	db.Table("tickets").Delete(gw.Controller)
 	return
 }
