@@ -8,4 +8,6 @@ type Controller interface {
 	GetID() uint
 	GetOption() Option
 	GetCreatedAt() time.Time
+	GetClientID() uint
+	GetEventID() uint
 }

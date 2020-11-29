@@ -14,6 +14,7 @@ import (
 	ticketDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/ticket"
 	clientGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/client"
 	ticketGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/ticket"
+	sessMOD "github.com/PabloGamiz/SafeEvents-Backend/model/session"
 	ticketMOD "github.com/PabloGamiz/SafeEvents-Backend/model/ticket"
 )
 
@@ -44,6 +45,8 @@ func (tx *txPurchase) buildNewTicket(ctx context.Context) (gw ticketGW.Gateway, 
 		AssistantID: assistID,
 		EventID:     tx.request.EventID,
 		CreatedAt:   time.Now(),
+		ClientID:    tx.sessCtrl.GetID(),
+		Description: tx.request.Description,
 	}
 
 	gw = ticketGW.NewTicketGateway(ctx, tick)
@@ -65,17 +68,30 @@ func (tx *txPurchase) releaseBookedTickets() (err error) {
 
 	released := 0
 	for _, ticket := range tickets {
-		if ticket.GetOption() == ticketMOD.BOOKED {
-			created := ticket.GetCreatedAt()
-			if diff := time.Now().Sub(created); diff > 24*time.Hour {
-				gwTicket := ticketGW.NewTicketGateway(tx.ctx, ticket)
-				if err = gwTicket.Remove(); err != nil {
-					break // not returning, due n could be greater than 0; so the TakenTickets substract must be done
-				}
-
-				released++
-			}
+		if ticket.GetOption() != ticketMOD.BOOKED {
+			// if is not booked, it means the ticket has been bought
+			continue
 		}
+
+		created := ticket.GetCreatedAt()
+		if diff := time.Now().Sub(created); diff < 24*time.Hour {
+			// any booking has a duration of 24h
+			continue
+		}
+
+		gwTicket := ticketGW.NewTicketGateway(tx.ctx, ticket)
+		if err = gwTicket.Remove(); err != nil {
+			// if an error did happen while removing the ticket from the database, the loop must go on
+			// the reason why is the releases counter may be non-zero, so the TakenTickets substract must be done
+			continue
+		}
+
+		// if the owner has signed-in, its session must be updated
+		if sess, err := sessMOD.GetSessionByClientID(ticket.GetClientID()); err == nil {
+			sess.GetAssistant().RemovePurchase(ticket)
+		}
+
+		released++
 	}
 
 	tx.eventCtrl.TakeTickets(-released)

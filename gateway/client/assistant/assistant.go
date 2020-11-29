@@ -33,7 +33,7 @@ func (gw *assistantGateway) Update() (err error) {
 		return db.Error
 	}
 
-	for _, tkt := range gw.GetNewPurchased() {
+	for _, tkt := range gw.GetPurchased() {
 		ticketGW := ticket.NewTicketGateway(gw.ctx, tkt)
 		if err = ticketGW.Update(); err != nil {
 			return

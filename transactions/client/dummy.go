@@ -10,7 +10,7 @@ import (
 func newDummyTokenInfo() *oauth2.Tokeninfo {
 	return &oauth2.Tokeninfo{
 		Email:     "testing@gmail.com",
-		ExpiresIn: 1,
+		ExpiresIn: -1,
 		UserId:    "1234",
 	}
 }

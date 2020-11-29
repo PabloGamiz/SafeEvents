@@ -10,7 +10,6 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client/organizer"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 var once sync.Once
@@ -40,7 +39,7 @@ func FindClientByEmail(ctx context.Context, email string) (ctrl Controller, err 
 	}
 
 	var client Client
-	if result := db.Preload(clause.Associations).Where(queryFindByEmail, email).Find(&client); result.Error != nil {
+	if result := db.Preload("Assists.Purchased").Preload("Organize.Organize").Where(queryFindByEmail, email).Find(&client); result.Error != nil {
 		err = fmt.Errorf(errNotFoundByEmail, result.Error.Error(), email)
 		return
 	}
@@ -61,7 +60,7 @@ func FindClientByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 	}
 
 	var client Client
-	if db = db.Preload(clause.Associations).Where(queryFindByID, ID).Find(&client); db.Error != nil {
+	if db = db.Preload("Assists.Purchased").Preload("Organize.Organize").Where(queryFindByID, ID).Find(&client); db.Error != nil {
 		err = fmt.Errorf(errNotFoundByID, db.Error.Error(), ID)
 		return
 	}

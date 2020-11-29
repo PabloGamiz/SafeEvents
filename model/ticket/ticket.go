@@ -14,8 +14,9 @@ type Ticket struct {
 	EventID     uint      `json:"event_id"`
 	AssistantID uint      `json:"assistant_id"`
 	Option      Option    `json:"option" gorm:"not null"`
-	QrCode      string    `json:"qr_code" gorm:"unique"`
+	QrCode      *string   `json:"qr_code" gorm:"unique"`
 	CreatedAt   time.Time `json:"createdAt"`
+	ClientID    uint      `json:"client_id"`
 }
 
 func (ticket *Ticket) generateQrCode() (err error) {
@@ -24,7 +25,8 @@ func (ticket *Ticket) generateQrCode() (err error) {
 		return
 	}
 
-	ticket.QrCode = base64.URLEncoding.EncodeToString(data)
+	qr := base64.URLEncoding.EncodeToString(data)
+	ticket.QrCode = &qr
 	//qrCode, _ := qr.Encode(data, qr.L, qr.Auto)
 	//qrCode, _ = barcode.Scale(qrCode, 512, 512)
 	//png.Encode(w, qrCode)
@@ -54,4 +56,14 @@ func (ticket *Ticket) GetOption() Option {
 // GetCreatedAt return the creation time of the ticket
 func (ticket *Ticket) GetCreatedAt() time.Time {
 	return ticket.CreatedAt
+}
+
+// GetClientID return the client of the ticket
+func (ticket *Ticket) GetClientID() uint {
+	return ticket.AssistantID
+}
+
+// GetEventID return the client of the ticket
+func (ticket *Ticket) GetEventID() uint {
+	return ticket.EventID
 }
