@@ -28,7 +28,7 @@ func (tx *txPublicaEvent) Postcondition(ctx context.Context) (interface{}, error
 		Price:       tx.request.Price,
 		CheckInDate: tx.request.CheckInDate,
 		ClosureDate: tx.request.ClosureDate,
-		LocationID:  uint64(tx.request.Locations.ID),
+		Location:    tx.request.Location,
 	}
 	gw := eventGW.NewEventGateway(ctx, event)
 	err := gw.Insert()

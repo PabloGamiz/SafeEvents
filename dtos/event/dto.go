@@ -4,7 +4,6 @@ import (
 	"time"
 
 	client_api "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
-	location_api "github.com/PabloGamiz/SafeEvents-Backend/dtos/location"
 	service_api "github.com/PabloGamiz/SafeEvents-Backend/dtos/service"
 )
 
@@ -18,6 +17,6 @@ type DTO struct {
 	Price       float32           `json:"price"`
 	CheckInDate time.Time         `json:"checkInDate"`
 	ClosureDate time.Time         `json:"closureDate"`
-	Locations   location_api.DTO  `json:"locations"`
+	Location    string            `json:"locations"`
 	Services    []service_api.DTO `json:"services"`
 }

@@ -34,7 +34,7 @@ func FindAll(ctx context.Context) (ctrl []Controller, err error) {
 	}
 
 	var eventsMOD []*Event
-	db.Preload("Services.Location").Preload("Services.Products").Preload(clause.Associations).Find(&eventsMOD)
+	db.Preload("Services.Products").Preload(clause.Associations).Find(&eventsMOD)
 
 	ctrl = make([]Controller, len(eventsMOD))
 	for index, event := range eventsMOD {
@@ -51,7 +51,7 @@ func FindEventByID(ID int) (ctrl Controller, err error) {
 		return
 	}
 	var events []*Event
-	db.Preload("Services.Location").Preload("Services.Products").Preload(clause.Associations).Where("id = ?", ID).Find(&events)
+	db.Preload("Services.Products").Preload(clause.Associations).Where("id = ?", ID).Find(&events)
 	if len(events) == 0 {
 		err = fmt.Errorf(errNotFoundByID, ID)
 		return
