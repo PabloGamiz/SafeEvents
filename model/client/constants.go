@@ -8,5 +8,5 @@ const (
 	errNotFoundByEmail = "Got %v while looking up for client with email %v"
 
 	queryFindByEmail = "email = ?"
-	queryFindByID    = "ID = ?"
+	queryFindByID    = "id = ?"
 )

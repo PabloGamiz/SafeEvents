@@ -21,8 +21,8 @@ func (tx *txGetEvent) Precondition() error {
 // Postcondition creates new user and a opens its first session
 func (tx *txGetEvent) Postcondition(ctx context.Context) (interface{}, error) {
 	log.Printf("Got a Event request for event with and ID of %d ", tx.request.ID)
-	event, err := eventMOD.FindEventByID(tx.request.ID)
-	return event, err
+	gw, err := eventMOD.FindEventByID(ctx, tx.request.ID)
+	return gw, err
 }
 
 // Commit commits the transaction result

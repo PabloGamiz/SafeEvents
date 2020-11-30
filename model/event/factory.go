@@ -6,12 +6,19 @@ import (
 	"log"
 	"sync"
 
+	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
-var once sync.Once
+var (
+	// AllInstancesByID stores all events indexed by its ID
+	AllInstancesByID = &sync.Map{}
+	once             sync.Once
+)
+
+type sID uint
 
 // OpenEventStream opens an stream ensuring the client's table does exists
 func OpenEventStream() (db *gorm.DB, err error) {
@@ -21,43 +28,59 @@ func OpenEventStream() (db *gorm.DB, err error) {
 	}
 
 	once.Do(func() {
-		db.AutoMigrate(&Event{})
+		db.AutoMigrate(&service.Service{}, &Event{})
 	})
 	return
 }
 
-// FindAll returns the controllers of all the events loaded on the BBDD
-func FindAll(ctx context.Context) (ctrl []Controller, err error) {
+//
+//func LoadOrStoreNewEvent(event Controller) error {
+//	sid := event.GetID()
+//	if
+//}
+
+// FindAll returns the gateway for finding all the events loaded on the BBDD
+func FindAll(ctx context.Context) (events []Controller, err error) {
 	var db *gorm.DB
 	if db, err = OpenEventStream(); err != nil {
 		return
 	}
 
 	var eventsMOD []*Event
-	db.Preload("Services.Products").Preload(clause.Associations).Find(&eventsMOD)
+	db.Preload("Services.Location").Preload("Services.Products").Preload(clause.Associations).Find(&eventsMOD)
+	if len(eventsMOD) == 0 {
+		err = fmt.Errorf(errNoEventsOnDatabase)
+		return
+	}
 
-	ctrl = make([]Controller, len(eventsMOD))
+	events = make([]Controller, len(eventsMOD))
 	for index, event := range eventsMOD {
-		ctrl[index] = event
+		events[index] = event
 	}
 
 	return
 }
 
 // FindEventByID returns the gateway for the event that match the provided name
-func FindEventByID(ID int) (ctrl Controller, err error) {
+func FindEventByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
+	sid := sID(ID)
+	if value, exists := AllInstancesByID.Load(sid); exists {
+		ctrl = value.(Controller)
+	}
+
 	var db *gorm.DB
 	if db, err = OpenEventStream(); err != nil {
 		return
 	}
-	var events []*Event
-	db.Preload("Services.Products").Preload(clause.Associations).Where("id = ?", ID).Find(&events)
-	if len(events) == 0 {
+
+	var event Event
+	db.Preload("Services.Location").Preload("Services.Products").Preload(clause.Associations).Where("id = ?", ID).Find(&event)
+	if event.GetID() == 0 {
 		err = fmt.Errorf(errNotFoundByID, ID)
 		return
 	}
 
-	ctrl = events[0]
-
+	ctrl = &event
+	AllInstancesByID.Store(sid, ctrl)
 	return
 }

@@ -9,7 +9,8 @@ import (
 
 // DTO represents the expected data from an Event.
 type DTO struct {
-	ID          int               `json:"id"`
+	Cookie      string            `json:"cookie"`
+	ID          uint              `json:"id"`
 	Title       string            `json:"title"`
 	Description string            `json:"description"`
 	Capacity    int               `json:"capacity"`
@@ -17,6 +18,6 @@ type DTO struct {
 	Price       float32           `json:"price"`
 	CheckInDate time.Time         `json:"checkInDate"`
 	ClosureDate time.Time         `json:"closureDate"`
-	Location    string            `json:"locations"`
+	Location    string            `json:"location"`
 	Services    []service_api.DTO `json:"services"`
 }

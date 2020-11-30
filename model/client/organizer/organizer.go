@@ -8,6 +8,7 @@ import (
 type Organizer struct {
 	ID       uint           `json:"id" gorm:"primaryKey; autoIncrement:true"`
 	Organize []*event.Event `json:"organize" gorm:"many2many:organizers_events;"`
+	ClientID uint           `json:"-"`
 	parent   Parent
 }
 
@@ -15,5 +16,6 @@ type Organizer struct {
 func (o *Organizer) SetParent(p Parent) {
 	if o.parent == nil {
 		o.parent = p
+		o.ClientID = p.GetID()
 	}
 }

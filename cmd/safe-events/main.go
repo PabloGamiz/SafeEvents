@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/api"
+	clientTX "github.com/PabloGamiz/SafeEvents-Backend/transactions/client"
 	"github.com/alvidir/util/config"
 	"github.com/joho/godotenv"
 )
@@ -36,6 +37,10 @@ func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	if err := godotenv.Load(); err != nil {
 		log.Panicf(errDotenvConfig, err.Error())
+	}
+
+	if err := clientTX.SetupDummyUser(); err != nil {
+		log.Fatalf("Got %v, while setting up the dummy user", err.Error())
 	}
 
 	envs, err := getMainEnv()
