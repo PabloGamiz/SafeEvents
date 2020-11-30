@@ -9,5 +9,6 @@ const (
 	BOUGHT
 	CHECKED
 
-	queryFindByEventID = "event_id = ?"
+	queryFindByEventID            = "event_id = ?"
+	queryFindByEventIDAndClientID = "event_id = ? and client_id = ?"
 )
