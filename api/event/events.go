@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	eventDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/event"
@@ -71,18 +70,25 @@ func HandleGetEventRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a single event request")
 
 	//Obte el id passat com a parametre a la url
-	idR, err := strconv.Atoi(r.URL.Query().Get("id"))
+	/*idR, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || idR < 1 {
 		http.NotFound(w, r)
 		return
 	}
 
 	geteventDTO := eventDTO.DTO{
-		ID: idR,
+		ID: uint(idR),
+	}*/
+
+	var getDTO eventDTO.DTO
+	if err := json.NewDecoder(r.Body).Decode(&getDTO); err != nil {
+		// If some error just happened it means the provided Json does not match with the expected DTO
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	// Setting up txGetEvent with the required values
-	txGetEvent := event.NewTxGetEvent(geteventDTO)
+	txGetEvent := event.NewTxGetEvent(getDTO)
 
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel() // ensures the context is canceled, at least once, at the end of this function

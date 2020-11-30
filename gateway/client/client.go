@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 	"gorm.io/gorm"
 )
 
@@ -14,18 +15,70 @@ type clientGateway struct {
 
 func (gw *clientGateway) Insert() (err error) {
 	var db *gorm.DB
-	if db, err = OpenClientStream(); err != nil {
+	if db, err = client.OpenClientStream(); err != nil {
 		return
 	}
 
-	db.Create(gw.Controller)
-	return
+	return db.Create(gw.Controller).Error
 }
 
 func (gw *clientGateway) Update() (err error) {
+	var db *gorm.DB
+	if db, err = client.OpenClientStream(); err != nil {
+		return
+	}
+
+	if db = db.Save(gw.Controller); db.Error != nil {
+		return db.Error
+	}
+
+	org := gw.GetOrganizer()
+
+	db.Model(org).Association("Organize").Append(org.GetEventOrg)
+
 	return nil
 }
 
 func (gw *clientGateway) Remove() (err error) {
-	return nil
+	var db *gorm.DB
+	if db, err = client.OpenClientStream(); err != nil {
+		return
+	}
+
+	return db.Delete(gw.Controller).Error
+}
+
+func (gw *clientGateway) AddFavorit() (err error) {
+	var db *gorm.DB
+	if db, err = client.OpenClientStream(); err != nil {
+		return
+	}
+	ctrl := gw.Controller.GetFavs()
+	err = db.Model(gw.Controller).Association("Favs").Append(ctrl)
+	return err
+}
+
+func (gw *clientGateway) DeleteFavorit(ctrl event.Controller) (err error) {
+	var db *gorm.DB
+	if db, err = client.OpenClientStream(); err != nil {
+		return
+	}
+	err = db.Model(gw.Controller).Association("Favs").Delete(gw.Controller, ctrl)
+	return err
+}
+
+func (gw *clientGateway) FindFavorit(ctrl event.Controller) (faved bool, err error) {
+	var db *gorm.DB
+	if db, err = client.OpenClientStream(); err != nil {
+		return
+	}
+	var eventsMOD []*event.Event
+	err = db.Model(gw.Controller).Association("Favs").Find(&eventsMOD)
+	for _, evnt := range eventsMOD {
+		if evnt.GetID() == ctrl.GetID() {
+			return true, err
+		}
+	}
+
+	return false, err
 }

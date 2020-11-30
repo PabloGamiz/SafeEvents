@@ -1,10 +1,10 @@
 package event
 
 import (
+	"fmt"
+	"sync"
 	"time"
 
-	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
-	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
 )
 
@@ -14,15 +14,22 @@ type Event struct {
 	Title       string            `json:"title" gorm:"not null;unique"`
 	Description string            `json:"description"`
 	Capacity    int               `json:"capacity" gorm:"not null"`
+	Taken       int               `json:"taken" gorm:"not null;check:,taken <= capacity"` // How many tickets have been purchased; Capacity - Taken = available_tickets
 	Price       float32           `json:"price" gorm:"not null"`
 	CheckInDate time.Time         `json:"checkInDate" gorm:"not null"`
 	ClosureDate time.Time         `json:"closureDate" gorm:"not null"`
-	Location    location.Location `json:"location" gorm:"foreignkey:LocationID;not null"`
-	LocationID  uint64            `json:"-"`
-	Organizers  []client.Client   `json:"organizers" gorm:"many2many:events_organizers;"`
+	Location    string            `json:"location" gorm:"not null"`
 	Services    []service.Service `json:"services" gorm:"foreignkey:EventID"`
 	CreatedAt   time.Time         `json:"createdAt"`
 	UpdatedAt   time.Time         `json:"updatedAt"`
+	Image       string            `json:"image" gorm:"not null"`
+	Tipus       string            `json:"tipus" gorm:"not null"`
+	mu          sync.Mutex
+}
+
+//CHAPUZA
+func (event *Event) GetEvent() *Event {
+	return event
 }
 
 // GetID return the ID of the Event.
@@ -70,6 +77,11 @@ func (event *Event) SetPrice(price float32) {
 	event.Price = price
 }
 
+// GetTaken return the number of tickets taken of the Event.
+func (event *Event) GetTaken() int {
+	return event.Taken
+}
+
 // GetCheckInDate return the ChekInDate of the Event.
 func (event *Event) GetCheckInDate() time.Time {
 	return event.CheckInDate
@@ -91,23 +103,13 @@ func (event *Event) SetClosureDate(closureDate time.Time) {
 }
 
 // GetLocation return the Location of the Event.
-func (event *Event) GetLocation() location.Location {
+func (event *Event) GetLocation() string {
 	return event.Location
 }
 
 // SetLocation sets the Location of the Event.
-func (event *Event) SetLocation(location location.Location) {
-	event.Location = location
-}
-
-// GetOrganizers return the Organizers of the Event.
-func (event *Event) GetOrganizers() []client.Client {
-	return event.Organizers
-}
-
-// SetOrganizers sets the Organizers of the Event.
-func (event *Event) SetOrganizers(organizers []client.Client) {
-	event.Organizers = organizers
+func (event *Event) SetLocation(loc string) {
+	event.Location = loc
 }
 
 // GetServices return the Services of the Event.
@@ -118,4 +120,37 @@ func (event *Event) GetServices() []service.Service {
 // SetServices sets the Services of the Event.
 func (event *Event) SetServices(services []service.Service) {
 	event.Services = services
+}
+
+// GetImage return the path of the Image.
+func (event *Event) GetImage() string {
+	return event.Image
+}
+
+// SetImage sets the path of the Image.
+func (event *Event) SetImage(image string) {
+	event.Image = image
+}
+
+// GetTipus return the type of the event.
+func (event *Event) GetTipus() string {
+	return event.Tipus
+}
+
+// SetTipus sets the type of the event.
+func (event *Event) SetTipus(tipus string) {
+	event.Tipus = tipus
+}
+
+// TakeTickets takes as much tickets as set on n, if there is not enought capacity an error its thrown
+func (event *Event) TakeTickets(n int) error {
+	event.mu.Lock()
+	defer event.mu.Unlock()
+
+	if event.Taken+n > event.Capacity {
+		return fmt.Errorf("Event capacity exceed")
+	}
+
+	event.Taken += n
+	return nil
 }

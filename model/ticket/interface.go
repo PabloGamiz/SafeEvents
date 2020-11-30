@@ -1,7 +1,7 @@
 package ticket
 
-// Controller represents a client and it's main data
+// Controller for ticket
 type Controller interface {
+	Activate() error
 	GetID() uint
-	Buy() error
 }

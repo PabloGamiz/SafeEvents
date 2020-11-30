@@ -2,7 +2,7 @@ package ticket
 
 // PurchaseRequestDTO is the expected struct for a purchase request
 type PurchaseRequestDTO struct {
-	ClientID    uint   `json:"client_id"`
+	Cookie      string `json:"cookie"`
 	EventID     uint   `json:"event_id"`
 	Option      uint   `json:"option"`
 	HowMany     int    `json:"how_many"`
