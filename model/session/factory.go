@@ -16,23 +16,30 @@ var (
 	AllInstancesByID = &sync.Map{}
 	// AllInstancesByEmail stores all sessions indexed by its email
 	AllInstancesByEmail = &sync.Map{}
+	// AllInstancesByClientID stores all sessions indexed by its client id
+	AllInstancesByClientID = &sync.Map{}
 )
 
 type sID string
 type email string
+type clientID uint
 
-func registerSession(session *Session) (err error) {
+func registerSession(session Controller) (err error) {
 	sid := sID(session.Cookie())
 	email := email(session.GetEmail())
+	client := clientID(session.GetID())
 
 	if _, exists := AllInstancesByID.Load(sid); exists {
 		return fmt.Errorf("Session with the provided ID already exists")
 	} else if _, exists = AllInstancesByEmail.Load(email); exists {
 		return fmt.Errorf("There is already a session for the provided user email")
+	} else if _, exists = AllInstancesByClientID.Load(client); exists {
+		return fmt.Errorf("There is already a session for the provided client ID")
 	}
 
 	AllInstancesByID.Store(sid, session)
 	AllInstancesByEmail.Store(email, session)
+	AllInstancesByClientID.Store(client, session)
 	return
 }
 
@@ -42,14 +49,17 @@ func removeSession(sid sID) (err error) {
 		return fmt.Errorf(errSessionNotExists, sid)
 	}
 
-	session, exists := content.(*Session)
-	if !exists {
+	session, ok := content.(Controller)
+	if !ok {
 		return fmt.Errorf(errAssertionFailed)
 	}
 
 	email := email(session.GetEmail())
+	client := clientID(session.GetID())
+
 	AllInstancesByID.Delete(sid)
 	AllInstancesByEmail.Delete(email)
+	AllInstancesByClientID.Delete(client)
 	return
 }
 
@@ -65,7 +75,7 @@ func newSessionID() (id sID, err error) {
 }
 
 // GetSessionByID returns the session with the provided cookie, if exists
-func GetSessionByID(cookie string) (ctrl *Session, err error) {
+func GetSessionByID(cookie string) (ctrl Controller, err error) {
 	sid := sID(cookie)
 
 	content, exists := AllInstancesByID.Load(sid)
@@ -75,7 +85,7 @@ func GetSessionByID(cookie string) (ctrl *Session, err error) {
 	}
 
 	var ok bool
-	if ctrl, ok = content.(*Session); !ok {
+	if ctrl, ok = content.(Controller); !ok {
 		err = fmt.Errorf(errAssertionFailed)
 	}
 
@@ -83,7 +93,7 @@ func GetSessionByID(cookie string) (ctrl *Session, err error) {
 }
 
 // GetSessionByEmail returns the session with the provided email, if exists
-func GetSessionByEmail(mail string) (ctrl *Session, err error) {
+func GetSessionByEmail(mail string) (ctrl Controller, err error) {
 	email := email(mail)
 
 	content, exists := AllInstancesByEmail.Load(email)
@@ -93,7 +103,25 @@ func GetSessionByEmail(mail string) (ctrl *Session, err error) {
 	}
 
 	var ok bool
-	if ctrl, ok = content.(*Session); !ok {
+	if ctrl, ok = content.(Controller); !ok {
+		err = fmt.Errorf(errAssertionFailed)
+	}
+
+	return
+}
+
+// GetSessionByClientID returns the session with the provided client ID, if exists
+func GetSessionByClientID(id uint) (ctrl Controller, err error) {
+	client := clientID(id)
+
+	content, exists := AllInstancesByClientID.Load(client)
+	if !exists {
+		err = fmt.Errorf("Session for client ID %v does not exists", client)
+		return
+	}
+
+	var ok bool
+	if ctrl, ok = content.(Controller); !ok {
 		err = fmt.Errorf(errAssertionFailed)
 	}
 
@@ -101,7 +129,7 @@ func GetSessionByEmail(mail string) (ctrl *Session, err error) {
 }
 
 // NewSession returns a brand new session for the provided client
-func NewSession(ctx context.Context, cancel context.CancelFunc, client client.Controller) (ctrl *Session, err error) {
+func NewSession(ctx context.Context, cancel context.CancelFunc, client client.Controller) (ctrl Controller, err error) {
 	if _, ok := ctx.Deadline(); !ok {
 		err = fmt.Errorf(errNoDeadline)
 		return

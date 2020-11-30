@@ -8,7 +8,7 @@ import (
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client/assistant"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client/organizer"
-	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/ticket"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
 
 	"gorm.io/gorm"
@@ -27,7 +27,7 @@ func OpenClientStream() (db *gorm.DB, err error) {
 		// Automigrate must be called only once for each gateway, and allways on the stream's opening call.
 		// This makes sure the client struct has its own table on the database. So model updates are only
 		// migrable to the database rebooting the server (not on-the-run).
-		db.AutoMigrate(&Client{}, &organizer.Organizer{}, &assistant.Assistant{})
+		db.AutoMigrate(&ticket.Ticket{}, &Client{}, &organizer.Organizer{}, &assistant.Assistant{})
 	})
 
 	return
@@ -41,7 +41,7 @@ func FindClientByEmail(ctx context.Context, email string) (ctrl Controller, err 
 	}
 
 	var client Client
-	if result := db.Where(queryFindByEmail, email).Find(&client); result.Error != nil {
+	if result := db.Preload("Assists.Purchased").Preload("Organize.Organize").Where(queryFindByEmail, email).Find(&client); result.Error != nil {
 		err = fmt.Errorf(errNotFoundByEmail, result.Error.Error(), email)
 		return
 	}
@@ -50,9 +50,6 @@ func FindClientByEmail(ctx context.Context, email string) (ctrl Controller, err 
 		err = fmt.Errorf(errNotFoundByEmail, "no value", email)
 		return
 	}
-
-	client.GetAssistant().SetParent(client)
-	client.GetOrganizer().SetParent(client)
 
 	return &client, nil
 }
@@ -65,7 +62,7 @@ func FindClientByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 	}
 
 	var client Client
-	if db = db.Where(queryFindByID, ID).Find(&client); db.Error != nil {
+	if db = db.Preload("Assists.Purchased").Preload("Organize.Organize").Where(queryFindByID, ID).Find(&client); db.Error != nil {
 		err = fmt.Errorf(errNotFoundByID, db.Error.Error(), ID)
 		return
 	}
@@ -74,9 +71,6 @@ func FindClientByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 		err = fmt.Errorf(errNotFoundByID, "no value", ID)
 		return
 	}
-
-	client.GetAssistant().SetParent(client)
-	client.GetOrganizer().SetParent(client)
 
 	return &client, nil
 }

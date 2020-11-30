@@ -16,6 +16,7 @@ type Organizer struct {
 func (o *Organizer) SetParent(p Parent) {
 	if o.parent == nil {
 		o.parent = p
+		o.ClientID = p.GetID()
 	}
 }
 

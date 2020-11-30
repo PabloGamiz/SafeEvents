@@ -3,7 +3,7 @@ module github.com/PabloGamiz/SafeEvents-Backend
 go 1.15
 
 require (
-	github.com/alvidir/util v0.0.0-20201031005445-47c6877f5e28
+	github.com/alvidir/util v0.0.0-20201128232421-f7d147f5f2dd
 	github.com/aws/aws-sdk-go v1.34.28
 	github.com/boombuler/barcode v1.0.0
 	github.com/go-sql-driver/mysql v1.5.0

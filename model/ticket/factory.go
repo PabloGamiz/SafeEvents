@@ -34,6 +34,17 @@ func GetTicketsByEventID(id uint) (tickets []Controller, err error) {
 		return
 	}
 
-	db.Where(queryFindByEventID, id).Find(&tickets)
+	db.Table("tickets").Where(queryFindByEventID, id).Find(&tickets)
+	return
+}
+
+// GetTicketsByEventIDAndClientID return all current tickets for a given event and client
+func GetTicketsByEventIDAndClientID(eid uint, cid uint) (tickets []Controller, err error) {
+	var db *gorm.DB
+	if db, err = OpenTicketStream(); err != nil {
+		return
+	}
+
+	db.Table("tickets").Where(queryFindByEventIDAndClientID, eid, cid).Find(&tickets)
 	return
 }

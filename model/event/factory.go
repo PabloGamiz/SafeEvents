@@ -6,6 +6,7 @@ import (
 	"log"
 	"sync"
 
+	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -27,7 +28,7 @@ func OpenEventStream() (db *gorm.DB, err error) {
 	}
 
 	once.Do(func() {
-		db.AutoMigrate(&Event{})
+		db.AutoMigrate(&service.Service{}, &Event{})
 	})
 	return
 }

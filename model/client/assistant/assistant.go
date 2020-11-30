@@ -37,6 +37,7 @@ func (a *Assistant) locateTicket(ctrl ticket.Controller) (index int, ok bool) {
 func (a *Assistant) SetParent(p Parent) {
 	if a.parent == nil {
 		a.parent = p
+		a.ClientID = p.GetID()
 	}
 }
 
@@ -94,21 +95,25 @@ func (a *Assistant) RemovePurchase(ctrl ticket.Controller) {
 
 // GetPurchased returns all currently tickets purchased by the assistant
 func (a *Assistant) GetPurchased() (ctrls []ticket.Controller) {
-	length := len(a.Purchased)
-	if length == 0 {
+	lengthA := len(a.Purchased)
+	lengthB := len(a.newPurchased)
+	if lengthA+lengthB == 0 {
 		return
 	}
 
-	ctrls = make([]ticket.Controller, length)
+	ctrls = make([]ticket.Controller, lengthA+lengthB)
 	for index, ticket := range a.Purchased {
 		ctrls[index] = ticket
+	}
+
+	for index, ticket := range a.newPurchased {
+		ctrls[lengthA+index] = ticket
 	}
 
 	return
 }
 
-// GetNewPurchased returns the latests purchases
-func (a *Assistant) GetNewPurchased() []ticket.Controller {
-	return a.newPurchased
-
+// GetID returns the assistant ID
+func (a *Assistant) GetID() uint {
+	return a.ID
 }
