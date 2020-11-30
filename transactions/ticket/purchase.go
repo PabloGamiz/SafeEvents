@@ -29,13 +29,13 @@ type txPurchase struct {
 }
 
 func (tx *txPurchase) buildPurchaseResponseDTO() *ticketDTO.PurchaseResponseDTO {
-	ticketsID := make([]uint, len(tx.purchased))
+	tickets := make([]ticket.Controller, len(tx.purchased))
 	for index, ticket := range tx.purchased {
-		ticketsID[index] = ticket.GetID()
+		tickets[index] = ticket
 	}
 
 	return &ticketDTO.PurchaseResponseDTO{
-		TicketsID: ticketsID,
+		Tickets: tickets,
 	}
 }
 

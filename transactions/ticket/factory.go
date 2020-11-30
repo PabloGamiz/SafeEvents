@@ -16,3 +16,9 @@ func NewTxActivate(request ticketDTO.ActivateRequestDTO) transaction.Tx {
 	body := &txActivate{request: request}
 	return transaction.NewTransaction(body)
 }
+
+// NewTxGetTickets builds a brand new transaction for Signin
+func NewTxGetTickets(request ticketDTO.GetTicketsRequestDTO) transaction.Tx {
+	body := &txGetTickets{request: request}
+	return transaction.NewTransaction(body)
+}
