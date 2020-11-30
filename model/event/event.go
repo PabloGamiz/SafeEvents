@@ -5,6 +5,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/PabloGamiz/SafeEvents-Backend/model/feedback"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
 )
 
