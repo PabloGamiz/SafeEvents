@@ -85,3 +85,13 @@ func FindClientByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 func AddOrganizer(ctx context.Context, evnt event.Controller, clt Controller) (ctrl Controller, err error) {
 	return
 }
+
+// FindOrganitzersEvent returns the gateways for the clients that organize the provided email
+func FindOrganitzersEvent(ctx context.Context, EventID uint) (NameOrg string, err error) {
+	/*var db *gorm.DB
+	if db, err = OpenClientStream(); err != nil {
+		return
+	}*/
+	//NO FA RES
+	return
+}

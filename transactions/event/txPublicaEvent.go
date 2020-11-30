@@ -41,6 +41,7 @@ func (tx *txPublicaEvent) Postcondition(ctx context.Context) (v interface{}, err
 		ClosureDate: tx.request.ClosureDate,
 		Location:    tx.request.Location,
 		Image:       tx.request.Image,
+		Tipus:       tx.request.Tipus,
 	}
 	gw := eventGW.NewEventGateway(ctx, eventCtrl)
 	err = gw.Insert()

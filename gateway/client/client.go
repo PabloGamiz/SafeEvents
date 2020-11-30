@@ -67,11 +67,18 @@ func (gw *clientGateway) DeleteFavorit(ctrl event.Controller) (err error) {
 	return err
 }
 
-func (gw *clientGateway) FindFavorit(ctrl event.Controller) (err error) {
+func (gw *clientGateway) FindFavorit(ctrl event.Controller) (faved bool, err error) {
 	var db *gorm.DB
 	if db, err = client.OpenClientStream(); err != nil {
 		return
 	}
-	err = db.Model(gw.Controller).Association("Favs").Find(gw.Controller, ctrl)
-	return err
+	var eventsMOD []*event.Event
+	err = db.Model(gw.Controller).Association("Favs").Find(&eventsMOD)
+	for _, evnt := range eventsMOD {
+		if evnt.GetID() == ctrl.GetID() {
+			return true, err
+		}
+	}
+
+	return false, err
 }

@@ -11,4 +11,5 @@ type Controller interface {
 	SetParent(Parent)
 	AddEvent(ctrl *event.Event)
 	GetEventOrg() []*event.Event
+	GetID() uint
 }

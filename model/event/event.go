@@ -23,6 +23,7 @@ type Event struct {
 	CreatedAt   time.Time         `json:"createdAt"`
 	UpdatedAt   time.Time         `json:"updatedAt"`
 	Image       string            `json:"image" gorm:"not null"`
+	Tipus       string            `json:"tipus" gorm:"not null"`
 	mu          sync.Mutex
 }
 
@@ -76,6 +77,11 @@ func (event *Event) SetPrice(price float32) {
 	event.Price = price
 }
 
+// GetTaken return the number of tickets taken of the Event.
+func (event *Event) GetTaken() int {
+	return event.Taken
+}
+
 // GetCheckInDate return the ChekInDate of the Event.
 func (event *Event) GetCheckInDate() time.Time {
 	return event.CheckInDate
@@ -124,6 +130,16 @@ func (event *Event) GetImage() string {
 // SetImage sets the path of the Image.
 func (event *Event) SetImage(image string) {
 	event.Image = image
+}
+
+// GetTipus return the type of the event.
+func (event *Event) GetTipus() string {
+	return event.Tipus
+}
+
+// SetTipus sets the type of the event.
+func (event *Event) SetTipus(tipus string) {
+	event.Tipus = tipus
 }
 
 // TakeTickets takes as much tickets as set on n, if there is not enought capacity an error its thrown
