@@ -3,6 +3,7 @@ package ticket
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"fmt"
 	"io"
 	"time"
 )
@@ -35,6 +36,10 @@ func (ticket *Ticket) generateQrCode() (err error) {
 
 // Activate checks the ticket as bought, elsewhere its just booked
 func (ticket *Ticket) Activate() (err error) {
+	if ticket.Option != BOOKED {
+		return fmt.Errorf("Ticket already activated or checked")
+	}
+
 	if err = ticket.generateQrCode(); err != nil {
 		return
 	}
