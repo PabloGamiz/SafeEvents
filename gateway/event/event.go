@@ -3,7 +3,6 @@ package event
 import (
 	"context"
 
-	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 	"gorm.io/gorm"
 )

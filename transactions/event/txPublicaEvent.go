@@ -38,7 +38,6 @@ func (tx *txPublicaEvent) Postcondition(ctx context.Context) (v interface{}, err
 		Capacity:    tx.request.Capacity,
 		Price:       tx.request.Price,
 		CheckInDate: tx.request.CheckInDate,
-		Price:       tx.request.Price,
 		ClosureDate: tx.request.ClosureDate,
 		Location:    tx.request.Location,
 		Image:       tx.request.Image,
