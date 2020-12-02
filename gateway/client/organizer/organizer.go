@@ -3,8 +3,8 @@ package organizer
 import (
 	"context"
 
-	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client/organizer"
+	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
 	"gorm.io/gorm"
 )
 
@@ -15,7 +15,7 @@ type organizerGateway struct {
 
 func (gw *organizerGateway) Insert() (err error) {
 	var db *gorm.DB
-	if db, err = client.OpenClientStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
@@ -24,7 +24,7 @@ func (gw *organizerGateway) Insert() (err error) {
 
 func (gw *organizerGateway) Update() (err error) {
 	var db *gorm.DB
-	if db, err = client.OpenClientStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
@@ -33,7 +33,7 @@ func (gw *organizerGateway) Update() (err error) {
 
 func (gw *organizerGateway) Remove() (err error) {
 	var db *gorm.DB
-	if db, err = client.OpenClientStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 

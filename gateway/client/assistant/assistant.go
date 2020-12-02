@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/gateway/ticket"
-	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client/assistant"
+	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
 	"gorm.io/gorm"
 )
 
@@ -16,7 +16,7 @@ type assistantGateway struct {
 
 func (gw *assistantGateway) Insert() (err error) {
 	var db *gorm.DB
-	if db, err = client.OpenClientStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
@@ -25,7 +25,7 @@ func (gw *assistantGateway) Insert() (err error) {
 
 func (gw *assistantGateway) Update() (err error) {
 	var db *gorm.DB
-	if db, err = client.OpenClientStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
@@ -45,7 +45,7 @@ func (gw *assistantGateway) Update() (err error) {
 
 func (gw *assistantGateway) Remove() (err error) {
 	var db *gorm.DB
-	if db, err = client.OpenClientStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
