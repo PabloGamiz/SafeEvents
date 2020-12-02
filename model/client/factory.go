@@ -8,7 +8,9 @@ import (
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client/assistant"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client/organizer"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/ticket"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
+
 	"gorm.io/gorm"
 )
 
@@ -25,7 +27,7 @@ func OpenClientStream() (db *gorm.DB, err error) {
 		// Automigrate must be called only once for each gateway, and allways on the stream's opening call.
 		// This makes sure the client struct has its own table on the database. So model updates are only
 		// migrable to the database rebooting the server (not on-the-run).
-		db.AutoMigrate(&Client{}, &organizer.Organizer{}, &assistant.Assistant{})
+		db.AutoMigrate(&ticket.Ticket{}, &Client{}, &organizer.Organizer{}, &assistant.Assistant{})
 	})
 
 	return
@@ -71,4 +73,41 @@ func FindClientByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 	}
 
 	return &client, nil
+}
+
+// // AddOrganizer ...
+// func AddOrganizer(ctx context.Context, event event.Controller, clt Controller) (ctrl Controller, err error) {
+// 	return
+// }
+
+// FindOrganitzersEvent returns the gateways for the clients that organize the provided email
+func FindOrganitzersEvent(ctx context.Context, EventID uint) (NameOrg string, err error) {
+	/*var db *gorm.DB
+	if db, err = OpenClientStream(); err != nil {
+		return
+	}*/
+	//NO FA RES
+	return
+}
+
+// FindAll returns the gateway for finding all the events loaded on the BBDD
+func FindAllFavs(ctx context.Context, clientCtrl Controller) (events []event.Controller, err error) {
+	var db *gorm.DB
+	if db, err = OpenClientStream(); err != nil {
+		return
+	}
+
+	var eventsMOD []*event.Event
+	db.Model(clientCtrl).Association("Favs").Find(&eventsMOD)
+	if len(eventsMOD) == 0 {
+		err = fmt.Errorf("errNoEventsOnDatabase")
+		return
+	}
+
+	events = make([]event.Controller, len(eventsMOD))
+	for index, event := range eventsMOD {
+		events[index] = event
+	}
+
+	return
 }

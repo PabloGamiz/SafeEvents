@@ -23,7 +23,14 @@ type Event struct {
 	Services    []service.Service `json:"services" gorm:"foreignkey:EventID"`
 	CreatedAt   time.Time         `json:"createdAt"`
 	UpdatedAt   time.Time         `json:"updatedAt"`
+	Image       string            `json:"image" gorm:"not null"`
+	Tipus       string            `json:"tipus" gorm:"not null"`
 	mu          sync.Mutex
+}
+
+//CHAPUZA
+func (event *Event) GetEvent() *Event {
+	return event
 }
 
 // GetID return the ID of the Event.
@@ -69,6 +76,11 @@ func (event *Event) GetPrice() float32 {
 // SetPrice sets the price of one ticket for the Event.
 func (event *Event) SetPrice(price float32) {
 	event.Price = price
+}
+
+// GetTaken return the number of tickets taken of the Event.
+func (event *Event) GetTaken() int {
+	return event.Taken
 }
 
 // GetCheckInDate return the ChekInDate of the Event.
@@ -142,6 +154,26 @@ func (event *Event) GetFeedbacks() (ctrls []feedback.Controller) {
 	}
 
 	return
+}
+
+// GetImage return the path of the Image.
+func (event *Event) GetImage() string {
+	return event.Image
+}
+
+// SetImage sets the path of the Image.
+func (event *Event) SetImage(image string) {
+	event.Image = image
+}
+
+// GetTipus return the type of the event.
+func (event *Event) GetTipus() string {
+	return event.Tipus
+}
+
+// SetTipus sets the type of the event.
+func (event *Event) SetTipus(tipus string) {
+	event.Tipus = tipus
 }
 
 // TakeTickets takes as much tickets as set on n, if there is not enought capacity an error its thrown

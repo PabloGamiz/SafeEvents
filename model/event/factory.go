@@ -74,7 +74,7 @@ func FindEventByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 	}
 
 	var event Event
-	db.Preload("Services.Location").Preload("Services.Products").Preload(clause.Associations).Where("id = ?", ID).Find(&event)
+	db.Preload("Services.Products").Preload(clause.Associations).Where("id = ?", ID).Find(&event)
 	if event.GetID() == 0 {
 		err = fmt.Errorf(errNotFoundByID, ID)
 		return

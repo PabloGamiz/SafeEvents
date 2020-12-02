@@ -13,5 +13,5 @@ type PurchaseRequestDTO struct {
 
 // PurchaseResponseDTO is the response for a purchase request
 type PurchaseResponseDTO struct {
-	Tickets []ticket.Controller `json:"tickets_id"`
+	Tickets []ticket.Controller `json:"tickets"`
 }
