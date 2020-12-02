@@ -39,8 +39,8 @@ func OpenEventStream() (db *gorm.DB, err error) {
 //	if
 //}
 
-// FindAll returns the gateway for finding all the events loaded on the BBDD
-func FindAll(ctx context.Context) (events []Controller, err error) {
+// FindAll returns the controllers of all the events loaded on the BBDD
+func FindAll(ctx context.Context) (ctrl []Controller, err error) {
 	var db *gorm.DB
 	if db, err = OpenEventStream(); err != nil {
 		return
@@ -48,14 +48,10 @@ func FindAll(ctx context.Context) (events []Controller, err error) {
 
 	var eventsMOD []*Event
 	db.Preload("Services.Location").Preload("Services.Products").Preload(clause.Associations).Find(&eventsMOD)
-	if len(eventsMOD) == 0 {
-		err = fmt.Errorf(errNoEventsOnDatabase)
-		return
-	}
 
-	events = make([]Controller, len(eventsMOD))
+	ctrl = make([]Controller, len(eventsMOD))
 	for index, event := range eventsMOD {
-		events[index] = event
+		ctrl[index] = event
 	}
 
 	return
@@ -63,24 +59,18 @@ func FindAll(ctx context.Context) (events []Controller, err error) {
 
 // FindEventByID returns the gateway for the event that match the provided name
 func FindEventByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
-	sid := sID(ID)
-	if value, exists := AllInstancesByID.Load(sid); exists {
-		ctrl = value.(Controller)
-	}
-
 	var db *gorm.DB
 	if db, err = OpenEventStream(); err != nil {
 		return
 	}
-
-	var event Event
-	db.Preload("Services.Products").Preload(clause.Associations).Where("id = ?", ID).Find(&event)
-	if event.GetID() == 0 {
+	var events []*Event
+	db.Preload("Services.Location").Preload("Services.Products").Preload(clause.Associations).Where("id = ?", ID).Find(&events)
+	if len(events) == 0 {
 		err = fmt.Errorf(errNotFoundByID, ID)
 		return
 	}
 
-	ctrl = &event
-	AllInstancesByID.Store(sid, ctrl)
+	ctrl = events[0]
+
 	return
 }

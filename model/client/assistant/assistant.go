@@ -117,8 +117,3 @@ func (a *Assistant) GetPurchased() (ctrls []ticket.Controller) {
 
 	return
 }
-
-// GetID returns the assistant ID
-func (a *Assistant) GetID() uint {
-	return a.ID
-}

@@ -11,20 +11,21 @@ import (
 
 // Event represents the Event class from UML.
 type Event struct {
-	ID          uint              `json:"id" gorm:"primaryKey; autoIncrement:true"`
-	Title       string            `json:"title" gorm:"not null;unique"`
-	Description string            `json:"description"`
-	Capacity    int               `json:"capacity" gorm:"not null"`
-	Taken       int               `json:"taken" gorm:"not null;check:,taken <= capacity"` // How many tickets have been purchased; Capacity - Taken = available_tickets
-	Price       float32           `json:"price" gorm:"not null"`
-	CheckInDate time.Time         `json:"checkInDate" gorm:"not null"`
-	ClosureDate time.Time         `json:"closureDate" gorm:"not null"`
-	Location    string            `json:"location" gorm:"not null"`
-	Services    []service.Service `json:"services" gorm:"foreignkey:EventID"`
-	CreatedAt   time.Time         `json:"createdAt"`
-	UpdatedAt   time.Time         `json:"updatedAt"`
-	Image       string            `json:"image" gorm:"not null"`
-	Tipus       string            `json:"tipus" gorm:"not null"`
+	ID          uint                 `json:"id" gorm:"primaryKey; autoIncrement:true"`
+	Title       string               `json:"title" gorm:"not null;unique"`
+	Description string               `json:"description"`
+	Capacity    int                  `json:"capacity" gorm:"not null"`
+	Taken       int                  `json:"taken" gorm:"not null;check:,taken <= capacity"` // How many tickets have been purchased; Capacity - Taken = available_tickets
+	Price       float32              `json:"price" gorm:"not null"`
+	CheckInDate time.Time            `json:"checkInDate" gorm:"not null"`
+	ClosureDate time.Time            `json:"closureDate" gorm:"not null"`
+	Location    string               `json:"location" gorm:"not null"`
+	Feedbacks   []*feedback.Feedback `json:"feedbacks" gorm:"foreignkey:EventID"`
+	Services    []*service.Service   `json:"services" gorm:"foreignkey:EventID"`
+	CreatedAt   time.Time            `json:"createdAt"`
+	UpdatedAt   time.Time            `json:"updatedAt"`
+	Image       string               `json:"image" gorm:"not null"`
+	Tipus       string               `json:"tipus" gorm:"not null"`
 	mu          sync.Mutex
 }
 
@@ -127,19 +128,6 @@ func (event *Event) GetServices() (ctrls []service.Controller) {
 
 	return
 }
-
-// // SetServices sets the provided Services as the Event services.
-// func (event *Event) SetServices(ctrl []service.Controller) int {
-// 	var services []*service.Service
-// 	for _, service := range ctrl {
-// 		services = append(services, service.GetService())
-// 	}
-
-// 	event.Services = services
-
-// 	return len(event.Services)
-
-// }
 
 // GetFeedbacks return the Feedbacks of the Event.
 func (event *Event) GetFeedbacks() (ctrls []feedback.Controller) {

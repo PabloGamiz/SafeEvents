@@ -11,11 +11,12 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/model/product"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/ticket"
+	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
 	"gorm.io/gorm"
 )
 
 func openMigrationStream() (db *gorm.DB, err error) {
-	if db, err = OpenStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		log.Fatalf("Got %v error while opening stream", err.Error())
 		return
 	}
@@ -23,7 +24,8 @@ func openMigrationStream() (db *gorm.DB, err error) {
 	return
 }
 
-func migrateTables() (err error) {
+// MigrateTables migrates the database tables
+func MigrateTables() (err error) {
 	db, err := openMigrationStream()
 	if err != nil {
 		return

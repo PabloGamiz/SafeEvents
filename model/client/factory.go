@@ -8,6 +8,7 @@ import (
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client/assistant"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client/organizer"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/ticket"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
 
@@ -90,7 +91,7 @@ func FindOrganitzersEvent(ctx context.Context, EventID uint) (NameOrg string, er
 	return
 }
 
-// FindAll returns the gateway for finding all the events loaded on the BBDD
+// FindAllFavs returns the gateway for finding all the events loaded on the BBDD
 func FindAllFavs(ctx context.Context, clientCtrl Controller) (events []event.Controller, err error) {
 	var db *gorm.DB
 	if db, err = OpenClientStream(); err != nil {
