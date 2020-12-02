@@ -26,7 +26,7 @@ func OpenClientStream() (db *gorm.DB, err error) {
 		// Automigrate must be called only once for each gateway, and allways on the stream's opening call.
 		// This makes sure the client struct has its own table on the database. So model updates are only
 		// migrable to the database rebooting the server (not on-the-run).
-		db.AutoMigrate(&ticket.Ticket{}, &Client{}, &organizer.Organizer{}, &assistant.Assistant{})
+		err = db.AutoMigrate(&ticket.Ticket{}, &organizer.Organizer{}, &assistant.Assistant{}, &Client{})
 	})
 
 	return
