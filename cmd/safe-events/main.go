@@ -39,13 +39,13 @@ func main() {
 		log.Panicf(errDotenvConfig, err.Error())
 	}
 
-	if err := clientTX.SetupDummyUser(); err != nil {
-		log.Fatalf("Got %v, while setting up the dummy user", err.Error())
-	}
-
 	envs, err := getMainEnv()
 	if err != nil {
 		log.Fatalf(errConfigFailed, err.Error())
+	}
+
+	if err := clientTX.SetupDummyUser(); err != nil {
+		log.Fatalf("Got %v, while setting up the dummy user", err.Error())
 	}
 
 	address := ":" + envs[0]
