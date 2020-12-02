@@ -5,24 +5,60 @@ import (
 	"log"
 
 	eventDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/event"
+	clientGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/client"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
+	clientMOD "github.com/PabloGamiz/SafeEvents-Backend/model/client"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 	eventMOD "github.com/PabloGamiz/SafeEvents-Backend/model/event"
 )
 
 // txSignup represents an
 type txGetEvent struct {
-	request eventDTO.DTO
+	request  eventDTO.DTO
+	faved    bool
+	organizs string
+}
+
+func (tx *txGetEvent) buildEventResponseDTO(ctrl event.Controller) *eventDTO.DTO {
+
+	return &eventDTO.DTO{
+		Title:       ctrl.GetTitle(),
+		Description: ctrl.GetDescription(),
+		Capacity:    ctrl.GetCapacity(),
+		CheckInDate: ctrl.GetCheckInDate(),
+		ClosureDate: ctrl.GetClosureDate(),
+		Location:    ctrl.GetLocation(),
+		Price:       ctrl.GetPrice(),
+		Taken:       ctrl.GetTaken(),
+		Image:       ctrl.GetImage(),
+		Faved:       tx.faved,
+		Organizer:   tx.organizs,
+	}
 }
 
 // Precondition validates the transaction is ready to run
 func (tx *txGetEvent) Precondition() error {
+	// make sure the session exists
+	//tx.sessCtrl, err = session.GetSessionByID(tx.request.Cookie)
 	return nil
 }
 
 // Postcondition creates new user and a opens its first session
-func (tx *txGetEvent) Postcondition(ctx context.Context) (interface{}, error) {
+func (tx *txGetEvent) Postcondition(ctx context.Context) (v interface{}, err error) {
 	log.Printf("Got a Event request for event with and ID of %d ", tx.request.ID)
-	gw, err := eventMOD.FindEventByID(ctx, tx.request.ID)
-	return gw, err
+	var gw event.Controller
+	if gw, err = eventMOD.FindEventByID(ctx, tx.request.ID); err != nil {
+		return
+	}
+	var ctr client.Controller
+	if ctr, err = clientMOD.FindClientByID(ctx, 2); err != nil {
+		return
+	}
+	clientgw := clientGW.NewClientGateway(ctx, ctr)
+	tx.faved, err = clientgw.FindFavorit(gw)
+	//tx.organizs, err = clientMOD.FindOrganitzersEvent(ctx, tx.request.ID)
+	response := tx.buildEventResponseDTO(gw)
+	return response, err
 }
 
 // Commit commits the transaction result

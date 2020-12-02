@@ -22,3 +22,15 @@ func NewTxClientInfo(request clientDTO.ClientInfoRequestDTO) transaction.Tx {
 	body := &txClientInfo{request: request}
 	return transaction.NewTransaction(body)
 }
+
+// NewTxAddFav builds a brand new transaction for Adding a Favorite Event
+func NewTxAddFav(request clientDTO.ClientFavDTO) transaction.Tx {
+	body := &txAddFav{request: request}
+	return transaction.NewTransaction(body)
+}
+
+// NewTxDelFav builds a brand new transaction for Deleting a Favorite Event
+func NewTxDelFav(request clientDTO.ClientFavDTO) transaction.Tx {
+	body := &txDelFav{request: request}
+	return transaction.NewTransaction(body)
+}

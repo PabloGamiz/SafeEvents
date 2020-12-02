@@ -13,6 +13,11 @@ type Assistant struct {
 	parent       Parent
 }
 
+// GetID returns the Assistant ID
+func (a *Assistant) GetID() uint {
+	return a.ID
+}
+
 func (a *Assistant) locateTicket(ctrl ticket.Controller) (index int, ok bool) {
 	left := len(a.Purchased)
 	max := left + len(a.newPurchased)
@@ -111,9 +116,4 @@ func (a *Assistant) GetPurchased() (ctrls []ticket.Controller) {
 	}
 
 	return
-}
-
-// GetID returns the assistant ID
-func (a *Assistant) GetID() uint {
-	return a.ID
 }

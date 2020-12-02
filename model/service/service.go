@@ -3,7 +3,6 @@ package service
 import (
 	"time"
 
-	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/product"
 )
 
@@ -13,7 +12,7 @@ type Service struct {
 	Name        string            `json:"name" gorm:"not null;unique"`
 	Description string            `json:"description" gorm:"not null"`
 	Kind        Kind              `json:"kind" gorm:"not null"`
-	Location    location.Location `json:"location" gorm:"foreignkey:LocationID;not null"`
+	Location    string            `json:"location" gorm:"foreignkey:LocationID;not null"`
 	LocationID  uint64            `json:"-"`
 	Products    []product.Product `json:"products" gorm:"many2many:services_products"`
 	EventID     uint              `json:"-"`
@@ -56,18 +55,18 @@ func (service *Service) GetKind() string {
 	return service.Kind.String()
 }
 
-// SetKind sets the Kind of the Service.
-func (service *Service) SetKind(kind Kind) {
-	service.Kind = kind
-}
+// // SetKind sets the Kind of the Service.
+// func (service *Service) SetKind(kind int64) {
+// 	service.Kind = kind
+// }
 
 // GetLocation return the Location of the Service.
-func (service *Service) GetLocation() (loc location.Location) {
+func (service *Service) GetLocation() string {
 	return service.Location
 }
 
 // SetLocation sets the Description of the Service.
-func (service *Service) SetLocation(location location.Location) {
+func (service *Service) SetLocation(location string) {
 	service.Location = location
 }
 
@@ -80,3 +79,8 @@ func (service *Service) GetProducts() []product.Product {
 func (service *Service) SetProducts(products []product.Product) {
 	service.Products = products
 }
+
+// // GetService gets a pointer to this Service.
+// func (service *Service) GetService() *Service {
+// 	return &Service{}
+// }

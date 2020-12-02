@@ -6,6 +6,7 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/gateway/client/assistant"
 	"github.com/PabloGamiz/SafeEvents-Backend/gateway/client/organizer"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 	"gorm.io/gorm"
 )
 
@@ -71,4 +72,39 @@ func (gw *clientGateway) Remove() (err error) {
 
 	organ := gw.Controller.GetOrganizer()
 	return organizer.NewOrganizerGateway(gw.ctx, organ).Remove()
+}
+
+func (gw *clientGateway) AddFavorit() (err error) {
+	var db *gorm.DB
+	if db, err = client.OpenClientStream(); err != nil {
+		return
+	}
+	ctrl := gw.Controller.GetFavs()
+	err = db.Model(gw.Controller).Association("Favs").Append(ctrl)
+	return err
+}
+
+func (gw *clientGateway) DeleteFavorit(ctrl event.Controller) (err error) {
+	var db *gorm.DB
+	if db, err = client.OpenClientStream(); err != nil {
+		return
+	}
+	err = db.Model(gw.Controller).Association("Favs").Delete(gw.Controller, ctrl)
+	return err
+}
+
+func (gw *clientGateway) FindFavorit(ctrl event.Controller) (faved bool, err error) {
+	var db *gorm.DB
+	if db, err = client.OpenClientStream(); err != nil {
+		return
+	}
+	var eventsMOD []*event.Event
+	err = db.Model(gw.Controller).Association("Favs").Find(&eventsMOD)
+	for _, evnt := range eventsMOD {
+		if evnt.GetID() == ctrl.GetID() {
+			return true, err
+		}
+	}
+
+	return false, err
 }

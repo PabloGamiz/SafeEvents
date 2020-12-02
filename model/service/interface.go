@@ -1,7 +1,6 @@
 package service
 
 import (
-	"github.com/PabloGamiz/SafeEvents-Backend/model/location"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/product"
 )
 
@@ -13,10 +12,11 @@ type Controller interface {
 	SetName(name string)
 	GetDescription() string
 	SetDescription(description string)
-	GetKind() Kind
-	SetKind(kind Kind)
-	GetLocation() location.Location
-	SetLocation(location location.Location)
+	GetKind() string
+	// SetKind(kind Kind)
+	GetLocation() string
+	SetLocation(location string)
 	GetProducts() []product.Product
 	SetProducts(products []product.Product)
+	// GetService() *Service
 }
