@@ -19,7 +19,7 @@ func (gw *organizerGateway) Insert() (err error) {
 		return
 	}
 
-	return db.Create(gw.Controller).Error
+	return db.Table("organizers").Create(gw.Controller).Error
 }
 
 func (gw *organizerGateway) Update() (err error) {

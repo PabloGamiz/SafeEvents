@@ -22,7 +22,7 @@ func (gw *clientGateway) Insert() (err error) {
 		return
 	}
 
-	if err = db.Create(gw.Controller).Error; err != nil {
+	if err = db.Table("clients").Create(gw.Controller).Error; err != nil {
 		return
 	}
 

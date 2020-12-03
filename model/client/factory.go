@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
@@ -18,18 +19,17 @@ func FindClientByEmail(ctx context.Context, email string) (ctrl Controller, err 
 	}
 
 	var client Client
-	//.Preload("Assists.Purchased").Preload("Organize.Organize")
-	db = db.Where(queryFindByEmail, email).Find(&client)
-
-	if db.Error != nil {
-		err = fmt.Errorf(errNotFoundByEmail, db.Error.Error(), email)
+	if resp := db.Where(queryFindByEmail, email).Find(&client); resp.Error != nil {
+		err = fmt.Errorf(errNotFoundByEmail, resp.Error.Error(), email)
 		return
 	}
 
 	if client.GetID() == 0 {
+		err = fmt.Errorf("Got primary key 0 for client %v", email)
 		return
 	}
 
+	log.Printf("%v", client.GetID())
 	return &client, nil
 }
 

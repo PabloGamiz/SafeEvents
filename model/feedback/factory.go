@@ -11,10 +11,10 @@ import (
 
 var once sync.Once
 
-// OpenFeedbackStream opens an stream ensuring the Feedback table does exist
-func OpenFeedbackStream() (db *gorm.DB, err error) {
+// OpenStream ensuring the Feedback table does exist
+func OpenStream() (db *gorm.DB, err error) {
 	if db, err = mysql.OpenStream(); err != nil {
-		log.Fatalf("Got %v error while opening stream", err.Error())
+		log.Fatalf("Got %v error while OpenStream", err.Error())
 		return
 	}
 
@@ -28,7 +28,7 @@ func OpenFeedbackStream() (db *gorm.DB, err error) {
 // FindFeedbackByIDAndAssistantIDAndEventID returns, if exists, the feedback provided by assistantID to eventID
 func FindFeedbackByIDAndAssistantIDAndEventID(feedbackID int, assistantID int, eventID int) (ctrl Controller, err error) {
 	var db *gorm.DB
-	if db, err = OpenFeedbackStream(); err != nil {
+	if db, err = OpenStream(); err != nil {
 		return
 	}
 
@@ -46,7 +46,7 @@ func FindFeedbackByIDAndAssistantIDAndEventID(feedbackID int, assistantID int, e
 // FindFeedbackByAssistantIDAndEventID returns, if exists, the feedback provided by assistantID to eventID
 func FindFeedbackByAssistantIDAndEventID(assistantID int, eventID int) (ctrl Controller, err error) {
 	var db *gorm.DB
-	if db, err = OpenFeedbackStream(); err != nil {
+	if db, err = OpenStream(); err != nil {
 		return
 	}
 
@@ -60,7 +60,7 @@ func FindFeedbackByAssistantIDAndEventID(assistantID int, eventID int) (ctrl Con
 // FindFeedbackByEventID returns, if exists, the feedback corresponding to eventID
 func FindFeedbackByEventID(eventID int) (ctrl []Controller, err error) {
 	var db *gorm.DB
-	if db, err = OpenFeedbackStream(); err != nil {
+	if db, err = OpenStream(); err != nil {
 		return
 	}
 
@@ -78,7 +78,7 @@ func FindFeedbackByEventID(eventID int) (ctrl []Controller, err error) {
 // FindFeedbackByAssistantID returns, if exists, the feedback providad by assistantID
 func FindFeedbackByAssistantID(assistantID int) (ctrl []Controller, err error) {
 	var db *gorm.DB
-	if db, err = OpenFeedbackStream(); err != nil {
+	if db, err = OpenStream(); err != nil {
 		return
 	}
 

@@ -20,7 +20,7 @@ func (gw *assistantGateway) Insert() (err error) {
 		return
 	}
 
-	return db.Create(gw.Controller).Error
+	return db.Table("assistants").Create(gw.Controller).Error
 }
 
 func (gw *assistantGateway) Update() (err error) {
