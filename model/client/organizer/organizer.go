@@ -7,7 +7,7 @@ import (
 // Organizer its a client that organizes events
 type Organizer struct {
 	ID       uint           `json:"id" gorm:"primaryKey; autoIncrement:true"`
-	Organize []*event.Event `json:"organize" gorm:"many2many:organizers_events;"`
+	Events   []*event.Event `json:"organizes" gorm:"many2many:organizers_events;"`
 	ClientID uint           `json:"-"`
 	parent   Parent
 }
@@ -16,15 +16,21 @@ type Organizer struct {
 func (o *Organizer) SetParent(p Parent) {
 	if o.parent == nil {
 		o.parent = p
+		o.ClientID = p.GetID()
 	}
 }
 
 // AddEvent adds a new event that organizes the client
 func (o *Organizer) AddEvent(ctrl *event.Event) {
-	o.Organize = append(o.Organize, ctrl)
+	o.Events = append(o.Events, ctrl)
 }
 
-// GetEventOrg returns the event organized
+// GetEventOrg returns the events organized
 func (o *Organizer) GetEventOrg() []*event.Event {
-	return o.Organize
+	return o.Events
+}
+
+// GetID return the organizer id
+func (o *Organizer) GetID() uint {
+	return o.ID
 }

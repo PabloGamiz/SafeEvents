@@ -13,5 +13,5 @@ type Gateway interface {
 	Remove() error
 	AddFavorit() error
 	DeleteFavorit(ctrl event.Controller) error
-	FindFavorit(ctrl event.Controller) error
+	FindFavorit(ctrl event.Controller) (bool, error)
 }

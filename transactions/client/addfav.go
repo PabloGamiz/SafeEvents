@@ -64,7 +64,7 @@ func (tx *txAddFav) Postcondition(ctx context.Context) (v interface{}, err error
 		return
 	}
 	var ctr client.Controller
-	ctr, err = clientMOD.FindClientByID(tx.ctx, 2)
+	ctr, err = clientMOD.FindClientByID(tx.ctx, 4)
 	ctr.AddFav(evnt.GetEvent()) //CHAPUZA
 	clientgw := clientGW.NewClientGateway(tx.ctx, ctr)
 	clientgw.AddFavorit()

@@ -16,7 +16,7 @@ package mysql
 
 // 	stream, err := OpenStream()
 // 	if err != nil {
-// 		t.Errorf("Got %v error while opening stream", err.Error())
+// 		t.Errorf("Got %v error while OpenStream", err.Error())
 // 		t.FailNow()
 // 	}
 

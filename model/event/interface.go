@@ -3,6 +3,7 @@ package event
 import (
 	"time"
 
+	"github.com/PabloGamiz/SafeEvents-Backend/model/feedback"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
 )
 
@@ -18,13 +19,16 @@ type Controller interface {
 	SetCapacity(capacity int)
 	GetPrice() float32
 	SetPrice(float32)
+	GetTaken() int
 	GetCheckInDate() time.Time
 	SetCheckInDate(checkInDate time.Time)
+	GetImage() string
+	SetImage(Image string)
 	GetClosureDate() time.Time
 	SetClosureDate(closureDate time.Time)
 	GetLocation() string
 	SetLocation(string)
-	GetServices() []service.Service
-	SetServices(services []service.Service)
+	GetServices() []service.Controller
 	TakeTickets(int) error
+	GetFeedbacks() []feedback.Controller
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 )
 
-// Client its the main data object fro a client
+// Client its the main data object from a client
 type Client struct {
 	ID       uint                `json:"id" gorm:"primaryKey; autoIncrement:true"`
 	Email    string              `json:"email" gorm:"not null; unique"`
