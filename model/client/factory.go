@@ -3,7 +3,6 @@ package client
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
@@ -19,17 +18,19 @@ func FindClientByEmail(ctx context.Context, email string) (ctrl Controller, err 
 	}
 
 	var client Client
-	if resp := db.Preload("Assists.Purchased").Preload("Organize.Events").Where(queryFindByEmail, email).Find(&client); resp.Error != nil {
-		err = fmt.Errorf(errNotFoundByEmail, resp.Error.Error(), email)
+	if result := db.Where(queryFindByEmail, email).Find(&client); result.Error != nil {
+		err = fmt.Errorf(errNotFoundByEmail, result.Error.Error(), email)
 		return
 	}
 
 	if client.GetID() == 0 {
-		err = fmt.Errorf("Got primary key 0 for client %v", email)
+		err = fmt.Errorf(errNotFoundByEmail, "no value", email)
 		return
 	}
 
-	log.Printf("%v", client.GetID())
+	client.GetAssistant().SetParent(&client)
+	client.GetOrganizer().SetParent(&client)
+
 	return &client, nil
 }
 
@@ -41,15 +42,18 @@ func FindClientByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 	}
 
 	var client Client
-	if db = db.Preload("Assists.Purchased").Preload("Organize.Organize").Where(queryFindByID, ID).Find(&client); db.Error != nil {
+	if db = db.Where(queryFindByID, ID).Find(&client); db.Error != nil {
 		err = fmt.Errorf(errNotFoundByID, db.Error.Error(), ID)
 		return
 	}
 
-	if got := client.GetID(); got != ID {
-		err = fmt.Errorf(errNotFoundByID, got, ID)
+	if client.GetID() == 0 {
+		err = fmt.Errorf(errNotFoundByID, "no value", ID)
 		return
 	}
+
+	client.GetAssistant().SetParent(&client)
+	client.GetOrganizer().SetParent(&client)
 
 	return &client, nil
 }
