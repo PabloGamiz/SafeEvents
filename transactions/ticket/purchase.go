@@ -114,6 +114,7 @@ func (tx *txPurchase) Postcondition(ctx context.Context) (v interface{}, err err
 		return
 	}
 
+	log.Println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\t1")
 	// making sure there are enought tikets to purchase
 	if err = tx.eventCtrl.TakeTickets(tx.request.HowMany); err != nil {
 		// if there are no enought tickets, try to release the booked ones
@@ -127,6 +128,7 @@ func (tx *txPurchase) Postcondition(ctx context.Context) (v interface{}, err err
 		}
 	}
 
+	log.Println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\t2")
 	// foreach ticket to purchase
 	tx.taked = true
 	tx.purchased = make([]ticketGW.Gateway, tx.request.HowMany)
@@ -136,6 +138,7 @@ func (tx *txPurchase) Postcondition(ctx context.Context) (v interface{}, err err
 		}
 	}
 
+	log.Println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\t3")
 	tx.ctx = ctx
 	response := tx.buildPurchaseResponseDTO()
 	return response, nil

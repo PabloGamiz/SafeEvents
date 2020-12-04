@@ -55,15 +55,15 @@ func newMysqlDriver() (driver driver.Connector, err error) {
 // OpenStream returns a gateway to the mysql database
 func OpenStream() (gormDB *gorm.DB, err error) {
 	var conn driver.Connector
-	if conn, err = getConnInstance(); err == nil {
-		db := sql.OpenDB(conn)
-		config := gormSqlDriver.Config{
-			Conn: db,
-		}
-
-		driver := gormSqlDriver.New(config)
-		gormDB, err = gorm.Open(driver, &gorm.Config{})
+	if conn, err = getConnInstance(); err != nil {
+		return
 	}
 
-	return
+	db := sql.OpenDB(conn)
+	config := gormSqlDriver.Config{
+		Conn: db,
+	}
+
+	driver := gormSqlDriver.New(config)
+	return gorm.Open(driver, &gorm.Config{})
 }

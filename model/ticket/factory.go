@@ -10,10 +10,10 @@ import (
 
 var once sync.Once
 
-// OpenTicketStream opens an stream ensuring the Event's table does exists
-func OpenTicketStream() (db *gorm.DB, err error) {
+// OpenStream ensuring the Event's table does exists
+func OpenStream() (db *gorm.DB, err error) {
 	if db, err = mysql.OpenStream(); err != nil {
-		log.Fatalf("Got %v error while opening stream", err.Error())
+		log.Fatalf("Got %v error while OpenStream", err.Error())
 		return
 	}
 
@@ -30,7 +30,7 @@ func OpenTicketStream() (db *gorm.DB, err error) {
 // GetTicketsByEventID return all current tickets for a given event
 func GetTicketsByEventID(id uint) (tickets []Controller, err error) {
 	var db *gorm.DB
-	if db, err = OpenTicketStream(); err != nil {
+	if db, err = OpenStream(); err != nil {
 		return
 	}
 
@@ -41,7 +41,7 @@ func GetTicketsByEventID(id uint) (tickets []Controller, err error) {
 // GetTicketsByEventIDAndClientID return all current tickets for a given event and client
 func GetTicketsByEventIDAndClientID(eid uint, cid uint) (tickets []Controller, err error) {
 	var db *gorm.DB
-	if db, err = OpenTicketStream(); err != nil {
+	if db, err = OpenStream(); err != nil {
 		return
 	}
 

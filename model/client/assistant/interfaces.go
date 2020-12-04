@@ -9,11 +9,11 @@ type Parent interface {
 
 // Controller for Assistant
 type Controller interface {
+	GetID() uint
 	AddPurchase(ctrl ticket.Controller) int
 	RemovePurchase(ctrl ticket.Controller)
 	GetPurchased() []ticket.Controller
 	SetParent(Parent)
-	GetID() uint
 
 	// S'ha eliminat GetNewPurchased fent així que GetPurchase retorni
 	// tant els nous com els antics. En teoria no hauria de suposar cap mena

@@ -13,7 +13,7 @@ services:
             - "dbdump:/docker-entrypoint-initdb.d"
         networks: 
             - database
-    
+            
     myadmin:
         container_name: safe-events-myadmin
         image: phpmyadmin/phpmyadmin:latest
@@ -30,11 +30,13 @@ services:
             PMA_USER: myadmin
             PMA_PASSWORD: myadminpwd
     
-    # BAKCEND
+    # # BAKCEND
     # backend:
     #     container_name: safe-events
     #     image: safe-events/backend:0.1.0
     #     restart: always
+    #     depends_on:
+    #         - myadmin
     #     ports:
     #         - 8080:8080
     #     networks: 

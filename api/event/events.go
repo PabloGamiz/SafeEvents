@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	eventDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/event"
