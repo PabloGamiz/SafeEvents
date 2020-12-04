@@ -28,7 +28,15 @@ func (gw *organizerGateway) Update() (err error) {
 		return
 	}
 
-	return db.Table("organizers").Updates(gw.Controller).Error
+	if err = db.Model(gw.Controller).Association("Events").Append(gw.GetEventOrg); err != nil {
+		return
+	}
+
+	if err = db.Table("organizers").Updates(gw.Controller).Error; err != nil {
+		return
+	}
+
+	return
 }
 
 func (gw *organizerGateway) Remove() (err error) {

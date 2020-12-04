@@ -48,7 +48,7 @@ func (tx *txPublicaEvent) Postcondition(ctx context.Context) (v interface{}, err
 	}
 
 	var ctr client.Controller = tx.sessCtrl
-	log.Println(ctr.GetOrganizer().GetID())
+	ctr.GetOrganizer().AddEvent(eventCtrl)
 	clientgw := clientGW.NewClientGateway(ctx, ctr)
 	if err = clientgw.Update(); err != nil {
 		return
