@@ -6,6 +6,8 @@ import (
 	"net/http"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/api"
+	"github.com/PabloGamiz/SafeEvents-Backend/mysql/migration"
+	clientTX "github.com/PabloGamiz/SafeEvents-Backend/transactions/client"
 	"github.com/alvidir/util/config"
 	"github.com/joho/godotenv"
 )
@@ -31,11 +33,27 @@ func getMainEnv() ([]string, error) {
 		envNetwKey /*1*/)
 }
 
-func main() {
+func setup() (err error) {
 	// to change the flags on the default logger
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	if err := godotenv.Load(); err != nil {
-		log.Panicf(errDotenvConfig, err.Error())
+	if err = godotenv.Load(); err != nil {
+		return
+	}
+
+	if err = migration.MigrateTables(); err != nil {
+		return
+	}
+
+	if err = clientTX.SetupDummyUser(); err != nil {
+		return
+	}
+
+	return
+}
+
+func main() {
+	if err := setup(); err != nil {
+		log.Fatalf(err.Error())
 	}
 
 	envs, err := getMainEnv()

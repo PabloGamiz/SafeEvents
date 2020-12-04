@@ -6,7 +6,7 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 )
 
-// Client its the main data object fro a client
+// Client its the main data object from a client
 type Client struct {
 	ID       uint                `json:"id" gorm:"primaryKey; autoIncrement:true"`
 	Email    string              `json:"email" gorm:"not null; unique"`
@@ -33,4 +33,25 @@ func (client *Client) GetAssistant() assistant.Controller {
 // GetOrganizer returns the organizer role of the client
 func (client *Client) GetOrganizer() organizer.Controller {
 	return &client.Organize
+}
+
+// AddFav add a new favourite event to the client
+func (client *Client) AddFav(ctrl *event.Event) {
+	client.Favs = append(client.Favs, ctrl)
+}
+
+// RemoveFav add a new favourite event to the client
+func (client *Client) RemoveFav(ctrl *event.Event) {
+	index := 0
+	for _, i := range client.Favs {
+		if i.ID != ctrl.ID {
+			client.Favs[index] = i
+			index++
+		}
+	}
+}
+
+// GetFavs returns the events that the client has in favourite
+func (client *Client) GetFavs() []*event.Event {
+	return client.Favs
 }
