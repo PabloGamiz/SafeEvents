@@ -53,7 +53,11 @@ func (gw *clientGateway) Update() (err error) {
 	}
 
 	organ := gw.Controller.GetOrganizer()
-	return organizer.NewOrganizerGateway(gw.ctx, organ).Update()
+	if err = db.Model(organ).Association("Events").Append(organ.GetEventOrg); err != nil {
+		return
+	}
+
+	return //organizer.NewOrganizerGateway(gw.ctx, organ).Update()
 }
 
 func (gw *clientGateway) Remove() (err error) {
