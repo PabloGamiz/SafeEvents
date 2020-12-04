@@ -8,6 +8,7 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 // FindClientByEmail returns the gateway for the client that match the provided mail
@@ -18,7 +19,7 @@ func FindClientByEmail(ctx context.Context, email string) (ctrl Controller, err 
 	}
 
 	var client Client
-	if result := db.Where(queryFindByEmail, email).Find(&client); result.Error != nil {
+	if result := db.Preload(clause.Associations).Where(queryFindByEmail, email).Find(&client); result.Error != nil {
 		err = fmt.Errorf(errNotFoundByEmail, result.Error.Error(), email)
 		return
 	}
@@ -42,13 +43,13 @@ func FindClientByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 	}
 
 	var client Client
-	if db = db.Where(queryFindByID, ID).Find(&client); db.Error != nil {
+	if db = db.Preload(clause.Associations).Where(queryFindByID, ID).Find(&client); db.Error != nil {
 		err = fmt.Errorf(errNotFoundByID, db.Error.Error(), ID)
 		return
 	}
 
-	if client.GetID() == 0 {
-		err = fmt.Errorf(errNotFoundByID, "no value", ID)
+	if got := client.GetID(); got != ID {
+		err = fmt.Errorf(errNotFoundByID, got, ID)
 		return
 	}
 
