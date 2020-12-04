@@ -18,7 +18,7 @@ func (gw *eventGateway) Insert() (err error) {
 		return
 	}
 
-	return db.Table("events").Create(gw.Controller).Error
+	return db.Create(gw.Controller).Error
 }
 
 func (gw *eventGateway) Update() (err error) {
@@ -27,7 +27,7 @@ func (gw *eventGateway) Update() (err error) {
 		return
 	}
 
-	return db.Table("events").Save(gw.Controller).Error
+	return db.Save(gw.Controller).Error
 }
 
 func (gw *eventGateway) Remove() (err error) {
