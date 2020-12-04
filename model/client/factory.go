@@ -19,7 +19,7 @@ func FindClientByEmail(ctx context.Context, email string) (ctrl Controller, err 
 	}
 
 	var client Client
-	if resp := db.Where(queryFindByEmail, email).Find(&client); resp.Error != nil {
+	if resp := db.Preload("Assists.Purchased").Preload("Organize.Events").Where(queryFindByEmail, email).Find(&client); resp.Error != nil {
 		err = fmt.Errorf(errNotFoundByEmail, resp.Error.Error(), email)
 		return
 	}
@@ -46,8 +46,8 @@ func FindClientByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 		return
 	}
 
-	if client.GetID() == 0 {
-		err = fmt.Errorf(errNotFoundByID, "no value", ID)
+	if got := client.GetID(); got != ID {
+		err = fmt.Errorf(errNotFoundByID, got, ID)
 		return
 	}
 
