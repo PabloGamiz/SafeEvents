@@ -7,6 +7,7 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/gateway/client/organizer"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
+	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
 	"gorm.io/gorm"
 )
 
@@ -17,11 +18,11 @@ type clientGateway struct {
 
 func (gw *clientGateway) Insert() (err error) {
 	var db *gorm.DB
-	if db, err = client.OpenClientStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
-	if err = db.Create(gw.Controller).Error; err != nil {
+	if err = db.Table("clients").Create(gw.Controller).Error; err != nil {
 		return
 	}
 
@@ -38,7 +39,7 @@ func (gw *clientGateway) Insert() (err error) {
 
 func (gw *clientGateway) Update() (err error) {
 	var db *gorm.DB
-	if db, err = client.OpenClientStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
@@ -57,7 +58,7 @@ func (gw *clientGateway) Update() (err error) {
 
 func (gw *clientGateway) Remove() (err error) {
 	var db *gorm.DB
-	if db, err = client.OpenClientStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
@@ -76,7 +77,7 @@ func (gw *clientGateway) Remove() (err error) {
 
 func (gw *clientGateway) AddFavorit() (err error) {
 	var db *gorm.DB
-	if db, err = client.OpenClientStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 	ctrl := gw.Controller.GetFavs()
@@ -86,7 +87,7 @@ func (gw *clientGateway) AddFavorit() (err error) {
 
 func (gw *clientGateway) DeleteFavorit(ctrl event.Controller) (err error) {
 	var db *gorm.DB
-	if db, err = client.OpenClientStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 	err = db.Model(gw.Controller).Association("Favs").Delete(gw.Controller, ctrl)
@@ -95,7 +96,7 @@ func (gw *clientGateway) DeleteFavorit(ctrl event.Controller) (err error) {
 
 func (gw *clientGateway) FindFavorit(ctrl event.Controller) (faved bool, err error) {
 	var db *gorm.DB
-	if db, err = client.OpenClientStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 	var eventsMOD []*event.Event

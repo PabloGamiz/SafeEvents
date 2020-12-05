@@ -2,7 +2,6 @@ package event
 
 import (
 	"fmt"
-	"sync"
 	"time"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/feedback"
@@ -26,7 +25,7 @@ type Event struct {
 	UpdatedAt   time.Time            `json:"updatedAt"`
 	Image       string               `json:"image" gorm:"not null"`
 	Tipus       string               `json:"tipus" gorm:"not null"`
-	mu          sync.Mutex
+	//mu          sync.Mutex
 }
 
 //CHAPUZA
@@ -166,8 +165,8 @@ func (event *Event) SetTipus(tipus string) {
 
 // TakeTickets takes as much tickets as set on n, if there is not enought capacity an error its thrown
 func (event *Event) TakeTickets(n int) error {
-	event.mu.Lock()
-	defer event.mu.Unlock()
+	//event.mu.Lock()
+	//defer event.mu.Unlock()
 
 	if event.Taken+n > event.Capacity {
 		return fmt.Errorf("Event capacity exceed")

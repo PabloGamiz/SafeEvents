@@ -15,9 +15,9 @@ import (
 	"gorm.io/gorm"
 )
 
-func openMigrationStream() (db *gorm.DB, err error) {
+func OpenStream() (db *gorm.DB, err error) {
 	if db, err = mysql.OpenStream(); err != nil {
-		log.Fatalf("Got %v error while opening stream", err.Error())
+		log.Fatalf("Got %v error while OpenStream", err.Error())
 		return
 	}
 
@@ -26,7 +26,7 @@ func openMigrationStream() (db *gorm.DB, err error) {
 
 // MigrateTables migrates the database tables
 func MigrateTables() (err error) {
-	db, err := openMigrationStream()
+	db, err := OpenStream()
 	if err != nil {
 		return
 	}
