@@ -14,7 +14,6 @@ type Feedback struct {
 	EventID     uint                 `json:"-" gorm:"index:uc_assistant_event,unique; not null"`
 	Assistant   *assistant.Assistant `json:"assistant" gorm:"foreignkey:AssistantID"`
 	AssistantID uint                 `json:"-" gorm:"index:uc_assistant_event,unique; not null"`
-	CreatedAt   time.Time            `json:"createdAt"`
 	UpdatedAt   time.Time            `json:"updatedAt"`
 }
 

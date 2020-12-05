@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"net/http"
+	"time"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/api"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql/migration"
@@ -52,6 +54,7 @@ func setup() (err error) {
 }
 
 func main() {
+	fmt.Println(time.Now())
 	if err := setup(); err != nil {
 		log.Fatalf(err.Error())
 	}
