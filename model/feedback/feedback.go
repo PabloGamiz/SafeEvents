@@ -47,6 +47,11 @@ func (feedback *Feedback) GetAssistant() assistant.Controller {
 	return feedback.Assistant
 }
 
+// GetAssistantID gets the assistant who has provided the feedback.
+func (feedback *Feedback) GetAssistantID() uint {
+	return feedback.AssistantID
+}
+
 // GetFeedback gets a pointer to this feedback.
 func (feedback *Feedback) GetFeedback() *Feedback {
 	return &Feedback{}

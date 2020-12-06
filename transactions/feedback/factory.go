@@ -22,3 +22,9 @@ func NewTxDELETEFeedback(request feedbackDTO.RequestDTO) transaction.Tx {
 	body := &txDELETEFeedback{request: request}
 	return transaction.NewTransaction(body)
 }
+
+// NewTxGETFeedbacks builds a brand new transaction for editing a feedback
+func NewTxGETFeedbacks(request feedbackDTO.RequestDTO) transaction.Tx {
+	body := &txGETFeedbacks{request: request}
+	return transaction.NewTransaction(body)
+}

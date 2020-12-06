@@ -2,7 +2,7 @@ package feedback
 
 const (
 	// APIGETFeedbacks is the path where get of feedbacks by eventID will be handled
-	APIGETFeedbacks = "/event/feeedback/findByEventID"
+	APIGETFeedbacks = "/event/feedback/get"
 	// APIPOSTFeedback is the path where all POSTs of feedbacks will be handled
 	APIPOSTFeedback = "/event/feedback/new"
 	// APIPUTFeedback is the path where all PUTs of feedbacks will be handled
