@@ -33,12 +33,6 @@ func OpenStream() (db *gorm.DB, err error) {
 	return
 }
 
-//
-//func LoadOrStoreNewEvent(event Controller) error {
-//	sid := event.GetID()
-//	if
-//}
-
 // FindAll returns the controllers of all the events loaded on the BBDD
 func FindAll(ctx context.Context) (ctrl []Controller, err error) {
 	var db *gorm.DB
