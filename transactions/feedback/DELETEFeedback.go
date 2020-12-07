@@ -31,9 +31,9 @@ func (tx *txDELETEFeedback) Precondition() (err error) {
 
 	// Make sure the feedback exists and belongs to the Assistant of the session.
 	tx.feedbackToDelete, err = feedbackMOD.FindFeedbackByIDAndAssistantIDAndEventID(
+		int(tx.request.ID),
 		int(tx.assistantCtrl.GetID()),
-		int(tx.request.EventID),
-		int(tx.request.ID))
+		int(tx.request.EventID))
 	if err != nil {
 		return
 	}
@@ -44,7 +44,7 @@ func (tx *txDELETEFeedback) Precondition() (err error) {
 
 // Postcondition declares a new feedback for a certain event
 func (tx *txDELETEFeedback) Postcondition(ctx context.Context) (v interface{}, err error) {
-	log.Printf("Got a Feedback request from client")
+	log.Printf("Got a DELETE Feedback request from client")
 
 	// Build Feedback Gateway for editing the feedback on the DB
 	tx.ctx = ctx

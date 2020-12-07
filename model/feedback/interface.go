@@ -12,5 +12,6 @@ type Controller interface {
 	GetMessage() string
 	SetMessage(message string)
 	GetAssistant() assistant.Controller
+	GetAssistantID() uint
 	GetFeedback() *Feedback
 }

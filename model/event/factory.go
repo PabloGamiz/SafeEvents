@@ -33,12 +33,6 @@ func OpenStream() (db *gorm.DB, err error) {
 	return
 }
 
-//
-//func LoadOrStoreNewEvent(event Controller) error {
-//	sid := event.GetID()
-//	if
-//}
-
 // FindAll returns the controllers of all the events loaded on the BBDD
 func FindAll(ctx context.Context) (ctrl []Controller, err error) {
 	var db *gorm.DB
@@ -47,8 +41,26 @@ func FindAll(ctx context.Context) (ctrl []Controller, err error) {
 	}
 
 	var eventsMOD []*Event
-	db.Preload(clause.Associations).Preload("Services.Location").Preload("Services.Products").Find(&eventsMOD)
+	db.Preload(clause.Associations).Find(&eventsMOD)
+	fmt.Println(eventsMOD)
+	ctrl = make([]Controller, len(eventsMOD))
+	for index, event := range eventsMOD {
+		ctrl[index] = event
+	}
 
+	return
+}
+
+// FindAllByType returns the controllers of all the events loaded on the BBDD
+func FindAllByType(ctx context.Context, eventType string) (ctrl []Controller, err error) {
+	var db *gorm.DB
+	if db, err = OpenStream(); err != nil {
+		return
+	}
+
+	var eventsMOD []*Event
+	db.Preload(clause.Associations).Where(queryFilterByType, eventType).Find(&eventsMOD)
+	fmt.Println(eventsMOD)
 	ctrl = make([]Controller, len(eventsMOD))
 	for index, event := range eventsMOD {
 		ctrl[index] = event

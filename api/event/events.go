@@ -34,6 +34,36 @@ func HandleListEventsRequest(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
+// HandleListEventsByTypeRequest attends a list events by type request
+func HandleListEventsByTypeRequest(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Handlering a List Events by type request")
+
+	// Expected data for a Publica request
+	var requestDTO eventDTO.ListEventsByTypeRequestDTO
+	if err := json.NewDecoder(r.Body).Decode(&requestDTO); err != nil {
+		// If some error just happened it means the provided Json does not match with the expected DTO
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Setting up TxSignin with the required values
+	TxListEventsByType := event.NewTxListEventsByType(requestDTO)
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel() // ensures the context is canceled, at least once, at the end of this function
+
+	TxListEventsByType.Execute(ctx)
+	result, err := TxListEventsByType.Result()
+	if err != nil {
+		// If err != nil it means the transaction has failed
+		http.Error(w, err.Error(), http.StatusConflict)
+		return
+	}
+
+	// Sending response
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
+}
+
 // HandlePublicaEventRequest attends a Publica Esdeveniment request
 func HandlePublicaEventRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a Publica Esdeveniment request")
