@@ -12,15 +12,18 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/transactions/client"
 )
 
-func buildClientInfoRequestDTO(id uint) clientDTO.ClientInfoRequestDTO {
+func buildClientInfoRequestDTO(id uint, cookie string) clientDTO.ClientInfoRequestDTO {
 	return clientDTO.ClientInfoRequestDTO{
-		ID: id,
+		ID:     id,
+		Cookie: cookie,
 	}
 }
 
 // HandleClientInfoRequest ...
 func HandleClientInfoRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a Client Info request")
+
+	cookie := r.Header.Get("Authorization")
 
 	//Get the id from the URL
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
@@ -32,7 +35,7 @@ func HandleClientInfoRequest(w http.ResponseWriter, r *http.Request) {
 
 	uid := uint(id)
 
-	req := buildClientInfoRequestDTO(uid)
+	req := buildClientInfoRequestDTO(uid, cookie)
 	log.Printf("Handlering a Client Info request for client %d", uid)
 
 	//Setting up TxClientInfo with the required values
