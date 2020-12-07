@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	eventDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/event"
@@ -138,9 +137,9 @@ func HandleGetEventRequest(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
-func buildListFavoritesRequestDTO(id uint) eventDTO.ListFavoritesRequestDTO {
+func buildListFavoritesRequestDTO(cookie string) eventDTO.ListFavoritesRequestDTO {
 	return eventDTO.ListFavoritesRequestDTO{
-		ID: id,
+		Cookie: cookie,
 	}
 }
 
@@ -148,16 +147,9 @@ func buildListFavoritesRequestDTO(id uint) eventDTO.ListFavoritesRequestDTO {
 func HandleListFavoritesRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a List Favorites request")
 
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
-	if err != nil || id < 1 {
-		log.Printf("Error no id found")
-		http.Error(w, err.Error(), http.StatusConflict)
-		return
-	}
+	cookie := r.Header.Get("Authorization")
 
-	uid := uint(id)
-
-	req := buildListFavoritesRequestDTO(uid)
+	req := buildListFavoritesRequestDTO(cookie)
 
 	// Setting uo TxListFavorites with the required values
 	txListFavorites := event.NewTxListFavorites(req)
