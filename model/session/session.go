@@ -19,3 +19,7 @@ type Session struct {
 func (session *Session) Cookie() string {
 	return session.cookie
 }
+
+func (session *Session) Client() client.Controller {
+	return session.Controller
+}

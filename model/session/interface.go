@@ -11,4 +11,5 @@ type Controller interface {
 	client.Controller
 	context.Context
 	Cookie() string
+	Client() client.Controller
 }

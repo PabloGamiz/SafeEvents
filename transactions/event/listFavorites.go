@@ -25,13 +25,9 @@ func (tx *txListFavorites) Precondition() error {
 	return nil
 }
 
-func doNothing(sess sessionMOD.Controller) {
-	return
-}
-
 // Postcondition returns the list of favorites for the user id
 func (tx *txListFavorites) Postcondition(ctx context.Context) (v interface{}, err error) {
-	log.Printf("Got a List Favorites request for client %d", tx.request.ID)
+	log.Printf("Got a List Favorites request for client %s", tx.request.Cookie)
 
 	// SESSION //
 
@@ -40,13 +36,8 @@ func (tx *txListFavorites) Postcondition(ctx context.Context) (v interface{}, er
 		log.Printf("No id found for cookie %s", tx.request.Cookie)
 		return
 	}
-
-	doNothing(sess)
-
 	//Get the client and make sure it exists
-	if tx.clientCtrl, err = clientMOD.FindClientByID(ctx, tx.request.ID); err != nil {
-		return
-	}
+	tx.clientCtrl = sess.Client()
 
 	events, err := clientMOD.FindAllFavs(ctx, tx.clientCtrl)
 
