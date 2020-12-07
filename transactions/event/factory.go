@@ -11,6 +11,12 @@ func NewTxListEvents() transaction.Tx {
 	return transaction.NewTransaction(body)
 }
 
+// NewTxListEventsByType builds a brand new transaction for List Events
+func NewTxListEventsByType(request eventDTO.ListEventsByTypeRequestDTO) transaction.Tx {
+	body := &txListEventsByType{request: request}
+	return transaction.NewTransaction(body)
+}
+
 // NewTxPublicaEvent builds a brand new transaction for Publica_event
 func NewTxPublicaEvent(request eventDTO.DTO) transaction.Tx {
 	body := &txPublicaEvent{request: request}
