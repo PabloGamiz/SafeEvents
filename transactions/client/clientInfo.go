@@ -35,20 +35,17 @@ func (tx *txClientInfo) Postcondition(ctx context.Context) (v interface{}, err e
 		return
 	}
 
-	doNothing(sess)
+	var id = tx.request.ID
 
 	var ctrl clientMOD.Controller
-	if ctrl, err = client.FindClientByID(ctx, tx.request.ID); err != nil {
-		return
-	}
-	/*
-		var events eventMOD.Controller
-		if events, err = eventGW.FindEventsByClientID(ctx, tx.request.ID); err != nil {
+	if id != 0 {
+		if ctrl, err = client.FindClientByID(ctx, id); err != nil {
 			return
 		}
-	*/
-	//response := tx.buildClientInfoDTO(ctrl)
-	//return response, err
+	} else {
+		ctrl = sess.Client()
+	}
+
 	return ctrl, err
 
 }

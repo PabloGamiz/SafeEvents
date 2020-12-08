@@ -25,18 +25,23 @@ func HandleClientInfoRequest(w http.ResponseWriter, r *http.Request) {
 
 	cookie := r.Header.Get("Authorization")
 
+	var id int
+	var err error
 	//Get the id from the URL
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
-	if err != nil || id < 1 {
-		log.Printf("Error no id found")
-		http.Error(w, err.Error(), http.StatusConflict)
-		return
+	if r.URL.Query().Get("id") != "" {
+		id, err = strconv.Atoi(r.URL.Query().Get("id"))
+		if err != nil || id < 1 {
+			log.Printf("Error no id found")
+			http.Error(w, err.Error(), http.StatusConflict)
+			return
+		}
+	} else {
+		id = 0
 	}
 
 	uid := uint(id)
 
 	req := buildClientInfoRequestDTO(uid, cookie)
-	log.Printf("Handlering a Client Info request for client %d", uid)
 
 	//Setting up TxClientInfo with the required values
 	txClientInfo := client.NewTxClientInfo(req)
