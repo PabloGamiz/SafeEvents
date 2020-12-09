@@ -47,7 +47,7 @@ func (tx *txGetEvent) Precondition() error {
 func (tx *txGetEvent) Postcondition(ctx context.Context) (v interface{}, err error) {
 	log.Printf("Got a Event request for event with and ID of %d ", tx.request.ID)
 	var gw event.Controller
-	if gw, err = eventMOD.FindEventByID(ctx, tx.request.ID); err != nil {
+	if gw, err = eventMOD.FindEventByID(tx.request.ID); err != nil {
 		return
 	}
 	var ctr client.Controller

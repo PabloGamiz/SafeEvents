@@ -44,7 +44,7 @@ func (tx *txPUTFeedback) Precondition() (err error) {
 	tx.assistantCtrl = sessionCtrl.GetAssistant()
 
 	// Make sure event exists
-	if _, err = eventMOD.FindEventByID(tx.ctx, tx.request.EventID); err != nil {
+	if _, err = eventMOD.FindEventByID(tx.request.EventID); err != nil {
 		return
 	}
 

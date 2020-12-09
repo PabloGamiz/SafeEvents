@@ -70,7 +70,7 @@ func FindAllByType(ctx context.Context, eventType string) (ctrl []Controller, er
 }
 
 // FindEventByID returns the gateway for the event that match the provided name
-func FindEventByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
+func FindEventByID(ID uint) (ctrl Controller, err error) {
 	var db *gorm.DB
 	if db, err = OpenStream(); err != nil {
 		return
