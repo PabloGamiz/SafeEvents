@@ -97,7 +97,7 @@ func HandlePublicaEventRequest(w http.ResponseWriter, r *http.Request) {
 
 // HandleModificaEventRequest attends a Modifica Esdeveniment request
 func HandleModificaEventRequest(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Handlering a Publica Esdeveniment request")
+	log.Printf("Handlering a Modifica Esdeveniment request")
 
 	// Expected data for a Publica request
 	var modificaDTO eventDTO.DTO
