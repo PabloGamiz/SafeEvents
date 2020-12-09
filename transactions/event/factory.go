@@ -34,3 +34,9 @@ func NewTxListFavorites(request eventDTO.ListFavoritesRequestDTO) transaction.Tx
 	body := &txListFavorites{request: request}
 	return transaction.NewTransaction(body)
 }
+
+// NewTxRecomanaEvents do this and that ...
+func NewTxRecomanaEvents(request eventDTO.ListFavoritesRequestDTO) transaction.Tx {
+	body := &txRecomanaEvents{request: request}
+	return transaction.NewTransaction(body)
+}

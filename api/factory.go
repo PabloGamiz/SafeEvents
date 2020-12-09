@@ -29,6 +29,7 @@ func NewServer() Server {
 	router.HandleFunc(event.APIPubliEvent, event.HandlePublicaEventRequest).Methods(http.MethodPost)
 	router.HandleFunc(event.APIListFavorites, event.HandleListFavoritesRequest).Methods(http.MethodGet)
 	router.HandleFunc(event.APIGetEvent, event.HandleGetEventRequest).Methods(http.MethodPost)
+	router.HandleFunc(event.APIRecomanaEvents, event.HandleRecomanaEventsRequest).Methods(http.MethodPut)
 
 	// Ticket router Handlers
 	router.HandleFunc(ticket.APIPurchasePath, ticket.HandlePurchaseRequest).Methods(http.MethodPost)
