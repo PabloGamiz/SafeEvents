@@ -44,7 +44,7 @@ func setup() (err error) {
 		return
 	}
 
-	if err = clientTX.SetupDummyUser(); err != nil {
+	if _, err = clientTX.SetupDummyUser(); err != nil {
 		return
 	}
 

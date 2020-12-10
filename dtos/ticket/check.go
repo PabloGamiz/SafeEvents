@@ -9,12 +9,11 @@ import (
 type CheckRequestDTO struct {
 	Cookie  string `json:"cookie"`
 	EventID uint   `json:"event_id"`
-	Qr      string `json:"qr"`
+	Qr      string `json:"qr_code"`
 }
 
 // CheckResponseDTO is the response for a check request
 type CheckResponseDTO struct {
-	Ok     bool              `json:"ok"`
 	Client client.Controller `json:"client"`
 	Ticket ticket.Controller `json:"ticket"`
 }

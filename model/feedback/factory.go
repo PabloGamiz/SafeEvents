@@ -2,7 +2,6 @@ package feedback
 
 import (
 	"fmt"
-	"log"
 	"sync"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
@@ -11,24 +10,10 @@ import (
 
 var once sync.Once
 
-// OpenStream ensuring the Feedback table does exist
-func OpenStream() (db *gorm.DB, err error) {
-	if db, err = mysql.OpenStream(); err != nil {
-		log.Fatalf("Got %v error while OpenStream", err.Error())
-		return
-	}
-
-	once.Do(func() {
-		db.AutoMigrate(&Feedback{})
-	})
-
-	return
-}
-
 // FindFeedbackByIDAndAssistantIDAndEventID returns, if exists, the feedback provided by assistantID to eventID
 func FindFeedbackByIDAndAssistantIDAndEventID(feedbackID int, assistantID int, eventID int) (ctrl Controller, err error) {
 	var db *gorm.DB
-	if db, err = OpenStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
@@ -46,7 +31,7 @@ func FindFeedbackByIDAndAssistantIDAndEventID(feedbackID int, assistantID int, e
 // FindFeedbackByAssistantIDAndEventID returns, if exists, the feedback provided by assistantID to eventID
 func FindFeedbackByAssistantIDAndEventID(assistantID int, eventID int) (ctrl Controller, err error) {
 	var db *gorm.DB
-	if db, err = OpenStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
@@ -60,7 +45,7 @@ func FindFeedbackByAssistantIDAndEventID(assistantID int, eventID int) (ctrl Con
 // FindFeedbackByEventID returns, if exists, the feedback corresponding to eventID
 func FindFeedbackByEventID(eventID int) (ctrl []Controller, err error) {
 	var db *gorm.DB
-	if db, err = OpenStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
@@ -78,7 +63,7 @@ func FindFeedbackByEventID(eventID int) (ctrl []Controller, err error) {
 // FindFeedbackByAssistantID returns, if exists, the feedback providad by assistantID
 func FindFeedbackByAssistantID(assistantID int) (ctrl []Controller, err error) {
 	var db *gorm.DB
-	if db, err = OpenStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 

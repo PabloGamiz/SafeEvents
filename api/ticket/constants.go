@@ -7,4 +7,6 @@ const (
 	APIActivatePath = "/ticket/activate"
 	// APIGetTicketsPath is the path where all activations request will be handled
 	APIGetTicketsPath = "/ticket"
+	// APICheckPath is the path where all check requests for tickets will be handled
+	APICheckPath = "/ticket/check"
 )

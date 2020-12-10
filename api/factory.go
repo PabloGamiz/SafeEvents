@@ -32,6 +32,7 @@ func NewServer() Server {
 	router.HandleFunc(ticket.APIPurchasePath, ticket.HandlePurchaseRequest).Methods(http.MethodPost)
 	router.HandleFunc(ticket.APIActivatePath, ticket.HandleActivateRequest).Methods(http.MethodPut)
 	router.HandleFunc(ticket.APIGetTicketsPath, ticket.HandleGetTicketsRequest).Methods(http.MethodGet)
+	router.HandleFunc(ticket.APICheckPath, ticket.HandleCheckRequest).Methods(http.MethodPut)
 
 	api.router = router
 	return api
