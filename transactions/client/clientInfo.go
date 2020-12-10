@@ -21,17 +21,13 @@ func (tx *txClientInfo) Precondition() error {
 	return nil
 }
 
-func doNothing(sess sessionMOD.Controller) {
-	return
-}
-
 // Postcondition creates new user and a opens its first session
 func (tx *txClientInfo) Postcondition(ctx context.Context) (v interface{}, err error) {
 	log.Printf("Got a client info request for client %d", tx.request.ID)
 
 	var sess sessionMOD.Controller
 	if sess, err = sessionMOD.GetSessionByID(tx.request.Cookie); err != nil {
-		log.Printf("No id found for cookie %s", tx.request.Cookie)
+		log.Printf("No session found for provided cookie")
 		return
 	}
 
