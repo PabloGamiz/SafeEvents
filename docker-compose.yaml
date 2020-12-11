@@ -31,18 +31,6 @@ services:
             PMA_PASSWORD: myadminpwd
     
     # BAKCEND
-<<<<<<< HEAD
-    #backend:
-    #    container_name: safe-events
-    #   image: safe-events/backend:0.1.0
-    #   restart: always
-    #   depends_on:
-    #     - myadmin
-        #ports:
-         #   - 8080:8080
-        #networks: 
-         #   - database
-=======
     # backend:
     #     container_name: safe-events
     #     image: safe-events/backend:0.1.0
@@ -53,7 +41,6 @@ services:
     #         - 8080:8080
     #     networks: 
     #         - database
->>>>>>> develop
             
 networks:
     # Database network is the bridge between domain environment and the sql databases
