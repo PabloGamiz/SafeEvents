@@ -68,7 +68,7 @@ func HandlePublicaEventRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a Publica Esdeveniment request")
 
 	// Expected data for a Publica request
-	var publicaDTO eventDTO.DTO
+	var publicaDTO eventDTO.PublicaEvent
 	if err := json.NewDecoder(r.Body).Decode(&publicaDTO); err != nil {
 		// If some error just happened it means the provided Json does not match with the expected DTO
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -99,18 +99,7 @@ func HandlePublicaEventRequest(w http.ResponseWriter, r *http.Request) {
 func HandleGetEventRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a single event request")
 
-	//Obte el id passat com a parametre a la url
-	/*idR, err := strconv.Atoi(r.URL.Query().Get("id"))
-	if err != nil || idR < 1 {
-		http.NotFound(w, r)
-		return
-	}
-
-	geteventDTO := eventDTO.DTO{
-		ID: uint(idR),
-	}*/
-
-	var getDTO eventDTO.DTO
+	var getDTO eventDTO.GetEvent
 	if err := json.NewDecoder(r.Body).Decode(&getDTO); err != nil {
 		// If some error just happened it means the provided Json does not match with the expected DTO
 		http.Error(w, err.Error(), http.StatusBadRequest)

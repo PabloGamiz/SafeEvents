@@ -15,7 +15,7 @@ import (
 
 // txPublicaEvent represents an
 type txPublicaEvent struct {
-	request    eventDTO.DTO
+	request    eventDTO.PublicaEvent
 	sessCtrl   session.Controller
 	clientCtrl client.Controller
 	eventCtrl  event.Controller

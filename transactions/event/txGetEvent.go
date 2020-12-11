@@ -15,15 +15,15 @@ import (
 
 // txSignup represents an
 type txGetEvent struct {
-	request  eventDTO.DTO
+	request  eventDTO.GetEvent
 	faved    bool
 	organizs string
 	sessCtrl session.Controller
 }
 
-func (tx *txGetEvent) buildEventResponseDTO(ctrl event.Controller) *eventDTO.DTO {
+func (tx *txGetEvent) buildEventResponseDTO(ctrl event.Controller) *eventDTO.FullEvent {
 
-	return &eventDTO.DTO{
+	return &eventDTO.FullEvent{
 		Title:       ctrl.GetTitle(),
 		Description: ctrl.GetDescription(),
 		Capacity:    ctrl.GetCapacity(),

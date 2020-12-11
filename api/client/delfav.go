@@ -15,7 +15,7 @@ import (
 func HandleClientDelFavRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a Delete Fav Request")
 
-	var FavDTO clientDTO.ClientFavDTO
+	var FavDTO clientDTO.FavDTO
 	if err := json.NewDecoder(r.Body).Decode(&FavDTO); err != nil {
 		// If some error just happened it means the provided Json does not match with the expected DTO
 		http.Error(w, err.Error(), http.StatusBadRequest)

@@ -6,14 +6,12 @@ import (
 	service_api "github.com/PabloGamiz/SafeEvents-Backend/dtos/service"
 )
 
-// DTO represents the expected data from an Event.
-type DTO struct {
-	Cookie      string `json:"cookie"`
-	ID          uint   `json:"id"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Capacity    int    `json:"capacity"`
-	//	Organizers  []client_api.DTO  `json:"organizers"`
+// PublicaEvent represents the expected data for creating an Event.
+type PublicaEvent struct {
+	Cookie      string            `json:"cookie"`
+	Title       string            `json:"title"`
+	Description string            `json:"description"`
+	Capacity    int               `json:"capacity"`
 	Organizer   string            `json:"organizers"`
 	CheckInDate time.Time         `json:"checkInDate"`
 	ClosureDate time.Time         `json:"closureDate"`

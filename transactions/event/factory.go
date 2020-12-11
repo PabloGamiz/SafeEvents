@@ -18,13 +18,13 @@ func NewTxListEventsByType(request eventDTO.ListEventsByTypeRequestDTO) transact
 }
 
 // NewTxPublicaEvent builds a brand new transaction for Publica_event
-func NewTxPublicaEvent(request eventDTO.DTO) transaction.Tx {
+func NewTxPublicaEvent(request eventDTO.PublicaEvent) transaction.Tx {
 	body := &txPublicaEvent{request: request}
 	return transaction.NewTransaction(body)
 }
 
 // NewTxGetEvent builds a brand new transaction for Publica_event
-func NewTxGetEvent(request eventDTO.DTO) transaction.Tx {
+func NewTxGetEvent(request eventDTO.GetEvent) transaction.Tx {
 	body := &txGetEvent{request: request}
 	return transaction.NewTransaction(body)
 }
