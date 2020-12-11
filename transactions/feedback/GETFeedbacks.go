@@ -50,7 +50,7 @@ func (tx *txGETFeedbacks) BuildFeedbackResponseDTOWithoutAssistant(feeedbackCtrl
 func (tx *txGETFeedbacks) Precondition() (err error) {
 
 	// Make sure event exists
-	if _, err = eventMOD.FindEventByID(tx.ctx, tx.request.EventID); err != nil {
+	if _, err = eventMOD.FindEventByID(tx.request.EventID); err != nil {
 		return
 	}
 

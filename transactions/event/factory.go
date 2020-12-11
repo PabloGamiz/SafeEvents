@@ -23,6 +23,12 @@ func NewTxPublicaEvent(request eventDTO.PublicaEvent) transaction.Tx {
 	return transaction.NewTransaction(body)
 }
 
+// NewTxModificaEvent builds a brand new transaction for modifica event
+func NewTxModificaEvent(request eventDTO.DTO) transaction.Tx {
+	body := &txModificaEvent{request: request}
+	return transaction.NewTransaction(body)
+}
+
 // NewTxGetEvent builds a brand new transaction for Publica_event
 func NewTxGetEvent(request eventDTO.GetEvent) transaction.Tx {
 	body := &txGetEvent{request: request}

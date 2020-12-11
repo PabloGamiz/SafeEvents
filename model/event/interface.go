@@ -29,8 +29,10 @@ type Controller interface {
 	GetClosureDate() time.Time
 	SetClosureDate(closureDate time.Time)
 	GetLocation() string
-	SetLocation(string)
+	SetLocation(location string)
 	GetServices() []service.Controller
 	TakeTickets(int) error
 	GetFeedbacks() []feedback.Controller
+	GetTipus() string
+	SetTipus(tipus string)
 }
