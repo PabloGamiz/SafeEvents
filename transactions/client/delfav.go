@@ -29,16 +29,7 @@ func (tx *txDelFav) Precondition() (err error) {
 // Postcondition creates new user and a opens its first session
 func (tx *txDelFav) Postcondition(ctx context.Context) (v interface{}, err error) {
 	log.Printf("Got a Del request for event %d and cookie %s", tx.request.EventID, tx.request.Cookie)
-	/*if ctrl, err = client.AddFav(ctx, tx.request.EventID, tx.request.Cookie); err != nil {
-		log.Printf("Adding to favs EventID %s", tx.request.EventID)
-		if err = tx.registerNewClient(ctx); err != nil {
-			return
-		}
-	}
 
-	response := tx.buildSessionResponseDTO(sess)
-	//log.Printf("Got a cookie %s for client %v", response.Cookie, sess.GetEmail())
-	return sess, ctrl*/
 	evnt, err := eventMOD.FindEventByID(ctx, uint(tx.request.EventID))
 	if err != nil {
 		log.Printf("Error finding Event ID %d", tx.request.EventID)
@@ -49,9 +40,8 @@ func (tx *txDelFav) Postcondition(ctx context.Context) (v interface{}, err error
 	if ctr, err = clientMOD.FindClientByID(ctx, ctrID); err != nil {
 		return
 	}
-	//var ctr client.Controller = tx.sessCtrl
-	//ctr, err = clientMOD.FindClientByID(tx.ctx, 2)
-	ctr.RemoveFav(evnt.GetEvent()) //CHAPUZA
+
+	ctr.RemoveFav(evnt.GetEvent())
 	clientgw := clientGW.NewClientGateway(tx.ctx, ctr)
 	err = clientgw.DeleteFavorit(evnt)
 	return evnt, err

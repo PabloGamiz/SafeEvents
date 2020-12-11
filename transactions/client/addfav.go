@@ -41,27 +41,18 @@ func (tx *txAddFav) Precondition() (err error) {
 func (tx *txAddFav) Postcondition(ctx context.Context) (v interface{}, err error) {
 	log.Printf("Got a AddFav request for event %d and cookie %s", tx.request.EventID, tx.request.Cookie)
 
-	/*if ctrl, err = client.AddFav(ctx, tx.request.EventID, tx.request.Cookie); err != nil {
-		log.Printf("Adding to favs EventID %s", tx.request.EventID)
-		if err = tx.registerNewClient(ctx); err != nil {
-			return
-		}
-	}
-
-	response := tx.buildSessionResponseDTO(sess)
-	//log.Printf("Got a cookie %s for client %v", response.Cookie, sess.GetEmail())
-	return sess, ctrl*/
 	evnt, err := eventMOD.FindEventByID(ctx, uint(tx.request.EventID))
 	if err != nil {
 		log.Printf("Error finding Event ID %d", tx.request.EventID)
 		return
 	}
+
 	var ctr client.Controller
 	var ctrID = tx.sessCtrl.GetID()
 	if ctr, err = clientMOD.FindClientByID(ctx, ctrID); err != nil {
 		return
 	}
-	//var ctr client.Controller = tx.sessCtrl
+
 	ctr.AddFav(evnt.GetEvent()) //CHAPUZA
 	clientgw := clientGW.NewClientGateway(ctx, ctr)
 	clientgw.AddFavorit()
