@@ -45,7 +45,7 @@ func FindAll(ctx context.Context) (ctrl []Controller, err error) {
 // FindAllByType returns the controllers of all the events loaded on the BBDD
 func FindAllByType(ctx context.Context, eventType string) (ctrl []Controller, err error) {
 	var db *gorm.DB
-	if db, err = OpenStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
