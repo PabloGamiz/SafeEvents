@@ -51,7 +51,7 @@ func (tx *txAddFav) Postcondition(ctx context.Context) (v interface{}, err error
 	response := tx.buildSessionResponseDTO(sess)
 	//log.Printf("Got a cookie %s for client %v", response.Cookie, sess.GetEmail())
 	return sess, ctrl*/
-	evnt, err := eventMOD.FindEventByID(ctx, uint(tx.request.EventID))
+	evnt, err := eventMOD.FindEventByID(uint(tx.request.EventID))
 	if err != nil {
 		log.Printf("Error finding Event ID %d", tx.request.EventID)
 		return
