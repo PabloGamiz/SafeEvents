@@ -158,19 +158,17 @@ func HandleGetEventRequest(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
-func buildListFavoritesRequestDTO(cookie string) eventDTO.ListFavoritesRequestDTO {
-	return eventDTO.ListFavoritesRequestDTO{
-		Cookie: cookie,
-	}
-}
-
 // HandleListFavoritesRequest attends a list of favorites events request
 func HandleListFavoritesRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a List Favorites request")
 
-	cookie := r.Header.Get("Authorization")
-
-	req := buildListFavoritesRequestDTO(cookie)
+	//Get the cookie from the request body
+	var req eventDTO.ListFavoritesRequestDTO
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		// If some error just happened it means the provided Json does not match with the expected DTO
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	// Setting uo TxListFavorites with the required values
 	txListFavorites := event.NewTxListFavorites(req)
