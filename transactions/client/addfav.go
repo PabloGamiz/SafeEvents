@@ -30,7 +30,7 @@ func (tx *txAddFav) Precondition() (err error) {
 func (tx *txAddFav) Postcondition(ctx context.Context) (v interface{}, err error) {
 	log.Printf("Got a AddFav request for event %d and cookie %s", tx.request.EventID, tx.request.Cookie)
 
-	evnt, err := eventMOD.FindEventByID(ctx, uint(tx.request.EventID))
+	evnt, err := eventMOD.FindEventByID(uint(tx.request.EventID))
 	if err != nil {
 		log.Printf("Error finding Event ID %d", tx.request.EventID)
 		return

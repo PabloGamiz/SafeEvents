@@ -33,6 +33,4 @@ type Controller interface {
 	GetServices() []service.Controller
 	TakeTickets(int) error
 	GetFeedbacks() []feedback.Controller
-	GetTipus() string
-	SetTipus(tipus string)
 }
