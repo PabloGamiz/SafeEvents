@@ -63,14 +63,13 @@ func removeSession(sid sID) (err error) {
 	return
 }
 
-func newSessionID() (id sID, err error) {
+func NewSessionID() (id string, err error) {
 	b := make([]byte, 32)
 	if _, err = io.ReadFull(rand.Reader, b); err != nil {
 		return
 	}
 
-	raw := base64.URLEncoding.EncodeToString(b)
-	id = sID(raw)
+	id = base64.URLEncoding.EncodeToString(b)
 	return
 }
 
@@ -135,12 +134,11 @@ func NewSession(ctx context.Context, cancel context.CancelFunc, client client.Co
 		return
 	}
 
-	var sid sID
-	if sid, err = newSessionID(); err != nil {
+	var cookie string
+	if cookie, err = NewSessionID(); err != nil {
 		return
 	}
 
-	cookie := string(sid)
 	session := &Session{
 		Controller: client,
 		Context:    ctx,

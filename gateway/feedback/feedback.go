@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/feedback"
+	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
 	"gorm.io/gorm"
 )
 
@@ -14,7 +15,7 @@ type feedbackGateway struct {
 
 func (gw *feedbackGateway) Insert() (err error) {
 	var db *gorm.DB
-	if db, err = feedback.OpenStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
@@ -24,7 +25,7 @@ func (gw *feedbackGateway) Insert() (err error) {
 
 func (gw *feedbackGateway) Update() (err error) {
 	var db *gorm.DB
-	if db, err = feedback.OpenStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
@@ -34,7 +35,7 @@ func (gw *feedbackGateway) Update() (err error) {
 
 func (gw *feedbackGateway) Remove() (err error) {
 	var db *gorm.DB
-	if db, err = feedback.OpenStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 

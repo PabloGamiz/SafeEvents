@@ -10,14 +10,15 @@ import (
 
 // Ticket its the main data object fro a Ticket
 type Ticket struct {
-	ID          uint      `json:"id" gorm:"primaryKey; autoIncrement:true"`
-	Description string    `json:"description" gorm:"not null"`
-	EventID     uint      `json:"event_id"`
-	AssistantID uint      `json:"assistant_id"`
-	Option      Option    `json:"option" gorm:"not null"`
-	QrCode      *string   `json:"qr_code" gorm:"unique"`
-	CreatedAt   time.Time `json:"createdAt"`
-	ClientID    uint      `json:"client_id"`
+	ID          uint       `json:"id" gorm:"primaryKey; autoIncrement:true"`
+	Description string     `json:"description" gorm:"not null"`
+	EventID     uint       `json:"event_id"`
+	AssistantID uint       `json:"assistant_id"`
+	Option      Option     `json:"option" gorm:"not null"`
+	QrCode      *string    `json:"qr_code" gorm:"unique"`
+	CreatedAt   time.Time  `json:"createdAt"`
+	CheckIn     *time.Time `json:"check_in"`
+	ClientID    uint       `json:"client_id"`
 }
 
 func (ticket *Ticket) generateQrCode() (err error) {
@@ -48,9 +49,34 @@ func (ticket *Ticket) Activate() (err error) {
 	return
 }
 
+// Check checks the tickets if it isn't already
+func (ticket *Ticket) Check() (err error) {
+	switch ticket.Option {
+	case CHECKED:
+		err = fmt.Errorf("This ticket has been already checked")
+	case BOOKED:
+		err = fmt.Errorf("This ticket has not been purchased")
+	case BOUGHT:
+		current := time.Now()
+		ticket.Option = CHECKED
+		ticket.CheckIn = &current
+	}
+
+	return
+}
+
 // GetID return the id of the ticket
 func (ticket *Ticket) GetID() uint {
 	return ticket.ID
+}
+
+// GetQR return the id of the ticket
+func (ticket *Ticket) GetQR() string {
+	if ticket.QrCode != nil {
+		return *ticket.QrCode
+	}
+
+	return ""
 }
 
 // GetOption return the purchase option of the ticket

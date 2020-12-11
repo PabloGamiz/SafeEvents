@@ -3,10 +3,8 @@ package event
 import (
 	"context"
 	"fmt"
-	"log"
 	"sync"
 
-	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -20,23 +18,16 @@ var (
 
 type sID uint
 
-// OpenStream ensuring the client's table does exists
-func OpenStream() (db *gorm.DB, err error) {
-	if db, err = mysql.OpenStream(); err != nil {
-		log.Fatalf("Got an error while OpenStream: %v", err.Error())
-		return
-	}
-
-	once.Do(func() {
-		db.AutoMigrate(&service.Service{}, &Event{})
-	})
-	return
-}
+//
+//func LoadOrStoreNewEvent(event Controller) error {
+//	sid := event.GetID()
+//	if
+//}
 
 // FindAll returns the controllers of all the events loaded on the BBDD
 func FindAll(ctx context.Context) (ctrl []Controller, err error) {
 	var db *gorm.DB
-	if db, err = OpenStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
@@ -72,7 +63,7 @@ func FindAllByType(ctx context.Context, eventType string) (ctrl []Controller, er
 // FindEventByID returns the gateway for the event that match the provided name
 func FindEventByID(ID uint) (ctrl Controller, err error) {
 	var db *gorm.DB
-	if db, err = OpenStream(); err != nil {
+	if db, err = mysql.OpenStream(); err != nil {
 		return
 	}
 	var events []*Event
