@@ -18,10 +18,12 @@ type clientGateway struct {
 
 func (gw *clientGateway) Insert() (err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
+	defer cancel()
 	if err = db.Table("clients").Create(gw.Controller).Error; err != nil {
 		return
 	}
@@ -39,10 +41,12 @@ func (gw *clientGateway) Insert() (err error) {
 
 func (gw *clientGateway) Update() (err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
+	defer cancel()
 	if db = db.Table("clients").Updates(gw.Controller); db.Error != nil {
 		return db.Error
 	}
@@ -58,10 +62,12 @@ func (gw *clientGateway) Update() (err error) {
 
 func (gw *clientGateway) Remove() (err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
+	defer cancel()
 	if db = db.Table("clients").Delete(gw.Controller); db.Error != nil {
 		return db.Error
 	}
@@ -77,9 +83,12 @@ func (gw *clientGateway) Remove() (err error) {
 
 func (gw *clientGateway) AddFavorit() (err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
+
+	defer cancel()
 	ctrl := gw.Controller.GetFavs()
 	err = db.Model(gw.Controller).Association("Favs").Append(ctrl)
 	return err
@@ -87,18 +96,24 @@ func (gw *clientGateway) AddFavorit() (err error) {
 
 func (gw *clientGateway) DeleteFavorit(ctrl event.Controller) (err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
+
+	defer cancel()
 	err = db.Model(gw.Controller).Association("Favs").Delete(gw.Controller, ctrl)
 	return err
 }
 
 func (gw *clientGateway) FindFavorit(ctrl event.Controller) (faved bool, err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
+
+	defer cancel()
 	var eventsMOD []*event.Event
 	err = db.Model(gw.Controller).Association("Favs").Find(&eventsMOD)
 	for _, evnt := range eventsMOD {
