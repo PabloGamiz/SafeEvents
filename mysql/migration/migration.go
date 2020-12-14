@@ -25,7 +25,6 @@ func MigrateTables() (err error) {
 	}
 
 	defer cancel()
-
 	if err != nil {
 		return
 	}

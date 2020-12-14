@@ -63,13 +63,12 @@ func OpenStream() (gormDB *gorm.DB, close Cancel, err error) {
 	}
 
 	db := sql.OpenDB(conn)
-	close = db.Close
-
 	config := gormSqlDriver.Config{
 		Conn: db,
 	}
 
 	driver := gormSqlDriver.New(config)
 	gormDB, err = gorm.Open(driver, &gorm.Config{})
+	close = db.Close
 	return
 }
