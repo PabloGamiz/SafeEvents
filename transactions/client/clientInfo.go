@@ -5,12 +5,8 @@ import (
 	"log"
 
 	clientDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
-	organizerDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/client/organizer"
-	eventDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/event"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	clientMOD "github.com/PabloGamiz/SafeEvents-Backend/model/client"
-	organizerMOD "github.com/PabloGamiz/SafeEvents-Backend/model/client/organizer"
-	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/session"
 	sessionMOD "github.com/PabloGamiz/SafeEvents-Backend/model/session"
 )
@@ -20,18 +16,20 @@ type txClientInfo struct {
 	sessCtrl session.Controller
 }
 
-func (tx *txClientInfo) BuildClientDTO(ctrl clientMOD.Controller) *clientDTO.DTO {
+func (tx *txClientInfo) BuildClientInfoResponseDTO(ctrl clientMOD.Controller) *clientDTO.ClientInfoResponseDTO {
 	id := ctrl.GetID()
 	email := ctrl.GetEmail()
-	organize := tx.BuildOrganizerDTO(ctrl.GetOrganizer())
-	return &clientDTO.DTO{
+	//organize := tx.BuildOrganizerDTO(ctrl.GetOrganizer())
+	organize := ctrl.GetOrganizer()
+	return &clientDTO.ClientInfoResponseDTO{
 		ID:       id,
 		Email:    email,
 		Organize: organize,
 	}
 }
 
-func (tx *txClientInfo) BuildOrganizerDTO(org organizerMOD.Controller) *organizerDTO.DTO {
+/*
+func (tx *txClientInfo) BuildOrganizerDTO(org organizerMOD.Controller) organizerDTO.DTO {
 	id := org.GetID()
 	organizes := org.GetEventOrg()
 	length := len(organizes)
@@ -39,15 +37,15 @@ func (tx *txClientInfo) BuildOrganizerDTO(org organizerMOD.Controller) *organize
 	for index, event := range organizes {
 		ctrls[index] = tx.BuildEventDTO(event)
 	}
-	return &organizerDTO.DTO{
+	return organizerDTO.DTO{
 		ID:        id,
 		Organizes: ctrls,
 	}
 }
 
-func (tx *txClientInfo) BuildEventDTO(ctrl event.Controller) *eventDTO.DTO {
+func (tx *txClientInfo) BuildEventDTO(ctrl event.Controller) eventDTO.DTO {
 
-	return &eventDTO.DTO{
+	return eventDTO.DTO{
 		Title:       ctrl.GetTitle(),
 		Description: ctrl.GetDescription(),
 		Capacity:    ctrl.GetCapacity(),
@@ -59,6 +57,7 @@ func (tx *txClientInfo) BuildEventDTO(ctrl event.Controller) *eventDTO.DTO {
 		Image:       ctrl.GetImage(),
 	}
 }
+*/
 
 func (tx *txClientInfo) Precondition() error {
 	//Comprovar que els elements son correctes
@@ -82,7 +81,7 @@ func (tx *txClientInfo) Postcondition(ctx context.Context) (v interface{}, err e
 		if ctrl, err = client.FindClientByID(ctx, id); err != nil {
 			return
 		}
-		response := tx.BuildClientDTO(ctrl)
+		response := tx.BuildClientInfoResponseDTO(ctrl)
 		return response, err
 	} else {
 		ctrl = sess.Client()
