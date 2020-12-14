@@ -15,7 +15,7 @@ type feedbackGateway struct {
 
 func (gw *feedbackGateway) Insert() (err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
@@ -25,7 +25,7 @@ func (gw *feedbackGateway) Insert() (err error) {
 
 func (gw *feedbackGateway) Update() (err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
@@ -35,7 +35,7 @@ func (gw *feedbackGateway) Update() (err error) {
 
 func (gw *feedbackGateway) Remove() (err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 

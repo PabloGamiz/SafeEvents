@@ -15,19 +15,23 @@ type organizerGateway struct {
 
 func (gw *organizerGateway) Insert() (err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
+	defer cancel()
 	return db.Table("organizers").Create(gw.Controller).Error
 }
 
 func (gw *organizerGateway) Update() (err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
+	defer cancel()
 	if err = db.Model(gw.Controller).Association("Events").Append(gw.GetEventOrg); err != nil {
 		return
 	}
@@ -41,9 +45,11 @@ func (gw *organizerGateway) Update() (err error) {
 
 func (gw *organizerGateway) Remove() (err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
+	defer cancel()
 	return db.Table("organizers").Delete(gw.Controller).Error
 }

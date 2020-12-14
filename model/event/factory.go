@@ -27,10 +27,12 @@ type sID uint
 // FindAll returns the controllers of all the events loaded on the BBDD
 func FindAll(ctx context.Context) (ctrl []Controller, err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
+	defer cancel()
 	var eventsMOD []*Event
 	db.Preload(clause.Associations).Preload("Services.Location").Preload("Services.Products").Find(&eventsMOD)
 
@@ -45,10 +47,12 @@ func FindAll(ctx context.Context) (ctrl []Controller, err error) {
 // FindEventByID returns the gateway for the event that match the provided name
 func FindEventByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 	var events []*Event
+	defer cancel()
 	db.Preload(clause.Associations).Preload("Services.Products").Where("id = ?", ID).Find(&events)
 	if len(events) == 0 {
 		err = fmt.Errorf(errNotFoundByID, ID)
