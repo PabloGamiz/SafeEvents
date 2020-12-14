@@ -21,4 +21,5 @@ type FullEvent struct {
 	Tipus       string            `json:"tipus"`
 	Faved       bool              `json:"Faved"`
 	Taken       int               `json:"Taken"`
+	EsOrganize  bool              `json:"esorg"`
 }

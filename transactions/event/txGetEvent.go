@@ -19,6 +19,7 @@ type txGetEvent struct {
 	faved    bool
 	organizs string
 	sessCtrl session.Controller
+	esOrg    bool
 }
 
 func (tx *txGetEvent) buildEventResponseDTO(ctrl event.Controller) *eventDTO.FullEvent {
@@ -36,6 +37,7 @@ func (tx *txGetEvent) buildEventResponseDTO(ctrl event.Controller) *eventDTO.Ful
 		Tipus:       ctrl.GetTipus(),
 		Faved:       tx.faved,
 		Organizer:   tx.organizs,
+		EsOrganize:  tx.esOrg,
 	}
 }
 
@@ -61,6 +63,10 @@ func (tx *txGetEvent) Postcondition(ctx context.Context) (v interface{}, err err
 	clientgw := clientGW.NewClientGateway(ctx, ctr)
 	tx.faved, err = clientgw.FindFavorit(gw)
 	tx.organizs, err = clientMOD.FindOrganitzersEvent(ctx, tx.request.ID)
+	tx.esOrg = false
+	if tx.organizs == ctr.GetEmail() {
+		tx.esOrg = true
+	}
 	response := tx.buildEventResponseDTO(gw)
 	return response, err
 }
