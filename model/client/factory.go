@@ -70,11 +70,32 @@ func FindClientByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 
 // FindOrganitzersEvent returns the gateways for the clients that organize the provided email
 func FindOrganitzersEvent(ctx context.Context, EventID uint) (NameOrg string, err error) {
-	/*var db *gorm.DB
+	var db *gorm.DB
+	var cancel mysql.Cancel
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
-	}*/
-	//NO FA RES
+	}
+
+	defer cancel()
+	//var clientsMOD []*organizer.Organizer
+	var orgIDs []uint
+	var cltIDs []uint
+	//var eventsMOD []*event.Event
+	//var eventMOD *event.Event
+	//subQuery := db.Table("events").Where("id = ?", EventID).Find(&eventMOD)
+	//db.Table("organizers_events").Preload(clause.Associations).Where("event_id = ?", EventID).Find(&clientsMOD)
+	db.Raw("SELECT organizer_id FROM organizers_events WHERE event_id = ?", EventID).Scan(&orgIDs)
+	if len(orgIDs) == 0 {
+		err = fmt.Errorf("errNoEventsOnDatabase")
+		return
+	}
+	db.Raw("SELECT client_id FROM organizers WHERE id = ?", orgIDs[0]).Scan(&cltIDs)
+	if len(cltIDs) == 0 {
+		err = fmt.Errorf("errNoEventsOnDatabase")
+		return
+	}
+	cltController, err := FindClientByID(ctx, cltIDs[0])
+	NameOrg = cltController.GetEmail()
 	return
 }
 

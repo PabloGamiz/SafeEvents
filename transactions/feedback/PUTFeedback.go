@@ -44,7 +44,7 @@ func (tx *txPUTFeedback) Precondition() (err error) {
 	tx.assistantCtrl = sessionCtrl.GetAssistant()
 
 	// Make sure event exists
-	if _, err = eventMOD.FindEventByID(int(tx.request.EventID)); err != nil {
+	if _, err = eventMOD.FindEventByID(tx.request.EventID); err != nil {
 		return
 	}
 
@@ -53,6 +53,7 @@ func (tx *txPUTFeedback) Precondition() (err error) {
 	feedback, err = feedbackMOD.FindFeedbackByAssistantIDAndEventID(
 		int(tx.assistantCtrl.GetID()),
 		int(tx.request.EventID))
+
 	if err != nil {
 		return
 	}
@@ -63,9 +64,10 @@ func (tx *txPUTFeedback) Precondition() (err error) {
 
 	// Make sure the feedback exists and belongs to the Assistant of the session.
 	_, err = feedbackMOD.FindFeedbackByIDAndAssistantIDAndEventID(
+		int(tx.request.ID),
 		int(tx.assistantCtrl.GetID()),
-		int(tx.request.EventID),
-		int(tx.request.ID))
+		int(tx.request.EventID))
+
 	if err != nil {
 		return
 	}

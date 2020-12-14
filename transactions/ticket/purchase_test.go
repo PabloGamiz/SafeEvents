@@ -30,7 +30,7 @@ func getDummyEventID(ctx context.Context, t *testing.T, cookie string) uint {
 		t.Fatalf(err.Error())
 	}
 
-	request := eventDTO.DTO{
+	request := eventDTO.PublicaEvent{
 		Cookie:      cookie,
 		Title:       "dummy-" + title,
 		Description: "Its an event for example",

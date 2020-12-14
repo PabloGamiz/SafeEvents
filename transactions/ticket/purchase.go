@@ -110,7 +110,7 @@ func (tx *txPurchase) Postcondition(ctx context.Context) (v interface{}, err err
 	log.Printf("Got a Purchase request from client %v", tx.sessCtrl.GetID())
 
 	// make sure the event exists
-	if tx.eventCtrl, err = eventMOD.FindEventByID(ctx, tx.request.EventID); err != nil {
+	if tx.eventCtrl, err = eventMOD.FindEventByID(tx.request.EventID); err != nil {
 		return
 	}
 

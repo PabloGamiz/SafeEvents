@@ -30,7 +30,7 @@ services:
             PMA_USER: myadmin
             PMA_PASSWORD: myadminpwd
     
-    # # BAKCEND
+    # BAKCEND
     # backend:
     #     container_name: safe-events
     #     image: safe-events/backend:0.1.0

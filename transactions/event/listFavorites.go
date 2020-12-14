@@ -8,6 +8,7 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	clientMOD "github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/session"
+	sessionMOD "github.com/PabloGamiz/SafeEvents-Backend/model/session"
 )
 
 type txListFavorites struct {
@@ -26,12 +27,17 @@ func (tx *txListFavorites) Precondition() error {
 
 // Postcondition returns the list of favorites for the user id
 func (tx *txListFavorites) Postcondition(ctx context.Context) (v interface{}, err error) {
-	log.Printf("Got a List Favorites request for client %d", tx.request.ID)
+	log.Printf("Got a List Favorites request for client %s", tx.request.Cookie)
 
-	//Get the client and make sure it exists
-	if tx.clientCtrl, err = clientMOD.FindClientByID(ctx, tx.request.ID); err != nil {
+	// SESSION //
+
+	var sess sessionMOD.Controller
+	if sess, err = sessionMOD.GetSessionByID(tx.request.Cookie); err != nil {
+		log.Printf("No id found for cookie %s", tx.request.Cookie)
 		return
 	}
+	//Get the client and make sure it exists
+	tx.clientCtrl = sess.Client()
 
 	events, err := clientMOD.FindAllFavs(ctx, tx.clientCtrl)
 

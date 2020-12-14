@@ -8,6 +8,10 @@ const (
 	APIGetEvent = "/event/single"
 	// APIListEvents is the path where all list events requests will be handled
 	APIListEvents = "/event/list"
-	// APIListFavotites is the path where all list favorites requests will be handled
+	// APIModificaEvent is the path where all list favorites requests will be handled
+	APIModificaEvent = "/event/modifica"
+	// APIListEventsByType is the path where all list events requests will be handled
+	APIListEventsByType = "/event/listByType"
+	// APIListFavorites is the path where all list favorites requests will be handled
 	APIListFavorites = "/event/favorites"
 )
