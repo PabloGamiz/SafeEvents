@@ -3,13 +3,11 @@ package event
 import (
 	"context"
 	"fmt"
-	"log"
 	"math"
 	"sort"
 	"sync"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/feedback"
-	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -92,12 +90,14 @@ func FindEventByID(ID uint) (ctrl Controller, err error) {
 // FindRecomended returns the controllers of all the events recomended for the user
 func FindRecomended(ctx context.Context, clientID uint) (ctrl []Controller, err error) {
 	var db *gorm.DB
-	if db, err = OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 	m := map[string]int{}
 	m["Art"] += 5
 	var PopularEvts []*Event
+	defer cancel()
 	var idAssis uint
 	db.Select("id").Where("client_id = ?", clientID).Table("assistants").Find(&idAssis)
 	//db.Table("events").Where("capacity <> ?", "taken").Where("closure_date > ?", time.Now()).Find(&PopularEvts).Order("taken desc")
