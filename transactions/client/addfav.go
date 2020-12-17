@@ -35,6 +35,7 @@ func (tx *txAddFav) Postcondition(ctx context.Context) (v interface{}, err error
 		log.Printf("Error finding Event ID %d", tx.request.EventID)
 		return
 	}
+
 	var ctr client.Controller
 	var ctrID = tx.sessCtrl.GetID()
 	if ctr, err = clientMOD.FindClientByID(ctx, ctrID); err != nil {

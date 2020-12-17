@@ -14,4 +14,6 @@ const (
 	APIListEventsByType = "/event/listByType"
 	// APIListFavorites is the path where all list favorites requests will be handled
 	APIListFavorites = "/event/favorites"
+	// APIRecomanaEvents is the path where all recomana events requests will be handled
+	APIRecomanaEvents = "/event/recomanaEv"
 )

@@ -188,3 +188,33 @@ func HandleListFavoritesRequest(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(result)
 }
+
+// HandleRecomanaEventsRequest attends a list of favorites events request
+func HandleRecomanaEventsRequest(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Handlering a Recomana Events request")
+
+	var RecDTO eventDTO.ListFavoritesRequestDTO
+	if err := json.NewDecoder(r.Body).Decode(&RecDTO); err != nil {
+		// If some error just happened it means the provided Json does not match with the expected DTO
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Setting up TxListFavorites with the required values
+	txRecomanaEvents := event.NewTxRecomanaEvents(RecDTO)
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+
+	txRecomanaEvents.Execute(ctx)
+	result, err := txRecomanaEvents.Result()
+
+	if err != nil {
+		//Transaction has failed
+		http.Error(w, err.Error(), http.StatusConflict)
+		return
+	}
+
+	//sending response
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
+}
