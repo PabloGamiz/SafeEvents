@@ -5,6 +5,7 @@ import (
 
 	"github.com/PabloGamiz/SafeEvents-Backend/api/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/api/event"
+	"github.com/PabloGamiz/SafeEvents-Backend/api/event/feedback"
 	"github.com/PabloGamiz/SafeEvents-Backend/api/ticket"
 	"github.com/gorilla/mux"
 )
@@ -24,14 +25,24 @@ func NewServer() Server {
 
 	// Events router Handlers
 	router.HandleFunc(event.APIListEvents, event.HandleListEventsRequest).Methods(http.MethodGet)
+	router.HandleFunc(event.APIListEventsByType, event.HandleListEventsByTypeRequest).Methods(http.MethodPost)
 	router.HandleFunc(event.APIPubliEvent, event.HandlePublicaEventRequest).Methods(http.MethodPost)
 	router.HandleFunc(event.APIListFavorites, event.HandleListFavoritesRequest).Methods(http.MethodPut)
+	router.HandleFunc(event.APIModificaEvent, event.HandleModificaEventRequest).Methods(http.MethodPut)
 	router.HandleFunc(event.APIGetEvent, event.HandleGetEventRequest).Methods(http.MethodPost)
+	router.HandleFunc(event.APIRecomanaEvents, event.HandleRecomanaEventsRequest).Methods(http.MethodPut)
 
 	// Ticket router Handlers
 	router.HandleFunc(ticket.APIPurchasePath, ticket.HandlePurchaseRequest).Methods(http.MethodPost)
 	router.HandleFunc(ticket.APIActivatePath, ticket.HandleActivateRequest).Methods(http.MethodPut)
 	router.HandleFunc(ticket.APIGetTicketsPath, ticket.HandleGetTicketsRequest).Methods(http.MethodGet)
+	router.HandleFunc(ticket.APICheckPath, ticket.HandleCheckRequest).Methods(http.MethodPut)
+
+	//Feedbacks router Handlers
+	router.HandleFunc(feedback.APIPOSTFeedback, feedback.HandlePOSTFeedbackRequest).Methods(http.MethodPost)
+	router.HandleFunc(feedback.APIPUTFeedback, feedback.HandlePUTFeedbackRequest).Methods(http.MethodPut)
+	router.HandleFunc(feedback.APIDELETEFeedback, feedback.HandleDELETEFeedbackRequest).Methods(http.MethodDelete)
+	router.HandleFunc(feedback.APIGETFeedbacks, feedback.HandleGETFeedbacksRequest).Methods(http.MethodGet)
 
 	api.router = router
 	return api

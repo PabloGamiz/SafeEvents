@@ -10,4 +10,6 @@ type Controller interface {
 	GetCreatedAt() time.Time
 	GetClientID() uint
 	GetEventID() uint
+	GetQR() string
+	Check() error
 }

@@ -11,6 +11,9 @@ import (
 	"gorm.io/gorm"
 )
 
+// Cancel closes function for mysql connection
+type Cancel func() error
+
 func initMysqlConn() (interface{}, error) {
 	return newMysqlDriver()
 }
@@ -53,7 +56,7 @@ func newMysqlDriver() (driver driver.Connector, err error) {
 }
 
 // OpenStream returns a gateway to the mysql database
-func OpenStream() (gormDB *gorm.DB, err error) {
+func OpenStream() (gormDB *gorm.DB, close Cancel, err error) {
 	var conn driver.Connector
 	if conn, err = getConnInstance(); err != nil {
 		return
@@ -65,5 +68,7 @@ func OpenStream() (gormDB *gorm.DB, err error) {
 	}
 
 	driver := gormSqlDriver.New(config)
-	return gorm.Open(driver, &gorm.Config{})
+	gormDB, err = gorm.Open(driver, &gorm.Config{})
+	close = db.Close
+	return
 }

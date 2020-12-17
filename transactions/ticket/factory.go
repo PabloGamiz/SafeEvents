@@ -22,3 +22,9 @@ func NewTxGetTickets(request ticketDTO.GetTicketsRequestDTO) transaction.Tx {
 	body := &txGetTickets{request: request}
 	return transaction.NewTransaction(body)
 }
+
+// NewTxCheck builds a brand new transaction for Signin
+func NewTxCheck(request ticketDTO.CheckRequestDTO) transaction.Tx {
+	body := &txCheck{request: request}
+	return transaction.NewTransaction(body)
+}

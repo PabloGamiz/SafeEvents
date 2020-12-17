@@ -8,4 +8,6 @@ const (
 
 	errEmailFormat = "The provided email address does not has the expected format"
 	errTokenFormat = "The provided token does no match with the expected format"
+
+	envDummyEmail = "DUMMY_EMAIL"
 )

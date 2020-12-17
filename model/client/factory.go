@@ -14,10 +14,12 @@ import (
 // FindClientByEmail returns the gateway for the client that match the provided mail
 func FindClientByEmail(ctx context.Context, email string) (ctrl Controller, err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
+	defer cancel()
 	var client Client
 	if result := db.Preload(clause.Associations).Preload("Assists.Purchased").Preload("Organize.Events").Where(queryFindByEmail, email).Find(&client); result.Error != nil {
 		err = fmt.Errorf(errNotFoundByEmail, result.Error.Error(), email)
@@ -38,10 +40,12 @@ func FindClientByEmail(ctx context.Context, email string) (ctrl Controller, err 
 // FindClientByID returns the gateway for the client that match the provided mail
 func FindClientByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
+	defer cancel()
 	var client Client
 	if db = db.Preload(clause.Associations).Preload("Assists.Purchased").Preload("Organize.Events").Where(queryFindByID, ID).Find(&client); db.Error != nil {
 		err = fmt.Errorf(errNotFoundByID, db.Error.Error(), ID)
@@ -66,21 +70,44 @@ func FindClientByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 
 // FindOrganitzersEvent returns the gateways for the clients that organize the provided email
 func FindOrganitzersEvent(ctx context.Context, EventID uint) (NameOrg string, err error) {
-	/*var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var db *gorm.DB
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
-	}*/
-	//NO FA RES
+	}
+
+	defer cancel()
+	//var clientsMOD []*organizer.Organizer
+	var orgIDs []uint
+	var cltIDs []uint
+	//var eventsMOD []*event.Event
+	//var eventMOD *event.Event
+	//subQuery := db.Table("events").Where("id = ?", EventID).Find(&eventMOD)
+	//db.Table("organizers_events").Preload(clause.Associations).Where("event_id = ?", EventID).Find(&clientsMOD)
+	db.Raw("SELECT organizer_id FROM organizers_events WHERE event_id = ?", EventID).Scan(&orgIDs)
+	if len(orgIDs) == 0 {
+		err = fmt.Errorf("errNoEventsOnDatabase")
+		return
+	}
+	db.Raw("SELECT client_id FROM organizers WHERE id = ?", orgIDs[0]).Scan(&cltIDs)
+	if len(cltIDs) == 0 {
+		err = fmt.Errorf("errNoEventsOnDatabase")
+		return
+	}
+	cltController, err := FindClientByID(ctx, cltIDs[0])
+	NameOrg = cltController.GetEmail()
 	return
 }
 
 // FindAllFavs returns the gateway for finding all the events loaded on the BBDD
 func FindAllFavs(ctx context.Context, clientCtrl Controller) (events []event.Controller, err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
+	defer cancel()
 	var eventsMOD []*event.Event
 	db.Model(clientCtrl).Association("Favs").Find(&eventsMOD)
 	if len(eventsMOD) == 0 {
