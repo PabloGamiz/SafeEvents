@@ -8,26 +8,26 @@ import (
 	eventDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/event"
 	serviceDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/service"
 	eventGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/event"
-	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
+	serviceGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/service"
+	clientMOD "github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	eventMOD "github.com/PabloGamiz/SafeEvents-Backend/model/event"
-	"github.com/PabloGamiz/SafeEvents-Backend/model/product"
 	productMOD "github.com/PabloGamiz/SafeEvents-Backend/model/product"
 	serviceMOD "github.com/PabloGamiz/SafeEvents-Backend/model/service"
-	"github.com/PabloGamiz/SafeEvents-Backend/model/session"
+	sessMOD "github.com/PabloGamiz/SafeEvents-Backend/model/session"
 )
 
 // txPublicaEvent represents an
 type txModificaEvent struct {
 	request    eventDTO.DTO
-	sessCtrl   session.Controller
-	clientCtrl client.Controller
+	sessCtrl   sessMOD.Controller
+	clientCtrl clientMOD.Controller
 	eventCtrl  eventMOD.Controller
 }
 
 func (tx *txModificaEvent) GetServicesFromRequest(servicesRequest []serviceDTO.DTO) []*serviceMOD.Service {
 	var services = make([]*serviceMOD.Service, len(servicesRequest))
 	for index, service := range servicesRequest {
-		var serviceProducts = make([]product.Product, len(service.Product))
+		var serviceProducts = make([]productMOD.Product, len(service.Product))
 		for i, product := range service.Product {
 			var productCtrl = productMOD.Product{
 				ID:          uint(product.ID),
@@ -54,7 +54,7 @@ func (tx *txModificaEvent) GetServicesFromRequest(servicesRequest []serviceDTO.D
 
 func (tx *txModificaEvent) Precondition() (err error) { //Comprova que no existeix l'event
 	// make sure the session exists
-	tx.sessCtrl, err = session.GetSessionByID(tx.request.Cookie)
+	tx.sessCtrl, err = sessMOD.GetSessionByID(tx.request.Cookie)
 	if err != nil {
 		return
 	}
@@ -85,6 +85,14 @@ func (tx *txModificaEvent) Precondition() (err error) { //Comprova que no existe
 func (tx *txModificaEvent) Postcondition(ctx context.Context) (v interface{}, err error) {
 	log.Printf("Got a Modifica Event request for event %s", tx.request.Title)
 
+	var services = tx.eventCtrl.GetServices()
+	for _, service := range services {
+		gw := serviceGW.NewServiceGateway(ctx, service)
+		if err = gw.Remove(); err != nil {
+			return
+		}
+	}
+
 	tx.eventCtrl.SetTitle(tx.request.Title)
 	tx.eventCtrl.SetDescription(tx.request.Description)
 	tx.eventCtrl.SetCapacity(tx.request.Capacity)
@@ -106,7 +114,6 @@ func (tx *txModificaEvent) Postcondition(ctx context.Context) (v interface{}, er
 }
 
 func (tx *txModificaEvent) Commit() (err error) {
-
 	return
 }
 

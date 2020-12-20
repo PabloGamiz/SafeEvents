@@ -12,9 +12,8 @@ type Service struct {
 	Name        string            `json:"name" gorm:"not null;unique"`
 	Description string            `json:"description" gorm:"not null"`
 	Kind        string            `json:"kind" gorm:"not null"`
-	Location    string            `json:"location" gorm:"foreignkey:LocationID;not null"`
-	LocationID  uint64            `json:"-"`
-	Products    []product.Product `json:"products" gorm:"many2many:services_products"`
+	Location    string            `json:"location" gorm:"not null"`
+	Products    []product.Product `json:"products" gorm:"foreignkey:ServiceID;constraint:OnDelete:CASCADE"`
 	EventID     uint              `json:"-"`
 	CreatedAt   time.Time         `json:"createdAt"`
 	UpdatedAt   time.Time         `json:"updatedAt"`

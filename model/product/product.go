@@ -11,6 +11,7 @@ type Product struct {
 	Description string `json:"description" gorm:"not null"`
 	Price       int    `json:"price" gorm:"not null"`
 	Status      string `json:"status" gorm:"not null"`
+	ServiceID   uint   `json:"-"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
