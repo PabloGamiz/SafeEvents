@@ -6,9 +6,13 @@ import (
 	"log"
 
 	eventDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/event"
+	serviceDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/service"
 	eventGW "github.com/PabloGamiz/SafeEvents-Backend/gateway/event"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	eventMOD "github.com/PabloGamiz/SafeEvents-Backend/model/event"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/product"
+	productMOD "github.com/PabloGamiz/SafeEvents-Backend/model/product"
+	serviceMOD "github.com/PabloGamiz/SafeEvents-Backend/model/service"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/session"
 )
 
@@ -18,6 +22,34 @@ type txModificaEvent struct {
 	sessCtrl   session.Controller
 	clientCtrl client.Controller
 	eventCtrl  eventMOD.Controller
+}
+
+func (tx *txModificaEvent) GetServicesFromRequest(servicesRequest []serviceDTO.DTO) []*serviceMOD.Service {
+	var services = make([]*serviceMOD.Service, len(servicesRequest))
+	for index, service := range servicesRequest {
+		var serviceProducts = make([]product.Product, len(service.Product))
+		for i, product := range service.Product {
+			var productCtrl = productMOD.Product{
+				ID:          uint(product.ID),
+				Name:        product.Name,
+				Description: product.Description,
+				Price:       product.Price,
+				Status:      product.Status,
+			}
+			serviceProducts[i] = productCtrl
+		}
+		var serviceCtrl = &serviceMOD.Service{
+			ID:          uint(service.ID),
+			Name:        service.Name,
+			Description: service.Description,
+			Kind:        service.Kind,
+			Location:    service.Location,
+			Products:    serviceProducts,
+		}
+		services[index] = serviceCtrl
+	}
+
+	return services
 }
 
 func (tx *txModificaEvent) Precondition() (err error) { //Comprova que no existeix l'event
@@ -60,9 +92,10 @@ func (tx *txModificaEvent) Postcondition(ctx context.Context) (v interface{}, er
 	tx.eventCtrl.SetCheckInDate(tx.request.CheckInDate)
 	tx.eventCtrl.SetClosureDate(tx.request.ClosureDate)
 	tx.eventCtrl.SetLocation(tx.request.Location)
-	// falta setter de services.
+	tx.eventCtrl.SetServices(tx.GetServicesFromRequest(tx.request.Services))
 	tx.eventCtrl.SetImage(tx.request.Image)
 	tx.eventCtrl.SetTipus(tx.request.Tipus)
+	tx.eventCtrl.SetMesures(tx.request.Mesures)
 
 	gw := eventGW.NewEventGateway(ctx, tx.eventCtrl)
 	if err = gw.Update(); err != nil {

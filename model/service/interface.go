@@ -13,10 +13,9 @@ type Controller interface {
 	GetDescription() string
 	SetDescription(description string)
 	GetKind() string
-	// SetKind(kind Kind)
+	SetKind(kind string)
 	GetLocation() string
 	SetLocation(location string)
 	GetProducts() []product.Product
 	SetProducts(products []product.Product)
-	// GetService() *Service
 }

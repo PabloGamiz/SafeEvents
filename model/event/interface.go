@@ -31,6 +31,9 @@ type Controller interface {
 	GetLocation() string
 	SetLocation(location string)
 	GetServices() []service.Controller
+	SetServices([]*service.Service)
 	TakeTickets(int) error
 	GetFeedbacks() []feedback.Controller
+	GetMesures() string
+	SetMesures(string)
 }

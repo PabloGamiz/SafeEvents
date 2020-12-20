@@ -11,7 +11,7 @@ type Service struct {
 	ID          uint              `json:"id" gorm:"primaryKey; autoIncrement:true"`
 	Name        string            `json:"name" gorm:"not null;unique"`
 	Description string            `json:"description" gorm:"not null"`
-	Kind        Kind              `json:"kind" gorm:"not null"`
+	Kind        string            `json:"kind" gorm:"not null"`
 	Location    string            `json:"location" gorm:"foreignkey:LocationID;not null"`
 	LocationID  uint64            `json:"-"`
 	Products    []product.Product `json:"products" gorm:"many2many:services_products"`
@@ -52,13 +52,13 @@ func (service *Service) SetDescription(description string) {
 
 // GetKind return the Kind of the Service.
 func (service *Service) GetKind() string {
-	return service.Kind.String()
+	return service.Kind
 }
 
-// // SetKind sets the Kind of the Service.
-// func (service *Service) SetKind(kind int64) {
-// 	service.Kind = kind
-// }
+// SetKind sets the Kind of the Service.
+func (service *Service) SetKind(kind string) {
+	service.Kind = kind
+}
 
 // GetLocation return the Location of the Service.
 func (service *Service) GetLocation() string {

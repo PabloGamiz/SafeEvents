@@ -10,7 +10,7 @@ type Product struct {
 	Name        string `json:"name" gorm:"not null;unique"`
 	Description string `json:"description" gorm:"not null"`
 	Price       int    `json:"price" gorm:"not null"`
-	Status      Status `json:"status" gorm:"not null"`
+	Status      string `json:"status" gorm:"not null"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
@@ -51,11 +51,11 @@ func (product *Product) SetPrice(price int) {
 }
 
 // GetStatus return the Status of the Product.
-func (product *Product) GetStatus() Status {
+func (product *Product) GetStatus() string {
 	return product.Status
 }
 
 // SetStatus sets the Status of the Product.
-func (product *Product) SetStatus(status Status) {
+func (product *Product) SetStatus(status string) {
 	product.Status = status
 }
