@@ -24,11 +24,16 @@ type Controller interface {
 	SetCheckInDate(checkInDate time.Time)
 	GetImage() string
 	SetImage(Image string)
+	GetTipus() string
+	SetTipus(tipus string)
 	GetClosureDate() time.Time
 	SetClosureDate(closureDate time.Time)
 	GetLocation() string
-	SetLocation(string)
+	SetLocation(location string)
 	GetServices() []service.Controller
+	SetServices([]*service.Service)
 	TakeTickets(int) error
 	GetFeedbacks() []feedback.Controller
+	GetMesures() string
+	SetMesures(string)
 }

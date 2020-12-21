@@ -25,6 +25,7 @@ type Event struct {
 	UpdatedAt   time.Time            `json:"updatedAt"`
 	Image       string               `json:"image" gorm:"not null"`
 	Tipus       string               `json:"tipus" gorm:"not null"`
+	Mesures     string               `json:"mesures"`
 	//mu          sync.Mutex
 }
 
@@ -128,6 +129,11 @@ func (event *Event) GetServices() (ctrls []service.Controller) {
 	return
 }
 
+// SetServices sets the services of an event
+func (event *Event) SetServices(services []*service.Service) {
+	event.Services = services
+}
+
 // GetFeedbacks return the Feedbacks of the Event.
 func (event *Event) GetFeedbacks() (ctrls []feedback.Controller) {
 	length := len(event.Feedbacks)
@@ -174,4 +180,14 @@ func (event *Event) TakeTickets(n int) error {
 
 	event.Taken += n
 	return nil
+}
+
+// SetMesures sets the COVID Mesures of the event.
+func (event *Event) SetMesures(mesures string) {
+	event.Mesures = mesures
+}
+
+// GetMesures returns the COVID Mesures of the event.
+func (event *Event) GetMesures() string {
+	return event.Mesures
 }

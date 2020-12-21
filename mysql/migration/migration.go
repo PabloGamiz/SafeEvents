@@ -15,18 +15,16 @@ import (
 	"gorm.io/gorm"
 )
 
-func OpenStream() (db *gorm.DB, err error) {
-	if db, err = mysql.OpenStream(); err != nil {
+// MigrateTables migrates the database tables
+func MigrateTables() (err error) {
+	var db *gorm.DB
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		log.Fatalf("Got %v error while OpenStream", err.Error())
 		return
 	}
 
-	return
-}
-
-// MigrateTables migrates the database tables
-func MigrateTables() (err error) {
-	db, err := OpenStream()
+	defer cancel()
 	if err != nil {
 		return
 	}

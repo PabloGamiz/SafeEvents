@@ -1,7 +1,6 @@
 package service
 
 import (
-	location_api "github.com/PabloGamiz/SafeEvents-Backend/dtos/location"
 	product_api "github.com/PabloGamiz/SafeEvents-Backend/dtos/product"
 )
 
@@ -11,6 +10,6 @@ type DTO struct {
 	Name        string            `json:"name"`
 	Description string            `json:"description"`
 	Kind        string            `json:"kind"`
-	Location    location_api.DTO  `json:"location"`
+	Location    string            `json:"location"`
 	Product     []product_api.DTO `json:"product"`
 }

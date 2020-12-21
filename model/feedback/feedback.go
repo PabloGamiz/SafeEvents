@@ -14,7 +14,6 @@ type Feedback struct {
 	EventID     uint                 `json:"-" gorm:"index:uc_assistant_event,unique; not null"`
 	Assistant   *assistant.Assistant `json:"assistant" gorm:"foreignkey:AssistantID"`
 	AssistantID uint                 `json:"-" gorm:"index:uc_assistant_event,unique; not null"`
-	CreatedAt   time.Time            `json:"createdAt"`
 	UpdatedAt   time.Time            `json:"updatedAt"`
 }
 
@@ -46,6 +45,11 @@ func (feedback *Feedback) SetMessage(message string) {
 // GetAssistant gets the assistant who has provided the feedback.
 func (feedback *Feedback) GetAssistant() assistant.Controller {
 	return feedback.Assistant
+}
+
+// GetAssistantID gets the assistant who has provided the feedback.
+func (feedback *Feedback) GetAssistantID() uint {
+	return feedback.AssistantID
 }
 
 // GetFeedback gets a pointer to this feedback.

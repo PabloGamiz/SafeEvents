@@ -16,19 +16,23 @@ type assistantGateway struct {
 
 func (gw *assistantGateway) Insert() (err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
+	defer cancel()
 	return db.Table("assistants").Create(gw.Controller).Error
 }
 
 func (gw *assistantGateway) Update() (err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
+	defer cancel()
 	if db = db.Table("assistants").Updates(gw.Controller); db.Error != nil {
 		return db.Error
 	}
@@ -45,9 +49,11 @@ func (gw *assistantGateway) Update() (err error) {
 
 func (gw *assistantGateway) Remove() (err error) {
 	var db *gorm.DB
-	if db, err = mysql.OpenStream(); err != nil {
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
+	defer cancel()
 	return db.Table("assistants").Delete(gw.Controller).Error
 }

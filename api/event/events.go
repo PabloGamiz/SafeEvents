@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	eventDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/event"
@@ -34,12 +33,42 @@ func HandleListEventsRequest(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
+// HandleListEventsByTypeRequest attends a list events by type request
+func HandleListEventsByTypeRequest(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Handlering a List Events by type request")
+
+	// Expected data for a Publica request
+	var requestDTO eventDTO.ListEventsByTypeRequestDTO
+	if err := json.NewDecoder(r.Body).Decode(&requestDTO); err != nil {
+		// If some error just happened it means the provided Json does not match with the expected DTO
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Setting up TxSignin with the required values
+	TxListEventsByType := event.NewTxListEventsByType(requestDTO)
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel() // ensures the context is canceled, at least once, at the end of this function
+
+	TxListEventsByType.Execute(ctx)
+	result, err := TxListEventsByType.Result()
+	if err != nil {
+		// If err != nil it means the transaction has failed
+		http.Error(w, err.Error(), http.StatusConflict)
+		return
+	}
+
+	// Sending response
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
+}
+
 // HandlePublicaEventRequest attends a Publica Esdeveniment request
 func HandlePublicaEventRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a Publica Esdeveniment request")
 
 	// Expected data for a Publica request
-	var publicaDTO eventDTO.DTO
+	var publicaDTO eventDTO.PublicaEvent
 	if err := json.NewDecoder(r.Body).Decode(&publicaDTO); err != nil {
 		// If some error just happened it means the provided Json does not match with the expected DTO
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -66,22 +95,43 @@ func HandlePublicaEventRequest(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
+// HandleModificaEventRequest attends a Modifica Esdeveniment request
+func HandleModificaEventRequest(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Handlering a Modifica Esdeveniment request")
+
+	// Expected data for a Publica request
+	var modificaDTO eventDTO.DTO
+	if err := json.NewDecoder(r.Body).Decode(&modificaDTO); err != nil {
+		// If some error just happened it means the provided Json does not match with the expected DTO
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Setting up TxPublicaEvent with the required values
+	txModificaEvent := event.NewTxModificaEvent(modificaDTO)
+
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel() // ensures the context is canceled, at least once, at the end of this function
+
+	txModificaEvent.Execute(ctx)
+	result, err := txModificaEvent.Result()
+
+	if err != nil {
+		// If err != nil it means the transaction has failed
+		http.Error(w, err.Error(), http.StatusConflict)
+		return
+	}
+
+	// Sending response
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
+}
+
 // HandleGetEventRequest attends a Get a single Esdeveniment request
 func HandleGetEventRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a single event request")
 
-	//Obte el id passat com a parametre a la url
-	/*idR, err := strconv.Atoi(r.URL.Query().Get("id"))
-	if err != nil || idR < 1 {
-		http.NotFound(w, r)
-		return
-	}
-
-	geteventDTO := eventDTO.DTO{
-		ID: uint(idR),
-	}*/
-
-	var getDTO eventDTO.DTO
+	var getDTO eventDTO.GetEvent
 	if err := json.NewDecoder(r.Body).Decode(&getDTO); err != nil {
 		// If some error just happened it means the provided Json does not match with the expected DTO
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -108,26 +158,17 @@ func HandleGetEventRequest(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
-func buildListFavoritesRequestDTO(id uint) eventDTO.ListFavoritesRequestDTO {
-	return eventDTO.ListFavoritesRequestDTO{
-		ID: id,
-	}
-}
-
 // HandleListFavoritesRequest attends a list of favorites events request
 func HandleListFavoritesRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a List Favorites request")
 
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
-	if err != nil || id < 1 {
-		log.Printf("Error no id found")
-		http.Error(w, err.Error(), http.StatusConflict)
+	//Get the cookie from the request body
+	var req eventDTO.ListFavoritesRequestDTO
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		// If some error just happened it means the provided Json does not match with the expected DTO
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	uid := uint(id)
-
-	req := buildListFavoritesRequestDTO(uid)
 
 	// Setting uo TxListFavorites with the required values
 	txListFavorites := event.NewTxListFavorites(req)
@@ -136,6 +177,36 @@ func HandleListFavoritesRequest(w http.ResponseWriter, r *http.Request) {
 
 	txListFavorites.Execute(ctx)
 	result, err := txListFavorites.Result()
+
+	if err != nil {
+		//Transaction has failed
+		http.Error(w, err.Error(), http.StatusConflict)
+		return
+	}
+
+	//sending response
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
+}
+
+// HandleRecomanaEventsRequest attends a list of favorites events request
+func HandleRecomanaEventsRequest(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Handlering a Recomana Events request")
+
+	var RecDTO eventDTO.ListFavoritesRequestDTO
+	if err := json.NewDecoder(r.Body).Decode(&RecDTO); err != nil {
+		// If some error just happened it means the provided Json does not match with the expected DTO
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Setting up TxListFavorites with the required values
+	txRecomanaEvents := event.NewTxRecomanaEvents(RecDTO)
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+
+	txRecomanaEvents.Execute(ctx)
+	result, err := txRecomanaEvents.Result()
 
 	if err != nil {
 		//Transaction has failed
