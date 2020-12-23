@@ -5,33 +5,23 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	clientDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/transactions/client"
 )
 
-func buildClientInfoRequestDTO(id uint) clientDTO.ClientInfoRequestDTO {
-	return clientDTO.ClientInfoRequestDTO{
-		ID: id,
-	}
-}
-
+// HandleClientInfoRequest ...
 func HandleClientInfoRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a Client Info request")
 
-	//Get the id from the URL
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
-	if err != nil || id < 1 {
-		log.Printf("Error no id found")
-		http.Error(w, err.Error(), http.StatusConflict)
+	//Get the cookie and id from the request body
+	var req clientDTO.ClientInfoRequestDTO
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		// If some error just happened it means the provided Json does not match with the expected DTO
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	uid := uint(id)
-
-	req := buildClientInfoRequestDTO(uid)
 
 	//Setting up TxClientInfo with the required values
 	txClientInfo := client.NewTxClientInfo(req)

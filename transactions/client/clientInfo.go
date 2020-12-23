@@ -7,23 +7,23 @@ import (
 	clientDTO "github.com/PabloGamiz/SafeEvents-Backend/dtos/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	clientMOD "github.com/PabloGamiz/SafeEvents-Backend/model/client"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/session"
+	sessionMOD "github.com/PabloGamiz/SafeEvents-Backend/model/session"
 )
 
 type txClientInfo struct {
-	request clientDTO.ClientInfoRequestDTO
+	request  clientDTO.ClientInfoRequestDTO
+	sessCtrl session.Controller
 }
 
-func (tx *txClientInfo) buildClientInfoDTO(ctrl clientMOD.Controller) *clientDTO.ClientInfoResponseDTO {
-	//username := client.Username()
+func (tx *txClientInfo) BuildClientInfoResponseDTO(ctrl clientMOD.Controller) *clientDTO.ClientInfoResponseDTO {
+	id := ctrl.GetID()
 	email := ctrl.GetEmail()
-	//verified := client.Verified()
-	//events := client.Events()
-
+	organize := ctrl.GetOrganizer()
 	return &clientDTO.ClientInfoResponseDTO{
-		//Username: username,
-		Email: email,
-		//Verified: verified,
-		//Events:   events,
+		ID:       id,
+		Email:    email,
+		Organize: organize,
 	}
 }
 
@@ -34,13 +34,28 @@ func (tx *txClientInfo) Precondition() error {
 
 // Postcondition creates new user and a opens its first session
 func (tx *txClientInfo) Postcondition(ctx context.Context) (v interface{}, err error) {
-	log.Printf("Got a Event request for client %d", tx.request.ID)
-	var ctrl clientMOD.Controller
-	if ctrl, err = client.FindClientByID(ctx, tx.request.ID); err != nil {
+	log.Printf("Got a client info request for client %d", tx.request.ID)
+
+	var sess sessionMOD.Controller
+	if sess, err = sessionMOD.GetSessionByID(tx.request.Cookie); err != nil {
+		log.Printf("No session found for provided cookie")
 		return
 	}
-	response := tx.buildClientInfoDTO(ctrl)
-	return response, err
+
+	var id = tx.request.ID
+
+	var ctrl clientMOD.Controller
+	if id != 0 {
+		if ctrl, err = client.FindClientByID(ctx, id); err != nil {
+			return
+		}
+		response := tx.BuildClientInfoResponseDTO(ctrl)
+		return response, err
+	} else {
+		ctrl = sess.Client()
+	}
+
+	return ctrl, err
 
 }
 
