@@ -19,7 +19,6 @@ type txClientInfo struct {
 func (tx *txClientInfo) BuildClientInfoResponseDTO(ctrl clientMOD.Controller) *clientDTO.ClientInfoResponseDTO {
 	id := ctrl.GetID()
 	email := ctrl.GetEmail()
-	//organize := tx.BuildOrganizerDTO(ctrl.GetOrganizer())
 	organize := ctrl.GetOrganizer()
 	return &clientDTO.ClientInfoResponseDTO{
 		ID:       id,
@@ -27,37 +26,6 @@ func (tx *txClientInfo) BuildClientInfoResponseDTO(ctrl clientMOD.Controller) *c
 		Organize: organize,
 	}
 }
-
-/*
-func (tx *txClientInfo) BuildOrganizerDTO(org organizerMOD.Controller) organizerDTO.DTO {
-	id := org.GetID()
-	organizes := org.GetEventOrg()
-	length := len(organizes)
-	ctrls := make([]eventDTO.DTO, length)
-	for index, event := range organizes {
-		ctrls[index] = tx.BuildEventDTO(event)
-	}
-	return organizerDTO.DTO{
-		ID:        id,
-		Organizes: ctrls,
-	}
-}
-
-func (tx *txClientInfo) BuildEventDTO(ctrl event.Controller) eventDTO.DTO {
-
-	return eventDTO.DTO{
-		Title:       ctrl.GetTitle(),
-		Description: ctrl.GetDescription(),
-		Capacity:    ctrl.GetCapacity(),
-		CheckInDate: ctrl.GetCheckInDate(),
-		ClosureDate: ctrl.GetClosureDate(),
-		Location:    ctrl.GetLocation(),
-		Price:       ctrl.GetPrice(),
-		Taken:       ctrl.GetTaken(),
-		Image:       ctrl.GetImage(),
-	}
-}
-*/
 
 func (tx *txClientInfo) Precondition() error {
 	//Comprovar que els elements son correctes

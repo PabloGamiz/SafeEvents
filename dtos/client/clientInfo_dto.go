@@ -1,8 +1,9 @@
 package client
 
 import (
-	//organizer_api "github.com/PabloGamiz/SafeEvents-Backend/dtos/client/organizer"
+	AssistantMOD "github.com/PabloGamiz/SafeEvents-Backend/model/client/assistant"
 	OrganizerMOD "github.com/PabloGamiz/SafeEvents-Backend/model/client/organizer"
+	EventMOD "github.com/PabloGamiz/SafeEvents-Backend/model/event"
 )
 
 // ClientInfoRequestDTO represents the expected data from a Client Info request
@@ -12,8 +13,9 @@ type ClientInfoRequestDTO struct {
 }
 
 type ClientInfoResponseDTO struct {
-	ID    uint   `json:"id"`
-	Email string `json:"email"`
-	//Organize organizer_api.DTO `json:"organizer"`
-	Organize OrganizerMOD.Controller `json:"organize"`
+	ID        uint                    `json:"id"`
+	Email     string                  `json:"email"`
+	Organize  OrganizerMOD.Controller `json:"organize"`
+	Assistant AssistantMOD.Controller `json:"assist"`
+	Favs      []EventMOD.Controller   `json:"favs"`
 }
