@@ -111,8 +111,8 @@ func FindAllFavs(ctx context.Context, clientCtrl Controller) (events []event.Con
 	var eventsMOD []*event.Event
 	db.Model(clientCtrl).Association("Favs").Find(&eventsMOD)
 	if len(eventsMOD) == 0 {
-		err = fmt.Errorf("errNoEventsOnDatabase")
-		return
+		//err = fmt.Errorf("errNoEventsOnDatabase")
+		return make([]event.Controller, 0), err
 	}
 
 	events = make([]event.Controller, len(eventsMOD))
