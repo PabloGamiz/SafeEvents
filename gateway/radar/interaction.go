@@ -1,19 +1,19 @@
-package event
+package radar
 
 import (
 	"context"
 
-	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/radar/interaction"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
 	"gorm.io/gorm"
 )
 
-type eventGateway struct {
-	event.Controller
+type interactionGateway struct {
+	interaction.Controller
 	ctx context.Context
 }
 
-func (gw *eventGateway) Insert() (err error) {
+func (gw *interactionGateway) Insert() (err error) {
 	var db *gorm.DB
 	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
@@ -21,10 +21,11 @@ func (gw *eventGateway) Insert() (err error) {
 	}
 
 	defer cancel()
-	return db.Create(gw.Controller).Error
+	db.Create(gw.Controller)
+	return
 }
 
-func (gw *eventGateway) Update() (err error) {
+func (gw *interactionGateway) Update() (err error) {
 	var db *gorm.DB
 	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
@@ -32,10 +33,11 @@ func (gw *eventGateway) Update() (err error) {
 	}
 
 	defer cancel()
-	return db.Save(gw.Controller).Error
+	db.Table("interactions").Updates(gw.Controller)
+	return
 }
 
-func (gw *eventGateway) Remove() (err error) {
+func (gw *interactionGateway) Remove() (err error) {
 	var db *gorm.DB
 	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
@@ -43,9 +45,6 @@ func (gw *eventGateway) Remove() (err error) {
 	}
 
 	defer cancel()
-	return db.Delete(gw.Controller).Error
-}
-
-func (gw *eventGateway) FindAll() (err error) {
-	return nil
+	db.Table("interactions").Delete(gw.Controller)
+	return
 }

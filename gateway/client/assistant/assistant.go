@@ -16,7 +16,7 @@ type assistantGateway struct {
 
 func (gw *assistantGateway) Insert() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -27,7 +27,7 @@ func (gw *assistantGateway) Insert() (err error) {
 
 func (gw *assistantGateway) Update() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -49,7 +49,7 @@ func (gw *assistantGateway) Update() (err error) {
 
 func (gw *assistantGateway) Remove() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}

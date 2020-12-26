@@ -63,6 +63,7 @@ func removeSession(sid sID) (err error) {
 	return
 }
 
+// NewSessionID builds a cookie string
 func NewSessionID() (id string, err error) {
 	b := make([]byte, 32)
 	if _, err = io.ReadFull(rand.Reader, b); err != nil {

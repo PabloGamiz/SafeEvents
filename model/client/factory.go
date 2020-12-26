@@ -14,7 +14,7 @@ import (
 // FindClientByEmail returns the gateway for the client that match the provided mail
 func FindClientByEmail(ctx context.Context, email string) (ctrl Controller, err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -40,7 +40,7 @@ func FindClientByEmail(ctx context.Context, email string) (ctrl Controller, err 
 // FindClientByID returns the gateway for the client that match the provided mail
 func FindClientByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -71,7 +71,7 @@ func FindClientByID(ctx context.Context, ID uint) (ctrl Controller, err error) {
 // FindOrganitzersEvent returns the gateways for the clients that organize the provided email
 func FindOrganitzersEvent(ctx context.Context, EventID uint) (NameOrg string, err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -102,7 +102,7 @@ func FindOrganitzersEvent(ctx context.Context, EventID uint) (NameOrg string, er
 // FindAllFavs returns the gateway for finding all the events loaded on the BBDD
 func FindAllFavs(ctx context.Context, clientCtrl Controller) (events []event.Controller, err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}

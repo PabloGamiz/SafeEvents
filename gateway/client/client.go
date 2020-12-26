@@ -18,7 +18,7 @@ type clientGateway struct {
 
 func (gw *clientGateway) Insert() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -41,7 +41,7 @@ func (gw *clientGateway) Insert() (err error) {
 
 func (gw *clientGateway) Update() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -62,7 +62,7 @@ func (gw *clientGateway) Update() (err error) {
 
 func (gw *clientGateway) Remove() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -83,7 +83,7 @@ func (gw *clientGateway) Remove() (err error) {
 
 func (gw *clientGateway) AddFavorit() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -96,7 +96,7 @@ func (gw *clientGateway) AddFavorit() (err error) {
 
 func (gw *clientGateway) DeleteFavorit(ctrl event.Controller) (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -108,7 +108,7 @@ func (gw *clientGateway) DeleteFavorit(ctrl event.Controller) (err error) {
 
 func (gw *clientGateway) FindFavorit(ctrl event.Controller) (faved bool, err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
