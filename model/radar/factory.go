@@ -41,7 +41,7 @@ func NewRadar(mac string, clientID uint) (ctrl Controller, err error) {
 	radar := &Radar{
 		MAC:          mac,
 		ClientID:     clientID,
-		interactions: make([]interactionMOD.Controller, 1),
+		interactions: []interactionMOD.Controller{},
 	}
 
 	AllInstancesByMAC.Store(mID, radar)

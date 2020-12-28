@@ -16,15 +16,15 @@ func HandleInteractionRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering an Interaction request")
 
 	// Expected data for a radar activation request
-	var activateDTO radarDTO.ActivateRequestDTO
-	if err := json.NewDecoder(r.Body).Decode(&activateDTO); err != nil {
+	var interactionDTO radarDTO.InteractionRequestDTO
+	if err := json.NewDecoder(r.Body).Decode(&interactionDTO); err != nil {
 		// If some error just happened it means the provided Json does not match with the expected DTO
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	// Setting up TxSignin with the required values
-	txSignin := radar.NewTxActivate(activateDTO)
+	txSignin := radar.NewTxInteraction(interactionDTO)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel() // ensures the context is canceled, at least once, at the end of this function
 

@@ -18,7 +18,6 @@ type txInteraction struct {
 	sessCtrl     session.Controller
 	interactions []interactionMOD.Controller
 	ctx          context.Context
-	radar        radarMOD.Controller
 }
 
 func (tx *txInteraction) buildInteractionResponse(howmany int) *radarDTO.InteractionResponseDTO {
@@ -38,8 +37,7 @@ func (tx *txInteraction) Precondition() (err error) {
 func (tx *txInteraction) Postcondition(ctx context.Context) (v interface{}, err error) {
 	log.Printf("Got an Interaction request from client %s", tx.sessCtrl.GetEmail())
 
-	tx.radar = tx.sessCtrl.GetRadar()
-	if tx.radar == nil {
+	if tx.sessCtrl.GetRadar() == nil {
 		err = fmt.Errorf("The provided client has no radar running")
 		return
 	}
@@ -51,12 +49,12 @@ func (tx *txInteraction) Postcondition(ctx context.Context) (v interface{}, err 
 		}
 
 		closeToID := radarCtrl.GetID()
-		newInteraction := interactionMOD.New(tx.radar.GetID(), closeToID, tx.request.Instant)
+		newInteraction := interactionMOD.New(tx.sessCtrl.GetRadar().GetID(), closeToID, tx.request.Instant)
 		tx.interactions = append(tx.interactions, newInteraction)
 	}
 
 	tx.ctx = ctx
-	howMany := tx.radar.SetInteractions(tx.interactions)
+	howMany := tx.sessCtrl.GetRadar().SetInteractions(tx.interactions)
 	response := tx.buildInteractionResponse(howMany)
 	return response, nil
 }
@@ -75,6 +73,7 @@ func (tx *txInteraction) Commit() (err error) {
 
 // Rollback rollbacks any change caused while the transaction
 func (tx *txInteraction) Rollback() {
-	size := len(tx.interactions)
-	tx.radar.PopInteractions(size)
+	if size := len(tx.interactions); size > 0 {
+		tx.sessCtrl.GetRadar().PopInteractions(size)
+	}
 }
