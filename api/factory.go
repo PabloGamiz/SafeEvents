@@ -23,6 +23,7 @@ func NewServer() Server {
 	router.HandleFunc(client.APIClientInfoPath, client.HandleClientInfoRequest).Methods(http.MethodPut)
 	router.HandleFunc(client.APIAddFavPath, client.HandleClientAddFavRequest).Methods(http.MethodPost)
 	router.HandleFunc(client.APIDelFavPath, client.HandleClientDelFavRequest).Methods(http.MethodPost)
+	router.HandleFunc(client.APIStatusPath, client.HandleStatusRequest).Methods(http.MethodPost)
 
 	// Events router Handlers
 	router.HandleFunc(event.APIListEvents, event.HandleListEventsRequest).Methods(http.MethodGet)

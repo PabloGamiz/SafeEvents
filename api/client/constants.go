@@ -11,4 +11,6 @@ const (
 	APIAddFavPath = "/addfav"
 	//APIDelFavPath is the path where all the delete fav request will be handled
 	APIDelFavPath = "/delfav"
+	//APIStatusPath is the path where all the delete fav request will be handled
+	APIStatusPath = "/status"
 )

@@ -1,6 +1,9 @@
 package client
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client/assistant"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client/organizer"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
@@ -13,6 +16,24 @@ type Client struct {
 	Organize organizer.Organizer `json:"organize" gorm:"foreignKey:ClientID"`
 	Assists  assistant.Assistant `json:"assists" gorm:"foreignKey:ClientID"`
 	Favs     []*event.Event      `json:"favs" gorm:"many2many:clients_favs;"`
+	Status   Status              `json:"status" gorm:"not null"`
+	Updated  time.Time           `json:"update_date"`
+}
+
+// SetStatus updates the status of the client
+func (client *Client) SetStatus(status Status, update time.Time) error {
+	if !client.Updated.Before(update) {
+		return fmt.Errorf("The profile is ahead of the provided update time: %v", client.Updated)
+	}
+
+	client.Status = status
+	client.Updated = update
+	return nil
+}
+
+// GetStatus return the status of the client
+func (client *Client) GetStatus() Status {
+	return client.Status
 }
 
 // GetID return the id of the client

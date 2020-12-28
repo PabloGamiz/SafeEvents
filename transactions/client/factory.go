@@ -34,3 +34,9 @@ func NewTxDelFav(request clientDTO.FavDTO) transaction.Tx {
 	body := &txDelFav{request: request}
 	return transaction.NewTransaction(body)
 }
+
+// NewTxStatus builds a brand new transaction for Signin
+func NewTxStatus(request clientDTO.StatusRequestDTO) transaction.Tx {
+	body := &txStatus{request: request}
+	return transaction.NewTransaction(body)
+}
