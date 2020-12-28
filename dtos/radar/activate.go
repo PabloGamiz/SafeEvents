@@ -10,5 +10,5 @@ type ActivateRequestDTO struct {
 
 // ActivateResponseDTO represents the expected data from a activate request
 type ActivateResponseDTO struct {
-	StartAt time.Time `json:"start_at"`
+	DoneAt time.Time `json:"done_at"`
 }

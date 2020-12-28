@@ -46,6 +46,7 @@ func NewServer() Server {
 
 	// Radar
 	router.HandleFunc(radar.APIActivatePath, radar.HandleActivateRequest).Methods(http.MethodPut)
+	router.HandleFunc(radar.APIActivatePath, radar.HandleDeactivateRequest).Methods(http.MethodDelete)
 	router.HandleFunc(radar.APIInteractionPath, radar.HandleInteractionRequest).Methods(http.MethodPost)
 
 	api.router = router
