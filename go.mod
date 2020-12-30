@@ -11,6 +11,8 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/joho/godotenv v1.3.0
 	github.com/mitchellh/mapstructure v1.3.3
+	github.com/sendgrid/rest v2.6.2+incompatible // indirect
+	github.com/sendgrid/sendgrid-go v3.7.2+incompatible
 	go.mongodb.org/mongo-driver v1.4.2
 	google.golang.org/api v0.34.0
 	google.golang.org/grpc v1.33.0

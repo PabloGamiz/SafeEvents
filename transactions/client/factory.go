@@ -34,3 +34,9 @@ func NewTxDelFav(request clientDTO.FavDTO) transaction.Tx {
 	body := &txDelFav{request: request}
 	return transaction.NewTransaction(body)
 }
+
+// NewTxSendMail builds a brand new transaction for sending a predefined mail to all emails present on request
+func NewTxSendMail(request []string) transaction.Tx {
+	body := &txSendMail{request: request}
+	return transaction.NewTransaction(body)
+}
