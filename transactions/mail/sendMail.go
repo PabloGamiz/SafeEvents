@@ -1,30 +1,30 @@
-package client
+package mail
 
 import (
 	"bytes"
 	"context"
 	"fmt"
-	"log"
 	"net/smtp"
 	"os"
 	"text/template"
 )
 
-// txAddFav represents an
+// txSendMail
 type txSendMail struct {
-	request []string
-	body    string
-	ctx     context.Context
+	request    []string
+	recipients []string
+	body       string
+	ctx        context.Context
 }
 
-func (tx *txSendMail) ParseTemplate(templateFileName string, data interface{}) error {
+func (tx *txSendMail) ParseTemplate(templateFileName string) error {
 	t, err := template.ParseFiles(templateFileName)
 	if err != nil {
 		return err
 	}
 
 	buf := new(bytes.Buffer)
-	if err = t.Execute(buf, data); err != nil {
+	if err = t.Execute(buf, nil); err != nil {
 		return err
 	}
 
@@ -38,8 +38,6 @@ func (tx *txSendMail) SendEmail() error {
 	emailServer := os.Getenv(envSMTPHost)
 	addr := emailServer + ":" + os.Getenv(envSMTPPort)
 
-	log.Printf("\n" + username + "\n" + password + "\n" + emailServer + "\n" + addr)
-
 	auth := smtp.PlainAuth("",
 		username,
 		password,
@@ -49,7 +47,7 @@ func (tx *txSendMail) SendEmail() error {
 	subject := emailSubject
 	msg := []byte(subject + mime + "\n" + tx.body)
 
-	err := smtp.SendMail(addr, auth, username, tx.request, msg)
+	err := smtp.SendMail(addr, auth, username, tx.recipients, msg)
 
 	if err != nil {
 		return fmt.Errorf("ERROR: attempting to send a mail %v", err)
@@ -66,13 +64,7 @@ func (tx *txSendMail) Precondition() (err error) {
 // Postcondition creates new user and a opens its first session
 func (tx *txSendMail) Postcondition(ctx context.Context) (v interface{}, err error) {
 
-	templateData := struct {
-		URL string
-	}{
-		URL: emailInfoURL,
-	}
-
-	if err = tx.ParseTemplate("template.html", templateData); err == nil {
+	if err = tx.ParseTemplate("template/template.html"); err == nil {
 		err = tx.SendEmail()
 	}
 
