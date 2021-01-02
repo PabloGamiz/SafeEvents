@@ -58,6 +58,11 @@ func (tx *txSendMail) SendEmail() error {
 
 // Precondition validates the transaction is ready to run
 func (tx *txSendMail) Precondition() (err error) {
+	/*
+		TODO: La request conté una llista dels ID d'usuaris a qui s'ha d'enviar el correu.
+					Cal convertir-la a una llista de correus i guardar-la a tx.recipients
+	*/
+
 	return nil
 }
 
