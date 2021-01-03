@@ -14,7 +14,7 @@ import (
 func newDummyTokenInfo() *oauth2.Tokeninfo {
 	email, exists := os.LookupEnv(envDummyEmail)
 	if !exists {
-		email = "testing@gmail.com"
+		email = "safeevents.sl@gmail.com"
 	}
 
 	return &oauth2.Tokeninfo{

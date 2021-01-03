@@ -137,7 +137,5 @@ func FindClientEmailByClientID(ctx context.Context, ID uint) (email string, err 
 		return
 	}
 
-	fmt.Println(email)
-
 	return
 }
