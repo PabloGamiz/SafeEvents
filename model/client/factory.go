@@ -122,3 +122,22 @@ func FindAllFavs(ctx context.Context, clientCtrl Controller) (events []event.Con
 
 	return
 }
+
+// FindClientEmailByClientID returns the email of the client matching the given ID.
+func FindClientEmailByClientID(ctx context.Context, ID uint) (email string, err error) {
+	var db *gorm.DB
+	var cancel mysql.Cancel
+	if db, cancel, err = mysql.OpenStream(); err != nil {
+		return
+	}
+
+	defer cancel()
+	if db = db.Select("email").Where(queryFindByID, ID).Table("clients").Find(&email); db.Error != nil {
+		err = fmt.Errorf(errNotFoundByID, db.Error.Error(), ID)
+		return
+	}
+
+	fmt.Println(email)
+
+	return
+}

@@ -7,11 +7,13 @@ import (
 	"net/smtp"
 	"os"
 	"text/template"
+
+	clientMOD "github.com/PabloGamiz/SafeEvents-Backend/model/client"
 )
 
 // txSendMail
 type txSendMail struct {
-	request    []string
+	request    []uint
 	recipients []string
 	body       string
 	ctx        context.Context
@@ -58,17 +60,18 @@ func (tx *txSendMail) SendEmail() error {
 
 // Precondition validates the transaction is ready to run
 func (tx *txSendMail) Precondition() (err error) {
-	/*
-		TODO: La request conté una llista dels ID d'usuaris a qui s'ha d'enviar el correu.
-					Cal convertir-la a una llista de correus i guardar-la a tx.recipients
-	*/
+	tx.recipients = make([]string, len(tx.request))
+	for index, clientID := range tx.request {
+		if tx.recipients[index], err = clientMOD.FindClientEmailByClientID(tx.ctx, clientID); err != nil {
+			return
+		}
+	}
 
 	return nil
 }
 
 // Postcondition creates new user and a opens its first session
 func (tx *txSendMail) Postcondition(ctx context.Context) (v interface{}, err error) {
-
 	if err = tx.ParseTemplate("template/template.html"); err == nil {
 		err = tx.SendEmail()
 	}
