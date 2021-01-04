@@ -10,6 +10,7 @@ import (
 	clientMOD "github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	interactionMOD "github.com/PabloGamiz/SafeEvents-Backend/model/radar/interaction"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/session"
+	mailer "github.com/PabloGamiz/SafeEvents-Backend/transactions/mail"
 )
 
 // txStatus represents an
@@ -32,8 +33,10 @@ func (tx *txStatus) notifyCloseClients() (err error) {
 		return
 	}
 
-	for _, clientID := range closeTo {
-		log.Printf("HAHA! You are fu**ed boy: %v", clientID)
+	txEmail := mailer.NewTxSendMail(closeTo)
+	txEmail.Execute()
+	if _, err = txEmail.Result(); err != nil {
+		return
 	}
 
 	return
