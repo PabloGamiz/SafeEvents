@@ -15,7 +15,7 @@ type buyerdataGateway struct {
 
 func (gw *buyerdataGateway) Insert() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -27,7 +27,7 @@ func (gw *buyerdataGateway) Insert() (err error) {
 
 func (gw *buyerdataGateway) Update() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -39,7 +39,7 @@ func (gw *buyerdataGateway) Update() (err error) {
 
 func (gw *buyerdataGateway) Remove() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}

@@ -11,23 +11,23 @@ import (
 
 // Client its the main data object from a client
 type Client struct {
-	ID       uint                `json:"id" gorm:"primaryKey; autoIncrement:true"`
-	Email    string              `json:"email" gorm:"not null; unique"`
-	Organize organizer.Organizer `json:"organize" gorm:"foreignKey:ClientID"`
-	Assists  assistant.Assistant `json:"assists" gorm:"foreignKey:ClientID"`
-	Favs     []*event.Event      `json:"favs" gorm:"many2many:clients_favs;"`
-	Status   Status              `json:"status" gorm:"not null"`
-	Updated  time.Time           `json:"update_date"`
+	ID           uint                `json:"id" gorm:"primaryKey; autoIncrement:true"`
+	Email        string              `json:"email" gorm:"not null; unique"`
+	Organize     organizer.Organizer `json:"organize" gorm:"foreignKey:ClientID"`
+	Assists      assistant.Assistant `json:"assists" gorm:"foreignKey:ClientID"`
+	Favs         []*event.Event      `json:"favs" gorm:"many2many:clients_favs;"`
+	Status       Status              `json:"status" gorm:"not null"`
+	StatusUpdate time.Time           `json:"status_update"`
 }
 
 // SetStatus updates the status of the client
 func (client *Client) SetStatus(status Status, update time.Time) error {
-	if !client.Updated.Before(update) {
-		return fmt.Errorf("The profile is ahead of the provided update time: %v", client.Updated)
+	if !client.StatusUpdate.Before(update) {
+		return fmt.Errorf("The profile is ahead of the provided update time: %v", client.StatusUpdate)
 	}
 
 	client.Status = status
-	client.Updated = update
+	client.StatusUpdate = update
 	return nil
 }
 

@@ -15,36 +15,36 @@ type serviceGateway struct {
 
 func (gw *serviceGateway) Insert() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
-	if db, cancel, err = mysql.OpenStream(); err != nil {
+	var disconnect mysql.Disconnect
+	if db, disconnect, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
-	defer cancel()
+	defer disconnect()
 	db.Create(gw.Controller)
 	return
 }
 
 func (gw *serviceGateway) Update() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
-	if db, cancel, err = mysql.OpenStream(); err != nil {
+	var disconnect mysql.Disconnect
+	if db, disconnect, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
-	defer cancel()
+	defer disconnect()
 	db.Save(gw.Controller)
 	return
 }
 
 func (gw *serviceGateway) Remove() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
-	if db, cancel, err = mysql.OpenStream(); err != nil {
+	var disconnect mysql.Disconnect
+	if db, disconnect, err = mysql.OpenStream(); err != nil {
 		return
 	}
 
-	defer cancel()
+	defer disconnect()
 	db.Delete(gw.Controller)
 	return
 }

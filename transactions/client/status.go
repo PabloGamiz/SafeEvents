@@ -34,7 +34,7 @@ func (tx *txStatus) notifyCloseClients() (err error) {
 	}
 
 	txEmail := mailer.NewTxSendMail(closeTo)
-	txEmail.Execute()
+	txEmail.Execute(tx.ctx)
 	if _, err = txEmail.Result(); err != nil {
 		return
 	}
@@ -52,6 +52,7 @@ func (tx *txStatus) Precondition() (err error) {
 // Postcondition creates new user and a opens its first session
 func (tx *txStatus) Postcondition(ctx context.Context) (v interface{}, err error) {
 	log.Printf("Got a status updating request from client %s", tx.sessCtrl.GetEmail())
+	tx.ctx = ctx
 
 	if err = tx.sessCtrl.SetStatus(tx.request.Status, tx.request.Date); err != nil {
 		return
@@ -63,7 +64,6 @@ func (tx *txStatus) Postcondition(ctx context.Context) (v interface{}, err error
 		}
 	}
 
-	tx.ctx = ctx
 	response := tx.buildStatusResponse()
 	return response, nil
 }

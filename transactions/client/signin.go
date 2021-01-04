@@ -32,7 +32,9 @@ func (tx *txSignin) buildSessionResponseDTO(ctrl sessionMOD.Controller) *clientD
 
 func (tx *txSignin) registerNewClient(ctx context.Context) (err error) {
 	clnt := &clientMOD.Client{
-		Email: tx.info.Email,
+		Email:        tx.info.Email,
+		Status:       clientMOD.UNKNOWN,
+		StatusUpdate: time.Now(),
 	}
 
 	gw := clientGW.NewClientGateway(ctx, clnt)
