@@ -13,7 +13,7 @@ var once sync.Once
 // FindFeedbackByIDAndAssistantIDAndEventID returns, if exists, the feedback provided by assistantID to eventID
 func FindFeedbackByIDAndAssistantIDAndEventID(feedbackID int, assistantID int, eventID int) (ctrl Controller, err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -33,7 +33,7 @@ func FindFeedbackByIDAndAssistantIDAndEventID(feedbackID int, assistantID int, e
 // FindFeedbackByAssistantIDAndEventID returns, if exists, the feedback provided by assistantID to eventID
 func FindFeedbackByAssistantIDAndEventID(assistantID int, eventID int) (ctrl Controller, err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -49,7 +49,7 @@ func FindFeedbackByAssistantIDAndEventID(assistantID int, eventID int) (ctrl Con
 // FindFeedbackByEventID returns, if exists, the feedback corresponding to eventID
 func FindFeedbackByEventID(eventID int) (ctrl []Controller, err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -69,7 +69,7 @@ func FindFeedbackByEventID(eventID int) (ctrl []Controller, err error) {
 // FindFeedbackByAssistantID returns, if exists, the feedback providad by assistantID
 func FindFeedbackByAssistantID(assistantID int) (ctrl []Controller, err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}

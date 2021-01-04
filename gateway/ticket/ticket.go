@@ -15,7 +15,7 @@ type ticketGateway struct {
 
 func (gw *ticketGateway) Insert() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -27,7 +27,7 @@ func (gw *ticketGateway) Insert() (err error) {
 
 func (gw *ticketGateway) Update() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -39,7 +39,7 @@ func (gw *ticketGateway) Update() (err error) {
 
 func (gw *ticketGateway) Remove() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}

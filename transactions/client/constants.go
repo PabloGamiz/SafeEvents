@@ -10,4 +10,5 @@ const (
 	errTokenFormat = "The provided token does no match with the expected format"
 
 	envDummyEmail = "DUMMY_EMAIL"
+	marginTime    = 24 * 15
 )

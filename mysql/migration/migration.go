@@ -11,6 +11,7 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/model/event"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/feedback"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/product"
+	"github.com/PabloGamiz/SafeEvents-Backend/model/radar/interaction"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/service"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/ticket"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
@@ -20,7 +21,7 @@ import (
 // MigrateTables migrates the database tables
 func MigrateTables() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		log.Fatalf("Got %v error while OpenStream", err.Error())
 		return
@@ -39,7 +40,8 @@ func MigrateTables() (err error) {
 		&ticket.Ticket{},
 		&event.Event{},
 		&service.Service{},
-		&product.Product{})
+		&product.Product{},
+		&interaction.Interaction{})
 
 	return
 }

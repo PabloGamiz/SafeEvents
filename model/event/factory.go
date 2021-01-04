@@ -30,7 +30,7 @@ type sID uint
 // FindAll returns the controllers of all the events loaded on the BBDD
 func FindAll(ctx context.Context) (ctrl []Controller, err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -50,7 +50,7 @@ func FindAll(ctx context.Context) (ctrl []Controller, err error) {
 // FindAllByType returns the controllers of all the events loaded on the BBDD
 func FindAllByType(ctx context.Context, eventType string) (ctrl []Controller, err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -70,7 +70,7 @@ func FindAllByType(ctx context.Context, eventType string) (ctrl []Controller, er
 // FindEventByID returns the gateway for the event that match the provided name
 func FindEventByID(ID uint) (ctrl Controller, err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}

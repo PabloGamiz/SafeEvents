@@ -8,7 +8,7 @@ import (
 // GetTicketsByEventID return all current tickets for a given event
 func GetTicketsByEventID(id uint) (tickets []Controller, err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -21,7 +21,7 @@ func GetTicketsByEventID(id uint) (tickets []Controller, err error) {
 // GetTicketsByEventIDAndClientID return all current tickets for a given event and client
 func GetTicketsByEventIDAndClientID(eid uint, cid uint) (tickets []Controller, err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -34,7 +34,7 @@ func GetTicketsByEventIDAndClientID(eid uint, cid uint) (tickets []Controller, e
 // GetTicketByQR return all current tickets for a given event and client
 func GetTicketByQR(qr string) (ctrl Controller, err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -49,7 +49,7 @@ func GetTicketByQR(qr string) (ctrl Controller, err error) {
 // GetTicketByID return all current tickets for a given event and client
 func GetTicketByID(id uint) (ctrl Controller, err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}

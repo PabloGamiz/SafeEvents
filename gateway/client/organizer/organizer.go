@@ -15,7 +15,7 @@ type organizerGateway struct {
 
 func (gw *organizerGateway) Insert() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -26,7 +26,7 @@ func (gw *organizerGateway) Insert() (err error) {
 
 func (gw *organizerGateway) Update() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
@@ -45,7 +45,7 @@ func (gw *organizerGateway) Update() (err error) {
 
 func (gw *organizerGateway) Remove() (err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}

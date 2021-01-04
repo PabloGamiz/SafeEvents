@@ -6,6 +6,7 @@ import (
 	"github.com/PabloGamiz/SafeEvents-Backend/api/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/api/event"
 	"github.com/PabloGamiz/SafeEvents-Backend/api/event/feedback"
+	"github.com/PabloGamiz/SafeEvents-Backend/api/radar"
 	"github.com/PabloGamiz/SafeEvents-Backend/api/ticket"
 	"github.com/gorilla/mux"
 )
@@ -22,6 +23,7 @@ func NewServer() Server {
 	router.HandleFunc(client.APIClientInfoPath, client.HandleClientInfoRequest).Methods(http.MethodPut)
 	router.HandleFunc(client.APIAddFavPath, client.HandleClientAddFavRequest).Methods(http.MethodPost)
 	router.HandleFunc(client.APIDelFavPath, client.HandleClientDelFavRequest).Methods(http.MethodPost)
+	router.HandleFunc(client.APIStatusPath, client.HandleStatusRequest).Methods(http.MethodPost)
 
 	// Events router Handlers
 	router.HandleFunc(event.APIListEvents, event.HandleListEventsRequest).Methods(http.MethodGet)
@@ -45,6 +47,11 @@ func NewServer() Server {
 	router.HandleFunc(feedback.APIPUTFeedback, feedback.HandlePUTFeedbackRequest).Methods(http.MethodPut)
 	router.HandleFunc(feedback.APIDELETEFeedback, feedback.HandleDELETEFeedbackRequest).Methods(http.MethodDelete)
 	router.HandleFunc(feedback.APIGETFeedbacks, feedback.HandleGETFeedbacksRequest).Methods(http.MethodGet)
+
+	// Radar
+	router.HandleFunc(radar.APIActivatePath, radar.HandleActivateRequest).Methods(http.MethodPut)
+	router.HandleFunc(radar.APIActivatePath, radar.HandleDeactivateRequest).Methods(http.MethodDelete)
+	router.HandleFunc(radar.APIInteractionPath, radar.HandleInteractionRequest).Methods(http.MethodPost)
 
 	api.router = router
 	return api
