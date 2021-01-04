@@ -42,7 +42,7 @@ func NewServer() Server {
 	router.HandleFunc(feedback.APIPOSTFeedback, feedback.HandlePOSTFeedbackRequest).Methods(http.MethodPost)
 	router.HandleFunc(feedback.APIPUTFeedback, feedback.HandlePUTFeedbackRequest).Methods(http.MethodPut)
 	router.HandleFunc(feedback.APIDELETEFeedback, feedback.HandleDELETEFeedbackRequest).Methods(http.MethodDelete)
-	router.HandleFunc(feedback.APIGETFeedbacks, feedback.HandleGETFeedbacksRequest).Methods(http.MethodGet)
+	router.HandleFunc(feedback.APIGETFeedbacks, feedback.HandleGETFeedbacksRequest).Methods(http.MethodPost)
 
 	api.router = router
 	return api

@@ -6,6 +6,7 @@ import (
 	"math"
 	"sort"
 	"sync"
+	"time"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/feedback"
 	"github.com/PabloGamiz/SafeEvents-Backend/mysql"
@@ -21,12 +22,6 @@ var (
 
 type sID uint
 
-//
-//func LoadOrStoreNewEvent(event Controller) error {
-//	sid := event.GetID()
-//	if
-//}
-
 // FindAll returns the controllers of all the events loaded on the BBDD
 func FindAll(ctx context.Context) (ctrl []Controller, err error) {
 	var db *gorm.DB
@@ -37,8 +32,8 @@ func FindAll(ctx context.Context) (ctrl []Controller, err error) {
 
 	defer cancel()
 	var eventsMOD []*Event
-	db.Preload(clause.Associations).Find(&eventsMOD)
-	fmt.Println(eventsMOD)
+	timeNow := time.Now()
+	db.Preload(clause.Associations).Where(queryFindAll, timeNow).Find(&eventsMOD)
 	ctrl = make([]Controller, len(eventsMOD))
 	for index, event := range eventsMOD {
 		ctrl[index] = event
@@ -56,9 +51,10 @@ func FindAllByType(ctx context.Context, eventType string) (ctrl []Controller, er
 	}
 
 	defer cancel()
+
 	var eventsMOD []*Event
-	db.Preload(clause.Associations).Where(queryFilterByType, eventType).Find(&eventsMOD)
-	fmt.Println(eventsMOD)
+	timeNow := time.Now()
+	db.Preload(clause.Associations).Where(queryFilterByType, eventType, timeNow).Find(&eventsMOD)
 	ctrl = make([]Controller, len(eventsMOD))
 	for index, event := range eventsMOD {
 		ctrl[index] = event

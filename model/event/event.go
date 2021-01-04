@@ -17,7 +17,7 @@ type Event struct {
 	Taken       int                  `json:"taken" gorm:"not null;check:,taken <= capacity"` // How many tickets have been purchased; Capacity - Taken = available_tickets
 	Price       float32              `json:"price" gorm:"not null"`
 	CheckInDate time.Time            `json:"checkInDate" gorm:"not null"`
-	ClosureDate time.Time            `json:"closureDate" gorm:"not null"`
+	ClosureDate time.Time            `json:"closureDate" gorm:"not null;check:closure_date >= check_in_date"`
 	Location    string               `json:"location" gorm:"not null"`
 	Feedbacks   []*feedback.Feedback `json:"feedbacks" gorm:"foreignkey:EventID"`
 	Services    []*service.Service   `json:"services" gorm:"foreignkey:EventID"`
