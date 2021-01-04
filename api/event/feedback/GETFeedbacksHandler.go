@@ -3,7 +3,6 @@ package feedback
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -24,7 +23,7 @@ func HandleGETFeedbacksRequest(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	fmt.Println(feedbackRequestDTO)
+
 	// Setting up TxPurchase with the required values
 	txGETFeedbacks := feedback.NewTxGETFeedbacks(feedbackRequestDTO)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -34,7 +33,6 @@ func HandleGETFeedbacksRequest(w http.ResponseWriter, r *http.Request) {
 	result, err := txGETFeedbacks.Result()
 
 	if err != nil {
-		// If err != nil it means the transaction has failed
 		http.Error(w, err.Error(), http.StatusConflict)
 		return
 	}
