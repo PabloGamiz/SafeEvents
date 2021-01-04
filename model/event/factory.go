@@ -86,7 +86,7 @@ func FindEventByID(ID uint) (ctrl Controller, err error) {
 // FindRecomended returns the controllers of all the events recomended for the user
 func FindRecomended(ctx context.Context, clientID uint) (ctrl []Controller, err error) {
 	var db *gorm.DB
-	var cancel mysql.Cancel
+	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
 		return
 	}
