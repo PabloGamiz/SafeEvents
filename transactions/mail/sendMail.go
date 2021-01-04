@@ -72,7 +72,7 @@ func (tx *txSendMail) Precondition() (err error) {
 
 // Postcondition creates new user and a opens its first session
 func (tx *txSendMail) Postcondition(ctx context.Context) (v interface{}, err error) {
-	if err = tx.ParseTemplate("template.html"); err == nil {
+	if err = tx.ParseTemplate("template/template.html"); err == nil {
 		err = tx.SendEmail()
 	}
 
