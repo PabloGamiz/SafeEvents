@@ -48,6 +48,7 @@ func (tx *txInteraction) Postcondition(ctx context.Context) (v interface{}, err 
 			continue
 		}
 
+		log.Printf("Got potential infected client, mac = %s", MAC)
 		closeToID := radarCtrl.GetID()
 		newInteraction := interactionMOD.New(tx.sessCtrl.GetRadar().GetID(), closeToID, tx.request.Instant)
 		tx.interactions = append(tx.interactions, newInteraction)
