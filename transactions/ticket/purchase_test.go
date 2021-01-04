@@ -39,6 +39,8 @@ func getDummyEventID(ctx context.Context, t *testing.T, cookie string) uint {
 		ClosureDate: time.Now(),
 		Price:       120,
 		Location:    "Testingcity",
+		Image:       "https://miro.medium.com/max/400/1*1R4iZ4wrVdWtONwHkBmgDA.jpeg",
+		Tipus:       "Altres",
 	}
 
 	txPublicaEvent := eventTX.NewTxPublicaEvent(request)

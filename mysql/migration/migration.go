@@ -3,6 +3,8 @@ package migration
 import (
 	"log"
 
+	"github.com/PabloGamiz/SafeEvents-Backend/model/buyerdata"
+
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client/assistant"
 	"github.com/PabloGamiz/SafeEvents-Backend/model/client/organizer"
@@ -30,6 +32,7 @@ func MigrateTables() (err error) {
 	}
 
 	db.AutoMigrate(&client.Client{},
+		&buyerdata.BuyerData{},
 		&organizer.Organizer{},
 		&assistant.Assistant{},
 		&feedback.Feedback{},

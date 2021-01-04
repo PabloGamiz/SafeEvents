@@ -28,3 +28,15 @@ func NewTxCheck(request ticketDTO.CheckRequestDTO) transaction.Tx {
 	body := &txCheck{request: request}
 	return transaction.NewTransaction(body)
 }
+
+// NewPaypalPurchase builds a brand new transaction for Signin
+func NewPaypalPurchase(request ticketDTO.PayPalPurchaseRequestDTO) transaction.Tx {
+	body := &txPaypalPurchase{request: request}
+	return transaction.NewTransaction(body)
+}
+
+// NewTicketPrice builds a brand new transaction for Signin
+func NewTicketPrice(request ticketDTO.PriceTicketRequestDTO) transaction.Tx {
+	body := &txTicketPrice{request: request}
+	return transaction.NewTransaction(body)
+}

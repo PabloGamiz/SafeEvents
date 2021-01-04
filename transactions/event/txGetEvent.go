@@ -35,6 +35,7 @@ func (tx *txGetEvent) buildEventResponseDTO(ctrl event.Controller) *eventDTO.Ful
 		Taken:       ctrl.GetTaken(),
 		Image:       ctrl.GetImage(),
 		Tipus:       ctrl.GetTipus(),
+		Mesures:     ctrl.GetMesures(),
 		Faved:       tx.faved,
 		Organizer:   tx.organizs,
 		EsOrganize:  tx.esOrg,

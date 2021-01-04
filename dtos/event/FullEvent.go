@@ -19,6 +19,7 @@ type FullEvent struct {
 	Services    []service_api.DTO `json:"services"`
 	Image       string            `json:"image"`
 	Tipus       string            `json:"tipus"`
+	Mesures     string            `json:"mesures"`
 	Faved       bool              `json:"Faved"`
 	Taken       int               `json:"Taken"`
 	EsOrganize  bool              `json:"esorg"`

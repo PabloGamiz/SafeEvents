@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"math"
-	"sort"
+	"strings"
 	"sync"
 
 	"github.com/PabloGamiz/SafeEvents-Backend/model/feedback"
@@ -95,12 +95,10 @@ func FindRecomended(ctx context.Context, clientID uint) (ctrl []Controller, err 
 		return
 	}
 	m := map[string]int{}
-	m["Art"] += 5
 	var PopularEvts []*Event
 	defer cancel()
 	var idAssis uint
 	db.Select("id").Where("client_id = ?", clientID).Table("assistants").Find(&idAssis)
-	//db.Table("events").Where("capacity <> ?", "taken").Where("closure_date > ?", time.Now()).Find(&PopularEvts).Order("taken desc")
 	db.Raw("SELECT * FROM `events` WHERE capacity <> taken AND closure_date > CURRENT_DATE ORDER BY taken desc").Scan(&PopularEvts) //OBTE TOTS ELS ESDEVENIMENTS DISPONIBLES ORDENATS PER PLACES LLIURES
 	type Result struct {
 		EventID uint
@@ -130,59 +128,85 @@ func FindRecomended(ctx context.Context, clientID uint) (ctrl []Controller, err 
 			}
 		}
 	}
-	m["Esports"] += 11
+	//ES TREUEN ELS ESDEVENIMENTS PROPERS QUE JA TE COMPRATS
+	db.Raw("SELECT DISTINCT tickets.event_id FROM tickets INNER JOIN events on tickets.event_id = events.id WHERE events.closure_date >= CURRENT_DATE AND tickets.assistant_id = ?", idAssis).Scan(&result)
+	for _, j := range result {
+		for x := 0; x < len(PopularEvts); x++ {
+			if j.EventID == PopularEvts[x].ID {
+				PopularEvts = append(PopularEvts[:x], PopularEvts[x+1:]...)
+			}
+		}
+	}
+	if len(PopularEvts) == 0 {
+		err = fmt.Errorf("Not Available Events for client ID %d", clientID)
+		return
+	}
 	//CONSULTA ELS FAVS DEL CLIENT
-	var event_id []uint
-	db.Raw("SELECT `event_id` FROM `clients_favs` WHERE client_id = ?", clientID).Scan(&event_id)
-	if len(event_id) != 0 {
-		for _, valor := range event_id {
+	var eventid []uint
+	mapdeMots := map[string]int{}
+	db.Raw("SELECT `event_id` FROM `clients_favs` WHERE client_id = ?", clientID).Scan(&eventid)
+	if len(eventid) != 0 {
+		for _, valor := range eventid {
 			var evnt []*Event
 			db.Table("events").Where("id = ?", valor).Find(&evnt)
 			if len(evnt) != 0 {
 				m[evnt[0].Tipus] += 10
 			}
-		}
-	}
-	for i, valor := range m {
-		if valor < 0 {
-			delete(m, i)
-		}
-	}
-	keys := make([]int, 0, len(m))
-	for k := range m {
-		keys = append(keys, m[k])
-	}
-	sort.Sort(sort.Reverse(sort.IntSlice(keys)))
-
-	fmt.Println(m, keys)
-	resultsize := int(math.Min(10, float64(len(PopularEvts))))
-	ctrl = make([]Controller, resultsize)
-	//mapiter := 0
-	for i := 0; i < resultsize; i++ {
-		ctrl[i] = PopularEvts[i]
-	}
-	/*	if len(t) == 0 {
-			err = fmt.Errorf("Not enough data from the user", clientID)
-			//devolver eventos con mayor popularidad (menos tickets disponibles)
-			//return
-		}
-
-		for index, valor := range m {
-			rows, _ := db.Table("events").Select("id").Where("tipus", index).Rows()
-			defer rows.Close()
-
-			for rows.Next() {
-				var evnt Event
-				var count int64
-				db.ScanRows(rows, &evnt)
-				db.Table("tickets").Group("event_id").Where("assistant_id = ?", idAssis).Where("event_id = ?", evnt.ID).Count(&count)
-
-				//find ratings at feedbacks
-				var fb feedback.Feedback
-				db.Table("feedbacks").Where("event_id = ?", evnt.ID).Where("assistant_id = ?", idAssis).Find(&fb)
-				m[index] = int(count) + valor
+			titolev := strings.Split(evnt[0].Title, " ")
+			for _, palabra := range titolev {
+				mapdeMots[palabra]++
 			}
 		}
-	*/
+	}
+	for key := range mapdeMots {
+		if strings.ToLower(key) == key {
+			delete(mapdeMots, key)
+		}
+	}
+	var primerInteres []*Event //Els que tenen coincidencia amb el nom
+	var segonInteres []*Event  //Els que tenen feedback positiu o estan a preferits
+	var tercerInteres []*Event //La resta dels esdeveniments disponibles
+	//AFEGEIX TOTS ELS EVENTS CANDIDATS SEGONS LA PREFERENCIA OBTENIDA AMB ELS PASOS ANTERIORS
+	for _, aux := range PopularEvts {
+		titlesplit := strings.Split(aux.Title, " ")
+		trobat := false
+		for s := 0; s < len(titlesplit); s++ {
+			_, found := mapdeMots[titlesplit[s]]
+			if found {
+				trobat = true
+				primerInteres = append(primerInteres, aux)
+				s = len(titlesplit)
+			}
+		}
+		if !trobat {
+			valor, found := m[aux.Tipus]
+			if found {
+				if valor < 0 {
+					tercerInteres = append(tercerInteres, aux)
+				} else {
+					segonInteres = append(segonInteres, aux)
+				}
+			} else {
+				tercerInteres = append(tercerInteres, aux)
+			}
+		}
+
+	}
+
+	resultsize := int(math.Min(20, float64(len(PopularEvts))))
+
+	ctrl = make([]Controller, resultsize)
+	for i := 0; i < resultsize; i++ {
+		if len(primerInteres) != 0 {
+			ctrl[i] = primerInteres[0]
+			primerInteres = append(primerInteres[1:])
+		} else if len(segonInteres) != 0 {
+			ctrl[i] = segonInteres[0]
+			segonInteres = append(segonInteres[1:])
+		} else {
+			ctrl[i] = tercerInteres[0]
+			tercerInteres = append(tercerInteres[1:])
+		}
+	}
 	return
 }
