@@ -47,3 +47,14 @@ func NewRadar(mac string, clientID uint) (ctrl Controller, err error) {
 	AllInstancesByMAC.Store(mID, radar)
 	return radar, nil
 }
+
+// KillRadar logs out the session with the provided cookie
+func KillRadar(MAC string) (err error) {
+	mac := macID(MAC)
+	if _, exists := AllInstancesByMAC.Load(mac); !exists {
+		return fmt.Errorf(errRadarNotExists, mac)
+	}
+
+	AllInstancesByMAC.Delete(mac)
+	return
+}

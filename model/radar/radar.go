@@ -20,7 +20,7 @@ func (radar *Radar) Init() (err error) {
 
 // Close deactivates the radar
 func (radar *Radar) Close() (err error) {
-	return
+	return KillRadar(radar.GetMAC())
 }
 
 // GetID returns te client id of the radar's owner
