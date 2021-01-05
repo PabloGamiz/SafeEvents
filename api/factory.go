@@ -37,7 +37,7 @@ func NewServer() Server {
 	// Ticket router Handlers
 	router.HandleFunc(ticket.APIPurchasePath, ticket.HandlePurchaseRequest).Methods(http.MethodPost)
 	router.HandleFunc(ticket.APIActivatePath, ticket.HandleActivateRequest).Methods(http.MethodPut)
-	router.HandleFunc(ticket.APIGetTicketsPath, ticket.HandleGetTicketsRequest).Methods(http.MethodGet)
+	router.HandleFunc(ticket.APIGetTicketsPath, ticket.HandleGetTicketsRequest).Methods(http.MethodPut)
 	router.HandleFunc(ticket.APICheckPath, ticket.HandleCheckRequest).Methods(http.MethodPut)
 	router.HandleFunc(ticket.APIPaypalPath, ticket.HandlePaypalPurchase).Methods(http.MethodPut)
 	router.HandleFunc(ticket.APITicketPrice, ticket.HandleTicketPriceRequest).Methods(http.MethodPut)
