@@ -19,7 +19,7 @@ func GetTicketsByEventID(id uint) (tickets []Controller, err error) {
 }
 
 // GetTicketsByEventIDAndClientID return all current tickets for a given event and client
-func GetTicketsByEventIDAndClientID(eid uint, cid uint) (tickets []Controller, err error) {
+func GetTicketsByEventIDAndClientID(eid uint, cid uint) (ctrls []Controller, err error) {
 	var db *gorm.DB
 	var cancel mysql.Disconnect
 	if db, cancel, err = mysql.OpenStream(); err != nil {
@@ -27,7 +27,14 @@ func GetTicketsByEventIDAndClientID(eid uint, cid uint) (tickets []Controller, e
 	}
 
 	defer cancel()
+	var tickets []Ticket
 	db.Table("tickets").Where(queryFindByEventIDAndClientID, eid, cid).Find(&tickets)
+
+	ctrls = make([]Controller, len(tickets))
+	for index, ticket := range tickets {
+		ctrls[index] = &ticket
+	}
+
 	return
 }
 
