@@ -33,7 +33,7 @@ func (gw *ticketGateway) Update() (err error) {
 	}
 
 	defer cancel()
-	db.Table("tickets").Updates(gw.Controller)
+	db.Table("tickets").Updates(gw.Controller.GetInstance())
 	return
 }
 

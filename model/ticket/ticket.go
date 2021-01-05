@@ -98,3 +98,8 @@ func (ticket *Ticket) GetClientID() uint {
 func (ticket *Ticket) GetEventID() uint {
 	return ticket.EventID
 }
+
+// GetInstance return itself as an instance of ticket
+func (ticket *Ticket) GetInstance() *Ticket {
+	return ticket
+}

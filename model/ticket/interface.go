@@ -12,4 +12,5 @@ type Controller interface {
 	GetEventID() uint
 	GetQR() string
 	Check() error
+	GetInstance() *Ticket
 }
