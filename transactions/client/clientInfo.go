@@ -53,9 +53,13 @@ func (tx *txClientInfo) Postcondition(ctx context.Context) (v interface{}, err e
 		return response, err
 	} else {
 		ctrl = sess.Client()
+		var idClient = ctrl.GetID()
+		var clientCtrl clientMOD.Controller
+		if clientCtrl, err = client.FindClientByID(ctx, idClient); err != nil {
+			return
+		}
+		return clientCtrl, err
 	}
-
-	return ctrl, err
 
 }
 
