@@ -32,7 +32,8 @@ func GetTicketsByEventIDAndClientID(eid uint, cid uint) (ctrls []Controller, err
 
 	ctrls = make([]Controller, len(tickets))
 	for index, ticket := range tickets {
-		ctrls[index] = &ticket
+		aux := ticket
+		ctrls[index] = &aux
 	}
 
 	return
