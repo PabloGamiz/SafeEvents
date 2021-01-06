@@ -23,6 +23,8 @@ func HandleInteractionRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	interactionDTO.Unix = time.Unix(interactionDTO.Instant, 0)
+
 	// Setting up TxSignin with the required values
 	txSignin := radar.NewTxInteraction(interactionDTO)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)

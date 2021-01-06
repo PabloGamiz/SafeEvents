@@ -4,9 +4,10 @@ import "time"
 
 // InteractionRequestDTO represents the expected data from a activate request
 type InteractionRequestDTO struct {
-	Cookie  string    `json:"cookie"`
-	CloseTo []string  `json:"close_to"`
-	Instant time.Time `json:"instant"`
+	Cookie  string   `json:"cookie"`
+	CloseTo []string `json:"close_to"`
+	Instant int64    `json:"instant"`
+	Unix    time.Time
 }
 
 // InteractionResponseDTO represents the expected data from a activate request
