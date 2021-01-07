@@ -6,6 +6,8 @@ const (
 	APIPubliEvent = "/event/publica"
 	// APIGetEvent is the path where all get event requests will be handled
 	APIGetEvent = "/event/single"
+	// APIGetEventAn is the path where all get event requests will be handled
+	APIGetEventAn = "/event/singleanonim"
 	// APIListEvents is the path where all list events requests will be handled
 	APIListEvents = "/event/list"
 	// APIModificaEvent is the path where all list favorites requests will be handled

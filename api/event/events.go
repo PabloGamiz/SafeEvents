@@ -158,6 +158,37 @@ func HandleGetEventRequest(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
+// HandleGetEventRequest attends a Get a single Esdeveniment request
+func HandleGetEventAnonimRequest(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Handlering a single event request")
+
+	var getDTO eventDTO.GetEvent
+	if err := json.NewDecoder(r.Body).Decode(&getDTO); err != nil {
+		// If some error just happened it means the provided Json does not match with the expected DTO
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Setting up txGetEvent with the required values
+	txGetEvent := event.NewTxGetEventAnonim(getDTO)
+
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel() // ensures the context is canceled, at least once, at the end of this function
+
+	txGetEvent.Execute(ctx)
+	result, err := txGetEvent.Result()
+
+	if err != nil {
+		// If err != nil it means the transaction has failed
+		http.Error(w, err.Error(), http.StatusConflict)
+		return
+	}
+
+	// Sending response
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
+}
+
 // HandleListFavoritesRequest attends a list of favorites events request
 func HandleListFavoritesRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handlering a List Favorites request")

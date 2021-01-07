@@ -16,7 +16,15 @@ func NewServer() Server {
 	api := &api{}
 
 	router := mux.NewRouter()
+	//router.Headers("Access-Control-Allow-Origin", "*")
+	/*
+		cors := handlers.CORS(
+			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
+			handlers.AllowedHeaders([]string{"Accept", "Accept-Language", "Content-Type", "Content-Language", "Origin", "Access-Control-Allow-Origin"}),
+			handlers.AllowedOrigins([]string{"*"}))
 
+		router.Use(cors)
+	*/
 	// Client router Handlers
 	router.HandleFunc(client.APISigninPath, client.HandleSigninRequest).Methods(http.MethodPost)
 	router.HandleFunc(client.APILogoutPath, client.HandleLogoutRequest).Methods(http.MethodPut)
@@ -32,6 +40,7 @@ func NewServer() Server {
 	router.HandleFunc(event.APIListFavorites, event.HandleListFavoritesRequest).Methods(http.MethodPut)
 	router.HandleFunc(event.APIModificaEvent, event.HandleModificaEventRequest).Methods(http.MethodPut)
 	router.HandleFunc(event.APIGetEvent, event.HandleGetEventRequest).Methods(http.MethodPost)
+	router.HandleFunc(event.APIGetEventAn, event.HandleGetEventAnonimRequest).Methods(http.MethodPost)
 	router.HandleFunc(event.APIRecomanaEvents, event.HandleRecomanaEventsRequest).Methods(http.MethodPut)
 
 	// Ticket router Handlers

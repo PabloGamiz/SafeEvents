@@ -29,7 +29,7 @@ func NewTxModificaEvent(request eventDTO.DTO) transaction.Tx {
 	return transaction.NewTransaction(body)
 }
 
-// NewTxGetEvent builds a brand new transaction for Publica_event
+// NewTxGetEvent builds a brand new transaction for Get_Event
 func NewTxGetEvent(request eventDTO.GetEvent) transaction.Tx {
 	body := &txGetEvent{request: request}
 	return transaction.NewTransaction(body)
@@ -44,5 +44,11 @@ func NewTxListFavorites(request eventDTO.ListFavoritesRequestDTO) transaction.Tx
 // NewTxRecomanaEvents do this and that ...
 func NewTxRecomanaEvents(request eventDTO.ListFavoritesRequestDTO) transaction.Tx {
 	body := &txRecomanaEvents{request: request}
+	return transaction.NewTransaction(body)
+}
+
+// NewTxGetEventAnonim builds a brand new transaction for Get_Event
+func NewTxGetEventAnonim(request eventDTO.GetEvent) transaction.Tx {
+	body := &txGetEventAnonim{request: request}
 	return transaction.NewTransaction(body)
 }
