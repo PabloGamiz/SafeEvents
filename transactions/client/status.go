@@ -27,7 +27,7 @@ func (tx *txStatus) buildStatusResponse() *clientDTO.StatusResponseDTO {
 }
 
 func (tx *txStatus) notifyCloseClients() (err error) {
-	padding := tx.request.Date.Add(marginTime * -time.Hour)
+	padding := tx.request.Unix.Add(marginTime * -time.Hour)
 	var closeTo []uint
 	if closeTo, err = interactionMOD.FindCloseToByClientIDAndTime(tx.sessCtrl.GetID(), padding); err != nil {
 		return
@@ -54,7 +54,7 @@ func (tx *txStatus) Postcondition(ctx context.Context) (v interface{}, err error
 	log.Printf("Got a status updating request from client %s", tx.sessCtrl.GetEmail())
 	tx.ctx = ctx
 
-	if err = tx.sessCtrl.SetStatus(tx.request.Status, tx.request.Date); err != nil {
+	if err = tx.sessCtrl.SetStatus(tx.request.Status, tx.request.Unix); err != nil {
 		return
 	}
 

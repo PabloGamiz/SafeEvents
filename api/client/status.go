@@ -23,6 +23,8 @@ func HandleStatusRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	statusDTO.Unix = time.Unix(statusDTO.Date, 0)
+
 	// Setting up TxSignin with the required values
 	txSignin := client.NewTxStatus(statusDTO)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)

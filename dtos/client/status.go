@@ -10,7 +10,8 @@ import (
 type StatusRequestDTO struct {
 	Cookie string        `json:"cookie"`
 	Status client.Status `json:"status"`
-	Date   time.Time     `json:"date"`
+	Date   int64         `json:"date"`
+	Unix   time.Time
 }
 
 // StatusResponseDTO represents the resulting response for a status request
