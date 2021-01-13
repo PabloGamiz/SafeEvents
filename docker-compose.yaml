@@ -1,38 +1,46 @@
 version: '3.8'
 
 services:
-    database:
-        container_name: mongo
-        image: mongo:4.2.10
+    # DATABASE
+    mysql:
+        container_name: safe-events-mysql
+        image: mysql/mysql-server:latest
         restart: on-failure
-        environment:
-            MONGO_INITDB_DATABASE: safe-events-db
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: rootpassword
         ports:
-            - 27017:27017
-        #env_file:
-        #    - .env
+            - "3306:3306"
         volumes:
-            - mongodb_data_container:/data/db
-            #- ./.docker/mongodb/mongod.conf:/etc/mongod.conf
-            #- ./.docker/mongodb/initdb.d/:/docker-entrypoint-initdb.d/
-            #- ./.docker/mongodb/data/db/:/data/db/
-            #- ./.docker/mongodb/data/log/:/var/log/mongodb/
-
+            - "dbdata:/var/lib/mysql"
+            - "dbdump:/docker-entrypoint-initdb.d"
         networks: 
             - database
+            
+    myadmin:
+        container_name: safe-events-myadmin
+        image: phpmyadmin/phpmyadmin:latest
+        restart: always
+        depends_on:
+            - mysql
+        ports:
+            - "9090:80"
+        networks: 
+            - database
+        environment: 
+            PMA_HOST: safe-events-mysql
+            PMA_PORT: 3306
+            PMA_USER: myadmin
+            PMA_PASSWORD: myadminpwd
     
+    # BAKCEND
     backend:
         container_name: safe-events
         image: safe-events/backend:0.1.0
         restart: always
+        depends_on:
+            - myadmin
+        ports:
+            - 8080:8080
         networks: 
             - database
-        environment: 
-            SERVICE_PORT: 9090
-            SERVICE_NETW: tcp
-            MONGODB_URL: https://mongo:27017
             
 networks:
     # Database network is the bridge between domain environment and the sql databases
@@ -41,4 +49,5 @@ networks:
         driver: bridge
 
 volumes:
-    mongodb_data_container:
+    dbdata:
+    dbdump:
