@@ -1,6 +1,6 @@
 # SafeEvents-Backend
 
-Projecte per a l'assignatura de PES (Projecte d'Enginyeria del Software) de la FiB.
+Projecte per a l'assignatura de PES (Projecte d'Enginyeria del Software) de la FIB.
 
 ## Tema
 
